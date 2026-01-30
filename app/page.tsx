@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import Image from 'next/image'
-import { FileText, TrendingUp, BookOpen, Target, Sparkles, CheckCircle, Zap } from 'lucide-react'
+import { FileText, TrendingUp, BookOpen, Target, Sparkles, CheckCircle, Zap, ArrowRight } from 'lucide-react'
 import { createServerClient } from '@/lib/supabase/server'
 import { FAQSection } from '@/components/home/FAQSection'
 
@@ -161,22 +161,33 @@ export default async function HomePage() {
 
                 {/* CTA Button for guests */}
                 {!user && (
-                  <div className="flex flex-col items-center lg:items-start gap-4 pt-2">
+                  <div className="flex flex-col items-center lg:items-start gap-6 pt-4">
                     <Link href="/write">
                       <Button
                         size="lg"
-                        className="group relative overflow-hidden bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-500 bg-size-200 bg-pos-0 hover:bg-pos-100 text-white shadow-xl hover:shadow-cyan-500/50 transition-all duration-500 px-6 py-4 md:px-10 md:py-7 text-base md:text-xl font-bold rounded-xl md:rounded-2xl"
+                        className="group relative h-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-xl shadow-blue-500/25 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 rounded-2xl text-lg font-bold overflow-hidden"
                       >
-                        <Sparkles className="mr-2 h-5 w-5 md:h-6 md:w-6 animate-pulse" />
-                        <span className="hidden sm:inline">Try Free Essay Scoring Now</span>
-                        <span className="sm:hidden">Try Free Now</span>
-                        <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">→</span>
+                        {/* Shine effect overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                        
+                        <span className="relative flex items-center gap-3">
+                          <Sparkles className="w-5 h-5 text-blue-100" />
+                          Try Free Essay Scoring Now
+                          <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1 text-blue-100" />
+                        </span>
                       </Button>
                     </Link>
-                    <p className="flex items-center gap-2 text-sm text-slate-600 font-medium">
-                      <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
-                      <span>No sign-up required • Instant results in 30 seconds</span>
-                    </p>
+                    
+                    <div className="flex items-center gap-6 text-sm text-slate-600 font-medium">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4 text-cyan-600" />
+                        <span>No sign-up required</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Zap className="w-4 h-4 text-blue-600" />
+                        <span>Instant results</span>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
