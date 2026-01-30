@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import Image from 'next/image'
 import { FileText, TrendingUp, BookOpen, Target, Sparkles, CheckCircle, Zap } from 'lucide-react'
 import { createServerClient } from '@/lib/supabase/server'
 import { FAQSection } from '@/components/home/FAQSection'
@@ -131,74 +132,158 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      {/* Hero Section - Redesigned with brighter colors and modern layout */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-sky-50 via-cyan-50 to-blue-50 py-12 md:py-20 lg:py-24">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-sky-50 via-cyan-50 to-blue-50 py-8 md:py-12 lg:py-16">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
-          {/* Large gradient orbs */}
-          <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-gradient-to-br from-cyan-400/30 to-blue-500/30 blur-3xl animate-pulse" />
-          <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-gradient-to-br from-sky-400/30 to-cyan-500/30 blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-
-          {/* Floating shapes */}
+          <div className="absolute -top-[200px] -right-[200px] h-[800px] w-[800px] rounded-full bg-gradient-to-br from-cyan-400/30 to-blue-500/30 blur-3xl opacity-50" />
+          <div className="absolute -bottom-[200px] -left-[200px] h-[800px] w-[800px] rounded-full bg-gradient-to-br from-sky-400/30 to-cyan-500/30 blur-3xl opacity-50" />
           <div className="absolute top-20 left-1/4 h-4 w-4 rounded-full bg-cyan-400/40 animate-float" />
           <div className="absolute top-40 right-1/4 h-3 w-3 rounded-full bg-blue-400/40 animate-float" style={{ animationDelay: '0.5s' }} />
           <div className="absolute bottom-40 left-1/3 h-5 w-5 rounded-full bg-sky-400/40 animate-float" style={{ animationDelay: '1.5s' }} />
-
-          {/* Grid pattern overlay */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#e0f2fe_1px,transparent_1px),linear-gradient(to_bottom,#e0f2fe_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
         </div>
 
         <div className="container relative z-10 mx-auto px-4">
-          <div className="mx-auto max-w-5xl">
-            <div className="text-center space-y-4 md:space-y-7">
-              {/* Trust badge */}
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/80 backdrop-blur-sm px-4 py-2 text-sm font-medium text-cyan-700 shadow-lg border border-cyan-100">
-                <Sparkles className="h-4 w-4 text-cyan-500" />
-                AI-Powered IELTS Writing Coach
+          <div className="mx-auto max-w-7xl">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-0 items-center">
+
+              {/* Left Column - Text */}
+              <div className="space-y-4 md:space-y-6 text-center lg:text-left z-20">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-tight tracking-tight shadow-sm" style={{ fontFamily: 'var(--font-shrikhand)' }}>
+                  <span className="bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-600 bg-clip-text text-transparent">IELTS</span>
+                  <span className="text-slate-900">4LIFE</span>
+                </h1>
+
+                <p className="max-w-md text-base sm:text-lg md:text-xl leading-relaxed text-slate-700 mx-auto lg:mx-0 font-medium">
+                  Instant band scores, detailed feedback, and vocabulary tools to help you achieve your target IELTS Writing score.
+                </p>
+
+                {/* CTA Button for guests */}
+                {!user && (
+                  <div className="flex flex-col items-center lg:items-start gap-4 pt-2">
+                    <Link href="/write">
+                      <Button
+                        size="lg"
+                        className="group relative overflow-hidden bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-500 bg-size-200 bg-pos-0 hover:bg-pos-100 text-white shadow-xl hover:shadow-cyan-500/50 transition-all duration-500 px-6 py-4 md:px-10 md:py-7 text-base md:text-xl font-bold rounded-xl md:rounded-2xl"
+                      >
+                        <Sparkles className="mr-2 h-5 w-5 md:h-6 md:w-6 animate-pulse" />
+                        <span className="hidden sm:inline">Try Free Essay Scoring Now</span>
+                        <span className="sm:hidden">Try Free Now</span>
+                        <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">→</span>
+                      </Button>
+                    </Link>
+                    <p className="flex items-center gap-2 text-sm text-slate-600 font-medium">
+                      <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                      <span>No sign-up required • Instant results in 30 seconds</span>
+                    </p>
+                  </div>
+                )}
               </div>
 
-              {/* Main heading */}
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight tracking-tight text-slate-900">
-                Master IELTS Writing
-                <br />
-                <span className="bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-600 bg-clip-text text-transparent">
-                  Score Higher
-                </span>
-              </h1>
+              {/* Right Column - Screenshot Collage */}
+              <div className="relative h-[450px] sm:h-[500px] md:h-[600px] lg:h-[700px] hidden md:block lg:-ml-12">
 
-              {/* Subheading */}
-              <p className="mx-auto max-w-2xl text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed text-slate-600 px-4">
-                Get instant, expert-level feedback on your essays. Track progress, enhance vocabulary, and achieve your target band score with AI.
-              </p>
-
-              {/* CTA Button for guests */}
-              {!user && (
-                <div className="flex flex-col items-center gap-3 md:gap-4 pt-2 md:pt-4">
-                  <Link href="/write">
-                    <Button
-                      size="lg"
-                      className="group relative overflow-hidden bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-500 bg-size-200 bg-pos-0 hover:bg-pos-100 text-white shadow-2xl hover:shadow-cyan-500/50 transition-all duration-500 px-6 py-4 md:px-10 md:py-7 text-base md:text-xl font-bold rounded-xl md:rounded-2xl"
-                    >
-                      <Sparkles className="mr-2 h-5 w-5 md:h-6 md:w-6 animate-pulse" />
-                      <span className="hidden sm:inline">Try Free Essay Scoring Now</span>
-                      <span className="sm:hidden">Try Free Now</span>
-                      <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">→</span>
-                    </Button>
-                  </Link>
-                  <p className="flex items-center gap-2 text-xs md:text-sm text-slate-500 px-4 text-center">
-                    <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
-                    <span>No sign-up required • Instant results in 30 seconds</span>
-                  </p>
+                {/* 1. Main Dashboard - Center Hub */}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[48%] z-30">
+                  <div className="rounded-2xl shadow-2xl overflow-hidden border-[3px] border-white animate-float">
+                    <Image
+                      src="/screenshots/hero-dashboard.png"
+                      alt="Progress tracking dashboard"
+                      width={900}
+                      height={1200}
+                      unoptimized
+                      className="w-full h-auto object-cover"
+                      priority
+                    />
+                  </div>
                 </div>
-              )}
 
-              {/* Real feature badge - keep only real info */}
-              <div className="flex items-center justify-center pt-4 md:pt-6">
-                <div className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-white/60 backdrop-blur-sm border border-cyan-200 shadow-sm">
-                  <Zap className="h-4 w-4 text-cyan-600" />
-                  <span className="text-xs md:text-sm font-medium text-slate-700">Instant AI-Powered Feedback</span>
+                {/* 2. Top-Left: Band Scoring - Bigger & On Top */}
+                <div className="absolute top-[8%] -left-[6%] w-[50%] z-40">
+                  <div className="rounded-xl shadow-xl overflow-hidden border-2 border-white/80 animate-float" style={{ animationDelay: '1.5s' }}>
+                    <Image
+                      src="/screenshots/hero-scoring.png"
+                      alt="AI-powered band scoring"
+                      width={1440}
+                      height={900}
+                      unoptimized
+                      className="w-full h-auto"
+                    />
+                  </div>
+                </div>
+
+                {/* 3. Top-Right: Detailed Feedback - Smaller */}
+                <div className="absolute top-[12%] -right-[8%] w-[38%] z-20">
+                  <div className="rounded-xl shadow-xl overflow-hidden border-2 border-white/80 animate-float" style={{ animationDelay: '0.5s' }}>
+                    <Image
+                      src="/screenshots/hero-feedback.png"
+                      alt="Detailed feedback with highlights"
+                      width={1280}
+                      height={800}
+                      unoptimized
+                      className="w-full h-auto"
+                    />
+                  </div>
+                </div>
+
+                {/* 4. Bottom-Right: Vocabulary - Bigger & Below Center */}
+                <div className="absolute bottom-[10%] -right-[8%] w-[44%] z-20">
+                  <div className="rounded-xl shadow-xl overflow-hidden border-2 border-white/80 animate-float" style={{ animationDelay: '2s' }}>
+                    <Image
+                      src="/screenshots/hero-vocab.png"
+                      alt="Vocabulary and flashcards"
+                      width={1120}
+                      height={700}
+                      unoptimized
+                      className="w-full h-auto"
+                    />
+                  </div>
+                </div>
+
+                {/* 5. Bottom-Left: Interactive Quiz - Smaller */}
+                <div className="absolute bottom-[8%] left-[2%] w-[32%] z-40">
+                  <div className="rounded-xl shadow-xl overflow-hidden border-2 border-white/80 animate-float" style={{ animationDelay: '1s' }}>
+                    <Image
+                      src="/screenshots/hero-quiz.png"
+                      alt="Interactive vocabulary quiz"
+                      width={960}
+                      height={600}
+                      unoptimized
+                      className="w-full h-auto"
+                    />
+                  </div>
+                </div>
+
+                {/* 6. Mid-Right: Improvement Tool - Increased size & overlap */}
+                <div className="absolute top-1/2 -translate-y-1/2 -right-[15%] w-[30%] z-10">
+                  <div className="rounded-lg shadow-lg overflow-hidden border border-white/60 animate-float" style={{ animationDelay: '2.5s' }}>
+                    <Image
+                      src="/screenshots/hero-improve.png"
+                      alt="AI essay improvement tool"
+                      width={760}
+                      height={480}
+                      unoptimized
+                      className="w-full h-auto"
+                    />
+                  </div>
+                </div>
+
+                {/* 7. Mid-Left: History - Increased size & overlap */}
+                <div className="absolute top-1/2 -translate-y-1/2 -left-[14%] w-[28%] z-10">
+                  <div className="rounded-lg shadow-lg overflow-hidden border border-white/60 animate-float" style={{ animationDelay: '3s' }}>
+                    <Image
+                      src="/screenshots/hero-history.png"
+                      alt="Essay submission history"
+                      width={640}
+                      height={400}
+                      unoptimized
+                      className="w-full h-auto"
+                    />
+                  </div>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
