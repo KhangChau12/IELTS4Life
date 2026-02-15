@@ -17,7 +17,8 @@
       "Bash(node:*)",
       "Bash(lsof:*)",
       "Bash(xargs kill:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(npx next build:*)"
     ],
     "deny": [],
     "ask": []

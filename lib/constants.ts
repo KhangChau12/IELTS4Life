@@ -71,3 +71,15 @@ export const MAX_VOCAB_GENERATIONS_PER_DAY = 20
 export const ESSAYS_PER_PAGE = 10
 export const VOCAB_PER_PAGE = 20
 export const ERRORS_PER_PAGE = 5
+export const PROMPTS_PER_PAGE = 15
+
+// Writing Prompt Question Types
+export const QUESTION_TYPES_DISPLAY: Record<string, string> = {
+  agree_disagree: 'Agree / Disagree',
+  advantages_disadvantages: 'Advantages & Disadvantages',
+  problem_solution: 'Problem & Solution (Causes / Effects / Solutions)',
+  two_part_question: 'Two-part Question',
+  positive_negative: 'Positive & Negative',
+  discussion_both_views: 'Discussion (Both Views)',
+  mixed_hybrid: 'Mixed / Hybrid',
+}
