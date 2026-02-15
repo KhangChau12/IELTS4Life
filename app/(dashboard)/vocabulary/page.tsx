@@ -34,85 +34,73 @@ async function getEssaysWithVocabulary(): Promise<EssayWithVocab[]> {
     redirect('/login')
   }
 
-  // Get all essays for the user
-  const { data: essays, error: essaysError } = await supabase
-    .from('essays')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false })
+  // Run all 4 queries in parallel instead of N+1 per essay
+  const [essaysResult, vocabResult, viewsResult, quizResult] = await Promise.all([
+    supabase
+      .from('essays')
+      .select('id, prompt, created_at, overall_score')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false }),
+    supabase
+      .from('vocabulary')
+      .select('essay_id, vocab_type')
+      .eq('user_id', user.id),
+    supabase
+      .from('vocabulary_views')
+      .select('essay_id, vocab_type')
+      .eq('user_id', user.id),
+    supabase
+      .from('vocabulary_quiz_attempts')
+      .select('essay_id, vocab_type, score, total_questions, created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false }),
+  ])
 
-  if (essaysError) {
-    console.error('Error fetching essays:', essaysError)
+  if (essaysResult.error || !essaysResult.data?.length) {
     return []
   }
 
-  if (!essays || essays.length === 0) {
-    return []
+  const essays = essaysResult.data
+  const allVocab = vocabResult.data || []
+  const allViews = viewsResult.data || []
+  const allQuiz = quizResult.data || []
+
+  // Build lookup sets for O(1) access
+  const vocabSet = new Set(allVocab.map(v => `${v.essay_id}:${v.vocab_type}`))
+  const viewsSet = new Set(allViews.map(v => `${v.essay_id}:${v.vocab_type}`))
+
+  // Build quiz lookup: latest score per essay+type (already ordered by created_at desc)
+  const quizMap = new Map<string, { score: number; total_questions: number }>()
+  for (const q of allQuiz) {
+    const key = `${q.essay_id}:${q.vocab_type}`
+    if (!quizMap.has(key)) {
+      quizMap.set(key, { score: q.score, total_questions: q.total_questions })
+    }
   }
 
-  // Get vocabulary, views, and quiz attempts for each essay
-  const essaysWithVocab: EssayWithVocab[] = await Promise.all(
-    essays.map(async (essay) => {
-      // Get vocabulary
-      const { data: vocab } = await supabase
-        .from('vocabulary')
-        .select('vocab_type')
-        .eq('essay_id', essay.id)
-        .eq('user_id', user.id)
+  return essays.map((essay) => {
+    const paraphraseQuiz = quizMap.get(`${essay.id}:paraphrase`)
+    const topicQuiz = quizMap.get(`${essay.id}:topic`)
 
-      const hasParaphraseVocab = vocab?.some(v => v.vocab_type === 'paraphrase') || false
-      const hasTopicVocab = vocab?.some(v => v.vocab_type === 'topic') || false
-
-      // Get view status
-      const { data: views } = await supabase
-        .from('vocabulary_views')
-        .select('vocab_type')
-        .eq('essay_id', essay.id)
-        .eq('user_id', user.id)
-
-      const hasViewedParaphrase = views?.some(v => v.vocab_type === 'paraphrase') || false
-      const hasViewedTopic = views?.some(v => v.vocab_type === 'topic') || false
-
-      // Get latest quiz scores
-      const { data: paraphraseQuiz } = await supabase
-        .from('vocabulary_quiz_attempts')
-        .select('score, total_questions')
-        .eq('essay_id', essay.id)
-        .eq('user_id', user.id)
-        .eq('vocab_type', 'paraphrase')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single()
-
-      const { data: topicQuiz } = await supabase
-        .from('vocabulary_quiz_attempts')
-        .select('score, total_questions')
-        .eq('essay_id', essay.id)
-        .eq('user_id', user.id)
-        .eq('vocab_type', 'topic')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single()
-
-      return {
-        ...essay,
-        hasParaphraseVocab,
-        hasTopicVocab,
-        paraphraseStatus: {
-          hasViewed: hasViewedParaphrase,
-          quizScore: paraphraseQuiz?.score || null,
-          totalQuestions: paraphraseQuiz?.total_questions || null,
-        },
-        topicStatus: {
-          hasViewed: hasViewedTopic,
-          quizScore: topicQuiz?.score || null,
-          totalQuestions: topicQuiz?.total_questions || null,
-        },
-      }
-    })
-  )
-
-  return essaysWithVocab
+    return {
+      id: essay.id,
+      prompt: essay.prompt,
+      created_at: essay.created_at,
+      overall_score: essay.overall_score,
+      hasParaphraseVocab: vocabSet.has(`${essay.id}:paraphrase`),
+      hasTopicVocab: vocabSet.has(`${essay.id}:topic`),
+      paraphraseStatus: {
+        hasViewed: viewsSet.has(`${essay.id}:paraphrase`),
+        quizScore: paraphraseQuiz?.score ?? null,
+        totalQuestions: paraphraseQuiz?.total_questions ?? null,
+      },
+      topicStatus: {
+        hasViewed: viewsSet.has(`${essay.id}:topic`),
+        quizScore: topicQuiz?.score ?? null,
+        totalQuestions: topicQuiz?.total_questions ?? null,
+      },
+    }
+  })
 }
 
 export const dynamic = 'force-dynamic'
@@ -154,20 +142,6 @@ export default async function VocabularyPage() {
       ) : (
         <VocabularyList essays={essays} />
       )}
-
-      <div className="mt-6 md:mt-8 p-4 md:p-6 bg-gradient-to-br from-cyan-50 to-blue-50 border border-cyan-200 rounded-lg shadow-sm animate-fadeInUp">
-        <h3 className="text-base md:text-lg font-semibold bg-gradient-to-r from-ocean-700 to-cyan-700 bg-clip-text text-transparent mb-3">About Vocabulary Builder</h3>
-        <div className="text-xs md:text-sm text-ocean-700 space-y-2 md:space-y-3">
-          <p>
-            <strong>Paraphrase Vocabulary:</strong> Generates alternative words and phrases for vocabulary used in your essay,
-            helping you expand your lexical resource.
-          </p>
-          <p>
-            <strong>Topic Vocabulary:</strong> Provides relevant vocabulary related to your essay topic,
-            enhancing your ability to discuss similar subjects.
-          </p>
-        </div>
-      </div>
     </div>
   )
 }

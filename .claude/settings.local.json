@@ -1,24 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install)",
-      "Bash(npm install:*)",
-      "Bash(ls:*)",
-      "Bash(cat:*)",
-      "Bash(dir \"app\\(dashboard)\")",
-      "Bash(dir:*)",
-      "Bash(npx tsc:*)",
-      "Bash(npm run build:*)",
-      "Bash(npm run dev:*)",
-      "Bash(wc:*)",
-      "Bash(npx shadcn@latest add:*)",
-      "Bash(npx shadcn-ui:*)",
-      "Bash(npm run:*)",
-      "Bash(node:*)",
-      "Bash(lsof:*)",
-      "Bash(xargs kill:*)",
-      "Bash(rm:*)",
-      "Bash(npx next build:*)"
+      "Bash"
     ],
     "deny": [],
     "ask": []

@@ -271,6 +271,19 @@ export function VocabularyList({ essays }: VocabularyListProps) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Vocabulary Types Info - shown once at top */}
+      <div className="bg-gradient-to-br from-cyan-50 to-blue-50 border border-cyan-200 rounded-lg p-3 md:p-4 text-xs md:text-sm text-cyan-800 shadow-sm">
+        <div className="flex items-center gap-2 font-semibold mb-2 text-cyan-700">
+          <Lightbulb className="w-4 h-4" />
+          <span>Vocabulary Types:</span>
+        </div>
+        <ul className="space-y-1 md:space-y-2 ml-4 md:ml-6 list-disc text-cyan-900">
+          <li><strong>Paraphrase:</strong> Suggests better alternatives for low-level words in your essay</li>
+          <li><strong>Topic:</strong> Provides C1-C2 vocabulary specific to this essay&apos;s topic</li>
+        </ul>
+      </div>
+
       {filteredEssays.map((essay) => {
         const paraphraseKey = `${essay.id}-paraphrase`
         const topicKey = `${essay.id}-topic`
@@ -425,19 +438,6 @@ export function VocabularyList({ essays }: VocabularyListProps) {
                   </div>
                 )}
 
-                {/* Info Box */}
-                {!essay.hasParaphraseVocab || !essay.hasTopicVocab ? (
-                  <div className="bg-gradient-to-br from-cyan-50 to-blue-50 border border-cyan-200 rounded-lg p-3 md:p-4 text-xs md:text-sm text-cyan-800 shadow-sm">
-                    <div className="flex items-center gap-2 font-semibold mb-2 text-cyan-700">
-                      <Lightbulb className="w-4 h-4" />
-                      <span>Vocabulary Types:</span>
-                    </div>
-                    <ul className="space-y-1 md:space-y-2 ml-4 md:ml-6 list-disc text-cyan-900">
-                      <li><strong>Paraphrase:</strong> Suggests better alternatives for low-level words in your essay</li>
-                      <li><strong>Topic:</strong> Provides C1-C2 vocabulary specific to this essay's topic</li>
-                    </ul>
-                  </div>
-                ) : null}
               </div>
             </CardContent>
           </Card>

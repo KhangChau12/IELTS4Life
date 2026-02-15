@@ -323,7 +323,7 @@ export function EssayImprovement({
     <Card className="border-ocean-200 shadow-card animate-fadeInUp">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 bg-gradient-to-r from-ocean-800 to-cyan-700 bg-clip-text text-transparent">
+          <CardTitle className="flex items-center gap-2 text-ocean-800">
             <Sparkles className="h-5 w-5 text-cyan-600" />
             Improved Essay (Band 7-8+ Example)
           </CardTitle>

@@ -127,7 +127,7 @@ export function VocabGenerateButtons({
     return (
       <div className="space-y-4">
         {/* Main signup message */}
-        <div className="bg-gradient-to-br from-cyan-50 to-blue-50 border-2 border-cyan-200 rounded-lg p-6">
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
           <div className="flex items-start gap-3 mb-4">
             <GraduationCap className="h-6 w-6 text-cyan-600 mt-1 flex-shrink-0" />
             <div>
@@ -158,7 +158,7 @@ export function VocabGenerateButtons({
 
           {/* CTA Button */}
           <Link href="/login" className="block ml-9">
-            <Button className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white">
+            <Button className="bg-ocean-700 hover:bg-ocean-800 text-white">
               <GraduationCap className="h-4 w-4 mr-2" />
               Sign Up FREE - Get 3 Essays/Day
             </Button>
@@ -197,7 +197,7 @@ export function VocabGenerateButtons({
               onClick={generateParaphrase}
               disabled={isGeneratingParaphrase || isGeneratingTopic}
               size="sm"
-              className="bg-gradient-to-r from-cyan-600 to-ocean-600"
+              className="bg-ocean-700 hover:bg-ocean-800"
             >
               <Sparkles className="h-4 w-4 mr-2" />
               {isGeneratingParaphrase ? 'Generating...' : 'Generate'}
@@ -226,7 +226,7 @@ export function VocabGenerateButtons({
               onClick={generateTopic}
               disabled={isGeneratingParaphrase || isGeneratingTopic}
               size="sm"
-              className="bg-gradient-to-r from-cyan-600 to-ocean-600"
+              className="bg-ocean-700 hover:bg-ocean-800"
             >
               <Sparkles className="h-4 w-4 mr-2" />
               {isGeneratingTopic ? 'Generating...' : 'Generate'}

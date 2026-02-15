@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Progress } from '@/components/ui/progress'
-import { Loader2, CheckCircle, Clock, Crown, FileText, PenTool, Sparkles, Target, Zap, Award } from 'lucide-react'
+import { Loader2, CheckCircle, Clock, Crown, FileText, PenTool, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { QuotaDisplay } from '@/components/QuotaDisplay'
 import { createClient } from '@/lib/supabase/client'
@@ -163,72 +163,32 @@ export default function WritePage() {
   const hasReachedTarget = wordCount >= 250
 
   return (
-    <div className="relative min-h-screen">
-      {/* Background decorations */}
-      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-gradient-to-br from-cyan-400/20 to-blue-500/20 blur-3xl animate-pulse" />
-        <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-gradient-to-br from-sky-400/20 to-cyan-500/20 blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-
-        {/* Floating shapes */}
-        <div className="absolute top-20 left-1/4 h-4 w-4 rounded-full bg-cyan-400/30 animate-float" />
-        <div className="absolute top-1/3 right-1/4 h-3 w-3 rounded-full bg-blue-400/30 animate-float" style={{ animationDelay: '0.5s' }} />
-        <div className="absolute bottom-1/3 left-1/2 h-5 w-5 rounded-full bg-sky-400/30 animate-float" style={{ animationDelay: '1.5s' }} />
-      </div>
-
-      <div className="max-w-5xl mx-auto relative px-4">
+    <div className="min-h-screen">
+      <div className="max-w-5xl mx-auto px-4">
         {/* Guest Banner */}
         {isGuest && !showGuestLimit && <GuestBanner />}
 
-        {/* Hero Header Section */}
-        <div className="mb-6 md:mb-8 space-y-4 md:space-y-6">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/80 backdrop-blur-sm px-4 py-2 text-sm font-medium text-cyan-700 shadow-lg border border-cyan-100">
-            <Sparkles className="h-4 w-4 text-cyan-500" />
-            AI-Powered Essay Scoring
-          </div>
-
-          {/* Title and Quota */}
+        {/* Header Section */}
+        <div className="mb-6 space-y-2">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             <div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 mb-2 md:mb-3 leading-tight">
-                Write Your <span className="bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-600 bg-clip-text text-transparent">Essay</span>
+              <h1 className="text-2xl md:text-3xl font-bold text-ocean-800 mb-1">
+                Submit Your Essay
               </h1>
-              <p className="text-base md:text-xl text-slate-600">Submit your IELTS Task 2 essay for instant AI-powered scoring</p>
+              <p className="text-sm md:text-base text-slate-500">Enter your IELTS Task 2 prompt and response for AI scoring.</p>
             </div>
             {!isGuest && <QuotaDisplay />}
-          </div>
-
-          {/* Feature bullets */}
-          <div className="flex flex-wrap items-center gap-3 md:gap-6 text-slate-700">
-            <div className="flex items-center gap-2">
-              <CheckCircle className="h-4 md:h-5 w-4 md:w-5 text-cyan-600" />
-              <span className="text-xs md:text-sm font-medium">Instant detailed feedback</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Target className="h-4 md:h-5 w-4 md:w-5 text-cyan-600" />
-              <span className="text-xs md:text-sm font-medium">4 IELTS criteria analyzed</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Zap className="h-4 md:h-5 w-4 md:w-5 text-cyan-600" />
-              <span className="text-xs md:text-sm font-medium">Results in ~30 seconds</span>
-            </div>
           </div>
         </div>
 
         {/* Main Essay Card */}
-        <Card className="border-0 bg-gradient-to-br from-white to-sky-50/30 shadow-2xl hover:shadow-2xl transition-shadow duration-300">
-          <CardHeader className="bg-gradient-to-r from-sky-50 to-cyan-50 border-b border-cyan-100 p-4 md:p-6">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/50">
-                <FileText className="h-5 w-5 md:h-6 md:w-6 text-white" />
-              </div>
-              <div>
-                <CardTitle className="text-lg md:text-2xl text-slate-900">Essay Submission</CardTitle>
-                <CardDescription className="text-sm md:text-base">
-                  Enter your prompt and essay below for AI analysis
-                </CardDescription>
-              </div>
+        <Card className="border border-slate-200 shadow-sm">
+          <CardHeader className="border-b border-slate-100 p-4 md:p-6">
+            <div className="flex items-center gap-2">
+              <FileText className="h-5 w-5 text-ocean-600" />
+              <CardTitle className="text-lg text-ocean-800">Essay Submission</CardTitle>
             </div>
+            <CardDescription>Enter your prompt and essay below for AI scoring.</CardDescription>
           </CardHeader>
           <CardContent className="pt-6 md:pt-8 p-4 md:p-6">
             <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
@@ -245,12 +205,11 @@ export default function WritePage() {
                   placeholder="Enter the IELTS Task 2 question or prompt..."
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
-                  className="min-h-[120px] border-2 border-cyan-200 focus:border-cyan-500 focus:ring-cyan-500 resize-none bg-white/80 backdrop-blur-sm rounded-xl text-base"
+                  className="min-h-[120px] border-2 border-cyan-200 focus:border-cyan-500 focus:ring-cyan-500 resize-none bg-white rounded-lg text-base"
                   disabled={isSubmitting}
                 />
-                <p className="text-sm text-slate-600 flex items-center gap-2">
-                  <span className="text-cyan-600">💡</span>
-                  Paste the complete essay question you are responding to
+                <p className="text-sm text-slate-500">
+                  Paste the complete essay question you are responding to.
                 </p>
               </div>
 
@@ -267,7 +226,7 @@ export default function WritePage() {
                   placeholder="Write or paste your IELTS Task 2 essay here..."
                   value={essay}
                   onChange={(e) => setEssay(e.target.value)}
-                  className="min-h-[400px] border-2 border-cyan-200 focus:border-cyan-500 focus:ring-cyan-500 font-mono text-sm resize-none bg-white/80 backdrop-blur-sm rounded-xl"
+                  className="min-h-[400px] border-2 border-cyan-200 focus:border-cyan-500 focus:ring-cyan-500 font-mono text-sm resize-none bg-white rounded-lg"
                   disabled={isSubmitting}
                 />
                 <div className="flex justify-between items-center">
@@ -336,7 +295,7 @@ export default function WritePage() {
               )}
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row justify-end gap-3 md:gap-4 pt-4 md:pt-6 border-t border-cyan-100">
+              <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4 md:pt-6 border-t border-slate-100">
                 <Button
                   type="button"
                   variant="outline"
@@ -346,26 +305,24 @@ export default function WritePage() {
                     setError('')
                   }}
                   disabled={isSubmitting}
-                  className="border-2 border-cyan-200 text-slate-700 hover:bg-cyan-50 px-4 py-3 md:px-6 md:py-5 text-sm md:text-base rounded-xl"
+                  className="px-6"
                 >
                   Clear
                 </Button>
                 <Button
                   type="submit"
                   disabled={isSubmitting || !prompt.trim() || !essay.trim()}
-                  className="group relative overflow-hidden bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-500 bg-size-200 bg-pos-0 hover:bg-pos-100 text-white shadow-2xl hover:shadow-cyan-500/50 transition-all duration-500 px-6 py-3 md:px-10 md:py-5 text-sm md:text-base font-bold rounded-xl"
+                  className="bg-ocean-700 hover:bg-ocean-800 text-white px-8 font-semibold"
                 >
                   {isSubmitting ? (
                     <>
-                      <Loader2 className="mr-2 h-4 md:h-5 w-4 md:w-5 animate-spin" />
-                      <span className="hidden sm:inline">Analyzing Essay...</span>
-                      <span className="sm:hidden">Analyzing...</span>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Analyzing Essay...
                     </>
                   ) : (
                     <>
-                      <Sparkles className="mr-2 h-4 md:h-5 w-4 md:w-5 animate-pulse" />
+                      <Sparkles className="mr-2 h-4 w-4" />
                       Score My Essay
-                      <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">→</span>
                     </>
                   )}
                 </Button>
@@ -376,7 +333,7 @@ export default function WritePage() {
 
         {/* Loading Progress - Show below form */}
         {isSubmitting && (
-          <Card className="border-cyan-200 shadow-xl mt-6 bg-gradient-to-br from-white to-cyan-50/30">
+          <Card className="border-slate-200 shadow-sm mt-6">
             <CardContent className="pt-6">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -389,7 +346,7 @@ export default function WritePage() {
                       <p className="text-sm text-slate-600">AI is examining your writing...</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-slate-700 bg-white/60 px-3 py-1.5 rounded-full border border-cyan-200">
+                  <div className="flex items-center gap-2 text-sm text-slate-600">
                     <Clock className="h-4 w-4 text-cyan-600" />
                     <span className="font-mono font-medium">{Math.floor(elapsedTime / 60)}:{(elapsedTime % 60).toString().padStart(2, '0')}</span>
                   </div>
@@ -426,46 +383,9 @@ export default function WritePage() {
           </Card>
         )}
 
-        {/* Tips Card */}
-        <div className="mt-6 md:mt-8 p-4 md:p-6 bg-gradient-to-br from-white to-cyan-50 border-2 border-cyan-200 rounded-2xl shadow-lg">
-          <div className="flex items-center gap-3 mb-3 md:mb-4">
-            <div className="flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/50">
-              <Award className="h-4 w-4 md:h-5 md:w-5 text-white" />
-            </div>
-            <h3 className="font-bold text-slate-900 text-base md:text-lg">IELTS Scoring Criteria</h3>
-          </div>
-          <p className="text-xs md:text-sm text-slate-600 mb-3 md:mb-4">Your essay will be evaluated on four key criteria:</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-            <div className="flex items-start gap-3 p-3 bg-white/60 rounded-lg border border-cyan-100">
-              <span className="flex items-center justify-center h-8 w-8 rounded-lg bg-cyan-100 text-cyan-700 font-bold text-sm flex-shrink-0">1</span>
-              <div>
-                <p className="font-semibold text-slate-900 text-sm">Task Response</p>
-                <p className="text-xs text-slate-600">How well you address the prompt</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 p-3 bg-white/60 rounded-lg border border-cyan-100">
-              <span className="flex items-center justify-center h-8 w-8 rounded-lg bg-blue-100 text-blue-700 font-bold text-sm flex-shrink-0">2</span>
-              <div>
-                <p className="font-semibold text-slate-900 text-sm">Coherence & Cohesion</p>
-                <p className="text-xs text-slate-600">Organization and logical flow</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 p-3 bg-white/60 rounded-lg border border-cyan-100">
-              <span className="flex items-center justify-center h-8 w-8 rounded-lg bg-sky-100 text-sky-700 font-bold text-sm flex-shrink-0">3</span>
-              <div>
-                <p className="font-semibold text-slate-900 text-sm">Lexical Resource</p>
-                <p className="text-xs text-slate-600">Vocabulary range and accuracy</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 p-3 bg-white/60 rounded-lg border border-cyan-100">
-              <span className="flex items-center justify-center h-8 w-8 rounded-lg bg-teal-100 text-teal-700 font-bold text-sm flex-shrink-0">4</span>
-              <div>
-                <p className="font-semibold text-slate-900 text-sm">Grammatical Accuracy</p>
-                <p className="text-xs text-slate-600">Grammar and sentence structure</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <p className="mt-4 text-xs text-slate-400 text-center">
+          Essays are evaluated on Task Response, Coherence &amp; Cohesion, Lexical Resource, and Grammatical Accuracy.
+        </p>
 
         {/* Guest Limit Modal */}
         <GuestLimitModal

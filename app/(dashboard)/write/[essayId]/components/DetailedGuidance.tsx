@@ -193,7 +193,7 @@ export function DetailedGuidance({ essayId, hasImprovedEssay, initialGuidance }:
 
   return (
     <Card className="border-ocean-200 shadow-lg">
-      <CardHeader className="bg-gradient-to-r from-ocean-50 to-cyan-50 border-b border-ocean-200">
+      <CardHeader className="border-b border-ocean-200">
         <div className="flex items-center gap-2">
           <Lightbulb className="h-5 w-5 text-ocean-600" />
           <CardTitle className="text-ocean-800">Detailed Writing Guidance</CardTitle>
