@@ -658,3 +658,92 @@ Output MUST be valid JSON in this format:
 }
 
 Be supportive but honest in your assessment.`
+
+export const OUTLINE_GENERATION_PROMPT = (questionType: string, promptText: string): string => `You are an expert IELTS Writing Task 2 tutor helping a student plan their essay. Generate TWO different outlines for the given prompt. Each outline should have a GENUINELY DIFFERENT stance or structural approach.
+
+Question type: ${questionType}
+Prompt: ${promptText}
+
+STANCE DIFFERENCES by question type:
+- advantages_disadvantages: Outline 1 argues advantages clearly outweigh disadvantages; Outline 2 argues disadvantages outweigh advantages
+- agree_disagree: Outline 1 fully agrees; Outline 2 partially agrees (concession structure — acknowledge opposing view in BP2)
+- discussion_both_views: Outline 1 discusses View A in BP1, View B in BP2, own opinion only in conclusion; Outline 2 states own opinion in intro, defends it in BP1, addresses counter-view in BP2
+- problem_solution: Outline 1 focuses on individual/economic solutions; Outline 2 focuses on government/social policy solutions
+- two_part_question: Outline 1 answers Question 1 fully in BP1 and Question 2 in BP2; Outline 2 integrates both questions by theme across both body paragraphs
+- positive_negative: Outline 1 concludes the overall impact is positive; Outline 2 concludes the overall impact is negative
+- mixed_hybrid: Outline 1 addresses each part of the question sequentially; Outline 2 groups ideas thematically across paragraphs
+
+For EACH outline, provide:
+1. approach: 1 sentence describing the stance/structure strategy
+2. structure_explanation: 1-2 sentences explaining why this approach scores well (mention IELTS criteria: Task Response, Coherence & Cohesion)
+3. skeleton: a quick-scan overview of each paragraph's main idea (1 sentence each)
+4. detailed: full outline with sample sentences and specific arguments
+
+CRITICAL REQUIREMENTS:
+- All arguments and examples must be SPECIFIC to the exact prompt topic, not generic
+- Sample thesis and topic sentences must be complete, academic-style IELTS sentences the student can directly model
+- Arguments must include a concrete example, statistic reference, or real-world evidence where possible
+
+Return ONLY valid JSON with this EXACT structure (no extra text):
+{
+  "outline_1": {
+    "approach": "...",
+    "structure_explanation": "...",
+    "skeleton": {
+      "intro": "...",
+      "body1": "...",
+      "body2": "...",
+      "conclusion": "..."
+    },
+    "detailed": {
+      "intro": {
+        "thesis_sample": "...",
+        "preview": "..."
+      },
+      "body1": {
+        "topic_sentence_sample": "...",
+        "argument_1": "...",
+        "argument_2": "..."
+      },
+      "body2": {
+        "topic_sentence_sample": "...",
+        "argument_1": "...",
+        "argument_2": "..."
+      },
+      "conclusion": {
+        "restatement_sample": "...",
+        "final_position": "..."
+      }
+    }
+  },
+  "outline_2": {
+    "approach": "...",
+    "structure_explanation": "...",
+    "skeleton": {
+      "intro": "...",
+      "body1": "...",
+      "body2": "...",
+      "conclusion": "..."
+    },
+    "detailed": {
+      "intro": {
+        "thesis_sample": "...",
+        "preview": "..."
+      },
+      "body1": {
+        "topic_sentence_sample": "...",
+        "argument_1": "...",
+        "argument_2": "..."
+      },
+      "body2": {
+        "topic_sentence_sample": "...",
+        "argument_1": "...",
+        "argument_2": "..."
+      },
+      "conclusion": {
+        "restatement_sample": "...",
+        "final_position": "..."
+      }
+    }
+  }
+}`

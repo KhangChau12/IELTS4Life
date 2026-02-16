@@ -54,6 +54,7 @@ export interface Database {
           coherence_cohesion_errors: Json | null
           lexical_resource_errors: Json | null
           grammatical_accuracy_errors: Json | null
+          prompt_id: string | null
           created_at: string
         }
         Insert: {
@@ -61,6 +62,7 @@ export interface Database {
           user_id: string
           prompt: string
           essay_content: string
+          prompt_id?: string | null
           overall_score?: number | null
           task_response_score?: number | null
           coherence_cohesion_score?: number | null
@@ -94,6 +96,7 @@ export interface Database {
           coherence_cohesion_errors?: Json | null
           lexical_resource_errors?: Json | null
           grammatical_accuracy_errors?: Json | null
+          prompt_id?: string | null
           created_at?: string
         }
       }
@@ -272,6 +275,55 @@ export interface Database {
           created_by?: string
           created_at?: string
           updated_at?: string
+        }
+      }
+      writing_prompt_outlines: {
+        Row: {
+          id: string
+          prompt_id: string
+          outline_1: string
+          outline_2: string
+          generated_at: string
+        }
+        Insert: {
+          id?: string
+          prompt_id: string
+          outline_1: string
+          outline_2: string
+          generated_at?: string
+        }
+        Update: {
+          id?: string
+          prompt_id?: string
+          outline_1?: string
+          outline_2?: string
+          generated_at?: string
+        }
+      }
+      essay_drafts: {
+        Row: {
+          id: string
+          user_id: string
+          prompt_id: string
+          draft_content: string
+          timer_seconds: number
+          last_saved_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          prompt_id: string
+          draft_content?: string
+          timer_seconds?: number
+          last_saved_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          prompt_id?: string
+          draft_content?: string
+          timer_seconds?: number
+          last_saved_at?: string
         }
       }
     }

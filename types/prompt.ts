@@ -30,3 +30,29 @@ export interface WritingPromptWithTopic extends WritingPrompt {
   prompt_topics: PromptTopic
   profiles: { email: string }
 }
+
+export interface PromptOutlines {
+  id: string
+  prompt_id: string
+  outline_1: string
+  outline_2: string
+  generated_at: string
+}
+
+export interface EssayDraft {
+  id: string
+  user_id: string
+  prompt_id: string
+  draft_content: string
+  timer_seconds: number
+  last_saved_at: string
+}
+
+export interface PromptWithUserEssay extends WritingPrompt {
+  prompt_topics: Pick<PromptTopic, 'id' | 'name'>
+  user_essay?: {
+    id: string
+    overall_score: number | null
+    created_at: string
+  } | null
+}

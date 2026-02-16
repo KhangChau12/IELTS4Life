@@ -50,6 +50,7 @@ export const MODELS = {
   ESSAY_SCORING: 'llama-3.3-70b-versatile',
   ESSAY_IMPROVEMENT: 'llama-3.3-70b-versatile',
   ERROR_SUMMARY: 'llama-3.3-70b-versatile',
+  OUTLINE_GENERATION: 'llama-3.3-70b-versatile',
 
   // Use OpenAI GPT-4o for vocabulary (best quality, with caching)
   VOCABULARY: 'gpt-4o',

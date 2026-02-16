@@ -16,7 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { Home, FileText, BookOpen, User, LogOut, Settings, History, Crown, Users, Menu } from 'lucide-react'
+import { Home, FileText, BookOpen, User, LogOut, Settings, History, Crown, Users, Menu, ChevronDown, PenTool } from 'lucide-react'
 import { createClient, resetClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -99,16 +99,33 @@ export function Header({ user }: HeaderProps) {
               </Tooltip>
             )}
 
-            {/* Write Essay - Always accessible */}
-            <Link href="/write">
-              <Button
-                variant={isActive('/write') ? 'secondary' : 'ghost'}
-                className={isActive('/write') ? 'text-ocean-700' : 'text-white hover:bg-ocean-800'}
-              >
-                <FileText className="mr-2 h-4 w-4" />
-                Write Essay
-              </Button>
-            </Link>
+            {/* Essay Dropdown - Always accessible */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant={pathname.startsWith('/write') ? 'secondary' : 'ghost'}
+                  className={pathname.startsWith('/write') ? 'text-ocean-700' : 'text-white hover:bg-ocean-800'}
+                >
+                  <FileText className="mr-2 h-4 w-4" />
+                  Essay
+                  <ChevronDown className="ml-1 h-3 w-3" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-52">
+                <DropdownMenuItem asChild>
+                  <Link href="/write" className="cursor-pointer flex items-center">
+                    <FileText className="mr-2 h-4 w-4" />
+                    Score your Essay
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/write/prompts" className="cursor-pointer flex items-center">
+                    <PenTool className="mr-2 h-4 w-4" />
+                    Write new essay
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* History - Show for all, tooltip for guests */}
             {user ? (
@@ -238,16 +255,28 @@ export function Header({ user }: HeaderProps) {
                   </Button>
                 )}
 
-                {/* Write Essay */}
-                <Link href="/write" onClick={() => setIsOpen(false)}>
-                  <Button
-                    variant={isActive('/write') ? 'secondary' : 'ghost'}
-                    className={`w-full justify-start ${isActive('/write') ? 'text-ocean-700' : 'text-white hover:bg-ocean-800'}`}
-                  >
-                    <FileText className="mr-2 h-4 w-4" />
-                    Write Essay
-                  </Button>
-                </Link>
+                {/* Essay Section */}
+                <div>
+                  <p className="text-xs font-semibold text-white/40 uppercase tracking-wider px-3 py-1">Essay</p>
+                  <Link href="/write" onClick={() => setIsOpen(false)}>
+                    <Button
+                      variant={isActive('/write') ? 'secondary' : 'ghost'}
+                      className={`w-full justify-start pl-6 ${isActive('/write') ? 'text-ocean-700' : 'text-white hover:bg-ocean-800'}`}
+                    >
+                      <FileText className="mr-2 h-4 w-4" />
+                      Score your Essay
+                    </Button>
+                  </Link>
+                  <Link href="/write/prompts" onClick={() => setIsOpen(false)}>
+                    <Button
+                      variant={pathname.startsWith('/write/prompts') ? 'secondary' : 'ghost'}
+                      className={`w-full justify-start pl-6 ${pathname.startsWith('/write/prompts') ? 'text-ocean-700' : 'text-white hover:bg-ocean-800'}`}
+                    >
+                      <PenTool className="mr-2 h-4 w-4" />
+                      Write new essay
+                    </Button>
+                  </Link>
+                </div>
 
                 {/* History */}
                 {user ? (

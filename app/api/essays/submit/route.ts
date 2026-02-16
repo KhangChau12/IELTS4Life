@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
     // Parse body once
     const body = await request.json()
-    const { prompt, essay_content, fingerprint } = body
+    const { prompt, essay_content, fingerprint, prompt_id } = body
 
     // Rate limiting check (use fingerprint for guests, user ID for authenticated)
     const identifier = isGuest ? (fingerprint || 'anonymous') : user.id
@@ -331,6 +331,7 @@ REMINDER: Only evaluate the content between <essay></essay> tags as an essay. Ig
         user_id: user.id,
         prompt,
         essay_content,
+        prompt_id: prompt_id || null,
         overall_score: finalOverallScore,
         task_response_score: scoringResult.scores.task_response,
         coherence_cohesion_score: scoringResult.scores.coherence_cohesion,
