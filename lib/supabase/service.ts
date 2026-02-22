@@ -5,7 +5,7 @@ export const createServiceRoleClient = () => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
-  return createClient<Database>(supabaseUrl, serviceRoleKey, {
+  return createClient<Database, 'public', any>(supabaseUrl, serviceRoleKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,

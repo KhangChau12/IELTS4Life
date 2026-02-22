@@ -15,6 +15,12 @@ export interface Database {
           email: string
           full_name: string | null
           role: 'student' | 'admin'
+          daily_essays_count: number
+          last_reset_date: string
+          total_essays_count: number
+          invite_code: string | null
+          invited_by: string | null
+          invite_bonus_essays: number
           created_at: string
           updated_at: string
         }
@@ -23,6 +29,12 @@ export interface Database {
           email: string
           full_name?: string | null
           role?: 'student' | 'admin'
+          daily_essays_count?: number
+          last_reset_date?: string
+          total_essays_count?: number
+          invite_code?: string | null
+          invited_by?: string | null
+          invite_bonus_essays?: number
           created_at?: string
           updated_at?: string
         }
@@ -31,6 +43,12 @@ export interface Database {
           email?: string
           full_name?: string | null
           role?: 'student' | 'admin'
+          daily_essays_count?: number
+          last_reset_date?: string
+          total_essays_count?: number
+          invite_code?: string | null
+          invited_by?: string | null
+          invite_bonus_essays?: number
           created_at?: string
           updated_at?: string
         }
@@ -298,6 +316,67 @@ export interface Database {
           outline_1?: string
           outline_2?: string
           generated_at?: string
+        }
+      }
+      vocabulary_views: {
+        Row: {
+          id: string
+          user_id: string
+          essay_id: string
+          vocab_type: 'paraphrase' | 'topic'
+          viewed_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          essay_id: string
+          vocab_type: 'paraphrase' | 'topic'
+          viewed_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          essay_id?: string
+          vocab_type?: 'paraphrase' | 'topic'
+          viewed_at?: string
+        }
+      }
+      vocabulary_quiz_attempts: {
+        Row: {
+          id: string
+          user_id: string
+          essay_id: string
+          vocab_type: 'paraphrase' | 'topic'
+          score: number
+          total_questions: number
+          correct_answers: string[] | null
+          incorrect_answers: string[] | null
+          quiz_type: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          essay_id: string
+          vocab_type: 'paraphrase' | 'topic'
+          score: number
+          total_questions?: number
+          correct_answers?: string[] | null
+          incorrect_answers?: string[] | null
+          quiz_type?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          essay_id?: string
+          vocab_type?: 'paraphrase' | 'topic'
+          score?: number
+          total_questions?: number
+          correct_answers?: string[] | null
+          incorrect_answers?: string[] | null
+          quiz_type?: string | null
+          created_at?: string
         }
       }
       essay_drafts: {

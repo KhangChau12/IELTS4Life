@@ -1,7 +1,7 @@
 export const QUESTION_TYPES = {
   agree_disagree: 'Agree / Disagree',
   advantages_disadvantages: 'Advantages & Disadvantages',
-  problem_solution: 'Problem & Solution',
+  problem_solution: 'Cause & Solution',
   two_part_question: 'Two-part Question',
   positive_negative: 'Positive & Negative',
   discussion_both_views: 'Discussion (Both Views)',

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Users, FileText, Zap, RefreshCw, BookOpen, Award, Brain, UserPlus, TrendingUp as TrendingUpIcon, Target } from 'lucide-react'
+import { Users, FileText, Zap, RefreshCw, BookOpen, Award, Brain, UserPlus, TrendingUp as TrendingUpIcon, Target, PenTool } from 'lucide-react'
 import { EnhancedUsersTable } from './EnhancedUsersTable'
 import {
   LineChart,
@@ -68,6 +68,11 @@ interface AdminStats {
   totalInvitedUsers: number
   uniqueReferrers: number
   inviteConversionRate: number
+  // Prompt stats
+  totalPrompts: number
+  promptsWithOutlines: number
+  essaysFromPrompts: number
+  essaysFromExternal: number
 }
 
 interface AdminDashboardClientProps {
@@ -138,9 +143,20 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
     { name: 'Paid Pro', value: stats.paidProUsers, color: COLORS.secondary },
   ]
 
-  // User growth over time
-  const userGrowthData = stats.usersOverTime.slice(-14).map(item => ({
-    date: format(new Date(item.date), 'MMM dd'),
+  // User growth over time — detect bucket size for formatting
+  const userGrowthSpanDays = stats.usersOverTime.length > 1
+    ? Math.ceil((new Date(stats.usersOverTime[stats.usersOverTime.length - 1].date).getTime() - new Date(stats.usersOverTime[0].date).getTime()) / (1000 * 60 * 60 * 24))
+    : 0
+  const userGrowthBucket = userGrowthSpanDays <= 60 ? 'day' : userGrowthSpanDays <= 365 ? 'week' : 'month'
+  const userGrowthDateFormat = userGrowthBucket === 'month' ? 'MMM yyyy' : 'MMM dd'
+  const userGrowthLabel = userGrowthBucket === 'day'
+    ? `Last ${stats.usersOverTime.length} days`
+    : userGrowthBucket === 'week'
+      ? `${Math.ceil(stats.usersOverTime.length)} weeks`
+      : `${stats.usersOverTime.length} months`
+
+  const userGrowthData = stats.usersOverTime.map(item => ({
+    date: format(new Date(item.date), userGrowthDateFormat),
     users: item.count
   }))
 
@@ -188,7 +204,7 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
       </div>
 
       {/* KPI Summary Cards - Top Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Total Users */}
         <Card className="border-l-4 border-l-cyan-500 hover:shadow-lg transition-shadow">
           <CardHeader className="pb-3">
@@ -198,9 +214,11 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-cyan-700">{formatNumber(stats.totalUsers)}</div>
-            <p className="text-xs text-slate-500 mt-1">
+            <div className="text-4xl font-bold text-cyan-700">{formatNumber(stats.totalUsers)}</div>
+            <p className="text-sm text-slate-500 mt-2">
               <span className="text-teal-600 font-semibold">{stats.totalInvitedUsers}</span> via referrals
+              <span className="mx-2 text-slate-300">|</span>
+              <span className="text-cyan-600 font-semibold">{stats.ptnkUsers}</span> PTNK students
             </p>
           </CardContent>
         </Card>
@@ -214,41 +232,11 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-teal-700">{formatNumber(stats.totalEssays)}</div>
-            <p className="text-xs text-slate-500 mt-1">
+            <div className="text-4xl font-bold text-teal-700">{formatNumber(stats.totalEssays)}</div>
+            <p className="text-sm text-slate-500 mt-2">
               Avg score: <span className="text-teal-600 font-semibold">{stats.avgOverallScore.toFixed(1)}</span>
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Vocabulary Words */}
-        <Card className="border-l-4 border-l-cyan-600 hover:shadow-lg transition-shadow">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-slate-600">Vocabulary</CardTitle>
-              <BookOpen className="h-5 w-5 text-cyan-700" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-cyan-800">{formatNumber(stats.totalVocabulary)}</div>
-            <p className="text-xs text-slate-500 mt-1">
-              <span className="text-cyan-700 font-semibold">{formatNumber(stats.totalQuizAttempts)}</span> quiz attempts
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Quiz Performance */}
-        <Card className="border-l-4 border-l-teal-600 hover:shadow-lg transition-shadow">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-slate-600">Quiz Score</CardTitle>
-              <Award className="h-5 w-5 text-teal-700" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-teal-800">{stats.avgQuizScore}%</div>
-            <p className="text-xs text-slate-500 mt-1">
-              <span className="text-teal-700 font-semibold">{formatNumber(stats.totalCorrectAnswers)}</span> / {formatNumber(stats.totalQuestions)} correct
+              <span className="mx-2 text-slate-300">|</span>
+              <span className="text-teal-700 font-semibold">{formatNumber(stats.essaysFromPrompts)}</span> from prompts
             </p>
           </CardContent>
         </Card>
@@ -404,7 +392,7 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
         <Card className="hover:shadow-lg transition-shadow">
           <CardHeader>
             <CardTitle className="text-lg text-slate-800">User Growth</CardTitle>
-            <CardDescription>Total registered users (Last 14 days)</CardDescription>
+            <CardDescription>Total registered users ({userGrowthLabel})</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={320}>
@@ -446,8 +434,88 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
         </Card>
       </div>
 
-      {/* Secondary Metrics - 3 Column */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Secondary Metrics - 5 cards in responsive grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Vocabulary & Quiz Stats */}
+        <Card className="hover:shadow-lg transition-shadow">
+          <CardHeader className="pb-3">
+            <div className="flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-cyan-700" />
+              <CardTitle className="text-sm font-medium text-slate-700">Vocabulary & Quiz</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-slate-600">Total Words</span>
+              <span className="text-lg font-bold text-cyan-800">{formatNumber(stats.totalVocabulary)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-slate-600">Quiz Attempts</span>
+              <span className="text-lg font-bold text-cyan-700">{formatNumber(stats.totalQuizAttempts)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-slate-600">Avg Quiz Score</span>
+              <span className="text-lg font-bold text-teal-700">{stats.avgQuizScore}%</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-slate-600">Correct Answers</span>
+              <span className="text-lg font-bold text-teal-800">{formatNumber(stats.totalCorrectAnswers)} / {formatNumber(stats.totalQuestions)}</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Quiz Breakdown */}
+        <Card className="hover:shadow-lg transition-shadow">
+          <CardHeader className="pb-3">
+            <div className="flex items-center gap-2">
+              <Brain className="h-5 w-5 text-cyan-600" />
+              <CardTitle className="text-sm font-medium text-slate-700">Quiz Breakdown</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-slate-600">Paraphrase Score</span>
+              <span className="text-lg font-bold text-cyan-700">{stats.avgParaphraseScore}%</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-slate-600">Topic Score</span>
+              <span className="text-lg font-bold text-teal-700">{stats.avgTopicScore}%</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-slate-600">Overall Avg</span>
+              <span className="text-lg font-bold text-cyan-800">{stats.avgQuizScore}%</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Prompt Stats */}
+        <Card className="hover:shadow-lg transition-shadow">
+          <CardHeader className="pb-3">
+            <div className="flex items-center gap-2">
+              <PenTool className="h-5 w-5 text-teal-600" />
+              <CardTitle className="text-sm font-medium text-slate-700">Writing Prompts</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-slate-600">Total Prompts</span>
+              <span className="text-lg font-bold text-teal-700">{formatNumber(stats.totalPrompts)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-slate-600">With Outlines</span>
+              <span className="text-lg font-bold text-cyan-700">{formatNumber(stats.promptsWithOutlines)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-slate-600">Essays (Prompt)</span>
+              <span className="text-lg font-bold text-teal-800">{formatNumber(stats.essaysFromPrompts)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-slate-600">Essays (External)</span>
+              <span className="text-lg font-bold text-slate-600">{formatNumber(stats.essaysFromExternal)}</span>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Referral Stats */}
         <Card className="hover:shadow-lg transition-shadow">
           <CardHeader className="pb-3">
@@ -492,30 +560,6 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
             <div className="flex justify-between items-center">
               <span className="text-sm text-slate-600">Total</span>
               <span className="text-lg font-bold text-cyan-800">{formatNumber(stats.totalInputTokens + stats.totalOutputTokens)}</span>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Quiz Breakdown */}
-        <Card className="hover:shadow-lg transition-shadow">
-          <CardHeader className="pb-3">
-            <div className="flex items-center gap-2">
-              <Brain className="h-5 w-5 text-cyan-600" />
-              <CardTitle className="text-sm font-medium text-slate-700">Quiz Breakdown</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-slate-600">Paraphrase Score</span>
-              <span className="text-lg font-bold text-cyan-700">{stats.avgParaphraseScore}%</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-slate-600">Topic Score</span>
-              <span className="text-lg font-bold text-teal-700">{stats.avgTopicScore}%</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-slate-600">Overall Avg</span>
-              <span className="text-lg font-bold text-cyan-800">{stats.avgQuizScore}%</span>
             </div>
           </CardContent>
         </Card>

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase/server'
+import { createServiceRoleClient } from '@/lib/supabase/service'
 
 // Force dynamic rendering for this route
 export const dynamic = 'force-dynamic'
@@ -28,47 +29,43 @@ export async function GET() {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
+    // Use service role client for data queries to bypass RLS
+    const serviceClient = createServiceRoleClient()
+
     // Calculate date range for 14 days ago
     const fourteenDaysAgo = new Date()
     fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14)
     fourteenDaysAgo.setHours(0, 0, 0, 0)
     const fourteenDaysAgoISO = fourteenDaysAgo.toISOString()
 
-    // Fetch statistics
-    const [
-      { count: totalUsers },
-      { count: totalEssays },
-      { data: tokenUsage },
-      { data: allEssaysForScoring },
-      { data: essaysLast14Days },
-      { data: allUsersWithEssays },
-      { data: allUsers },
-      { count: totalVocabulary },
-      { data: quizAttempts },
-      { data: inviteStats },
-    ] = await Promise.all([
-      supabase.from('profiles').select('*', { count: 'exact', head: true }),
-      supabase.from('essays').select('*', { count: 'exact', head: true }),
-      supabase.from('token_usage').select('*'),
-      // Get all essays for score distribution and average
-      supabase.from('essays').select('overall_score').order('created_at', { ascending: false }),
-      // Get essays from last 14 days for chart
-      supabase.from('essays').select('created_at').gte('created_at', fourteenDaysAgoISO).order('created_at', { ascending: true }),
-      // Get ALL users with essay counts
-      supabase.from('profiles').select(`
-        id,
-        email,
-        created_at,
-        role,
-        essays:essays(count)
-      `).order('created_at', { ascending: false }),
-      // Get all users for growth chart and counts
-      supabase.from('profiles').select('id, email, created_at').order('created_at', { ascending: true }),
-      supabase.from('vocabulary').select('*', { count: 'exact', head: true }),
-      supabase.from('vocabulary_quiz_attempts').select('score, total_questions, vocab_type, created_at'),
-      // Get invite/referral stats
-      supabase.from('profiles').select('invited_by'),
+    // Fetch statistics - individual queries to maintain type safety
+    const countQueries = await Promise.all([
+      serviceClient.from('profiles').select('*', { count: 'exact', head: true }),
+      serviceClient.from('essays').select('*', { count: 'exact', head: true }),
+      serviceClient.from('vocabulary').select('*', { count: 'exact', head: true }),
+      serviceClient.from('writing_prompts').select('*', { count: 'exact', head: true }),
+      serviceClient.from('writing_prompt_outlines').select('*', { count: 'exact', head: true }),
     ])
+    const totalUsers = countQueries[0].count
+    const totalEssays = countQueries[1].count
+    const totalVocabulary = countQueries[2].count
+    const totalPrompts = countQueries[3].count
+    const promptsWithOutlines = countQueries[4].count
+
+    const { data: tokenUsage } = await serviceClient.from('token_usage').select('*')
+    const { data: allEssaysForScoring } = await serviceClient.from('essays').select('overall_score').order('created_at', { ascending: false })
+    const { data: essaysLast14Days } = await serviceClient.from('essays').select('created_at').gte('created_at', fourteenDaysAgoISO).order('created_at', { ascending: true })
+    const { data: allUsersWithEssays } = await serviceClient.from('profiles').select(`
+      id,
+      email,
+      created_at,
+      role,
+      essays:essays(count)
+    `).order('created_at', { ascending: false })
+    const { data: allUsers } = await serviceClient.from('profiles').select('id, email, created_at').order('created_at', { ascending: true })
+    const { data: quizAttempts } = await serviceClient.from('vocabulary_quiz_attempts').select('score, total_questions, vocab_type, created_at')
+    const { data: inviteStats } = await serviceClient.from('profiles').select('invited_by')
+    const { data: essaysWithPromptId } = await serviceClient.from('essays').select('prompt_id').not('prompt_id', 'is', null)
 
     // Calculate token statistics
     const totalInputTokens = tokenUsage?.reduce((sum, t) => sum + (t.input_tokens || 0), 0) || 0
@@ -138,24 +135,79 @@ export async function GET() {
       essay_count: Array.isArray(user.essays) ? user.essays[0]?.count || 0 : 0
     })) || []
 
-    // User growth over last 14 days (CUMULATIVE - total users up to each day)
+    // User growth - full history with smart bucketing
     const today = new Date()
+    today.setHours(23, 59, 59, 999)
     const userGrowthData: Array<{ date: string; count: number }> = []
 
-    // Generate 14 days range
-    for (let i = 13; i >= 0; i--) {
-      const date = new Date(today)
-      date.setDate(date.getDate() - i)
-      date.setHours(23, 59, 59, 999) // End of day
-      const dateKey = date.toISOString().split('T')[0]
+    if (allUsers && allUsers.length > 0) {
+      const firstUserDate = new Date(allUsers[0].created_at)
+      firstUserDate.setHours(0, 0, 0, 0)
+      const totalDays = Math.ceil((today.getTime() - firstUserDate.getTime()) / (1000 * 60 * 60 * 24))
 
-      // Count all users created up to this date (cumulative)
-      const count = allUsers?.filter(user => {
-        const userDate = new Date(user.created_at)
-        return userDate <= date
-      }).length || 0
+      // Smart bucketing: day if <=60, week if <=365, month otherwise
+      type BucketMode = 'day' | 'week' | 'month'
+      const bucketMode: BucketMode = totalDays <= 60 ? 'day' : totalDays <= 365 ? 'week' : 'month'
 
-      userGrowthData.push({ date: dateKey, count })
+      const getBucketKey = (d: Date): string => {
+        if (bucketMode === 'day') return d.toISOString().split('T')[0]
+        if (bucketMode === 'week') {
+          // Start of week (Monday)
+          const day = d.getDay()
+          const diff = d.getDate() - day + (day === 0 ? -6 : 1)
+          const monday = new Date(d)
+          monday.setDate(diff)
+          return monday.toISOString().split('T')[0]
+        }
+        // month
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`
+      }
+
+      // Build cumulative count per bucket - O(n) walk through sorted users
+      const bucketCounts = new Map<string, number>()
+      let runningCount = 0
+      let userIdx = 0
+
+      // Generate all bucket keys from start to today
+      const bucketKeys: string[] = []
+      const cursor = new Date(firstUserDate)
+      while (cursor <= today) {
+        const key = getBucketKey(cursor)
+        if (!bucketKeys.length || bucketKeys[bucketKeys.length - 1] !== key) {
+          bucketKeys.push(key)
+        }
+        if (bucketMode === 'day') cursor.setDate(cursor.getDate() + 1)
+        else if (bucketMode === 'week') cursor.setDate(cursor.getDate() + 7)
+        else cursor.setMonth(cursor.getMonth() + 1)
+      }
+      // Ensure today's bucket is included
+      const todayKey = getBucketKey(today)
+      if (!bucketKeys.includes(todayKey)) bucketKeys.push(todayKey)
+
+      for (const key of bucketKeys) {
+        // Parse bucket end date
+        const bucketDate = new Date(key)
+        if (bucketMode === 'day') bucketDate.setHours(23, 59, 59, 999)
+        else if (bucketMode === 'week') {
+          bucketDate.setDate(bucketDate.getDate() + 6)
+          bucketDate.setHours(23, 59, 59, 999)
+        } else {
+          bucketDate.setMonth(bucketDate.getMonth() + 1)
+          bucketDate.setDate(0) // last day of month
+          bucketDate.setHours(23, 59, 59, 999)
+        }
+
+        // Count users up to this bucket's end
+        while (userIdx < allUsers.length && new Date(allUsers[userIdx].created_at) <= bucketDate) {
+          runningCount++
+          userIdx++
+        }
+        bucketCounts.set(key, runningCount)
+      }
+
+      for (const key of bucketKeys) {
+        userGrowthData.push({ date: key, count: bucketCounts.get(key) || 0 })
+      }
     }
 
     // Essays over time - last 14 days (CUMULATIVE)
@@ -167,7 +219,6 @@ export async function GET() {
       date.setHours(23, 59, 59, 999)
       const dateKey = date.toISOString().split('T')[0]
 
-      // Count all essays created up to this date (cumulative)
       const count = essaysLast14Days?.filter(essay => {
         const essayDate = new Date(essay.created_at)
         return essayDate <= date
@@ -175,6 +226,10 @@ export async function GET() {
 
       essaysGrowthData.push({ date: dateKey, count })
     }
+
+    // Prompt statistics
+    const essaysFromPrompts = essaysWithPromptId?.length || 0
+    const essaysFromExternal = (totalEssays || 0) - essaysFromPrompts
 
     return NextResponse.json({
       totalUsers: totalUsers || 0,
@@ -201,6 +256,11 @@ export async function GET() {
       totalInvitedUsers,
       uniqueReferrers,
       inviteConversionRate: Math.round(inviteConversionRate * 10) / 10,
+      // Prompt stats
+      totalPrompts: totalPrompts || 0,
+      promptsWithOutlines: promptsWithOutlines || 0,
+      essaysFromPrompts,
+      essaysFromExternal,
     })
   } catch (error) {
     console.error('Error fetching admin stats:', error)

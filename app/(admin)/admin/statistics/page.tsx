@@ -1,6 +1,9 @@
 import Link from 'next/link'
+import { headers } from 'next/headers'
 import { ArrowLeft } from 'lucide-react'
 import { AdminDashboardClient } from '../components/AdminDashboardClient'
+
+export const dynamic = 'force-dynamic'
 
 interface AdminStats {
   totalUsers: number
@@ -43,24 +46,24 @@ interface AdminStats {
   totalInvitedUsers: number
   uniqueReferrers: number
   inviteConversionRate: number
+  totalPrompts: number
+  promptsWithOutlines: number
+  essaysFromPrompts: number
+  essaysFromExternal: number
 }
 
 async function getAdminStats(): Promise<AdminStats> {
   try {
-    let baseUrl: string
+    const headersList = await headers()
+    const host = headersList.get('host') || 'localhost:3000'
+    const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https'
+    const cookie = headersList.get('cookie') || ''
 
-    if (process.env.VERCEL_URL) {
-      baseUrl = `https://${process.env.VERCEL_URL}`
-    } else if (process.env.NODE_ENV === 'development') {
-      baseUrl = 'http://localhost:3001'
-    } else {
-      baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ielts4life.com'
-    }
-
-    const response = await fetch(`${baseUrl}/api/admin/stats`, {
+    const response = await fetch(`${protocol}://${host}/api/admin/stats`, {
       cache: 'no-store',
       headers: {
         'Content-Type': 'application/json',
+        cookie,
       },
     })
 
@@ -94,6 +97,10 @@ async function getAdminStats(): Promise<AdminStats> {
       totalInvitedUsers: 0,
       uniqueReferrers: 0,
       inviteConversionRate: 0,
+      totalPrompts: 0,
+      promptsWithOutlines: 0,
+      essaysFromPrompts: 0,
+      essaysFromExternal: 0,
     }
   }
 }

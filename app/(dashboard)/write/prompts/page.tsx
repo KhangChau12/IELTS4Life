@@ -61,7 +61,7 @@ export default async function PromptsPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-ocean-900 mb-2">Write New Essay</h1>
         <p className="text-gray-600">
-          Choose a prompt from our library, get AI outline suggestions, and practice with a built-in timer.
+          Pick a prompt and start practicing — we recommend trying one per day for the best results.
         </p>
         {!user && (
           <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 text-sm">
