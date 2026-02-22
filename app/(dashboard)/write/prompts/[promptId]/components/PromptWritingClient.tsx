@@ -9,12 +9,14 @@ interface PromptWritingClientProps {
   prompt: WritingPrompt & { prompt_topics?: { id: string; name: string } }
   initialOutlines: PromptOutlines | null
   initialDraft: EssayDraft | null
+  isGuest: boolean
 }
 
 export default function PromptWritingClient({
   prompt,
   initialOutlines,
   initialDraft,
+  isGuest,
 }: PromptWritingClientProps) {
   const router = useRouter()
 
@@ -26,7 +28,7 @@ export default function PromptWritingClient({
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
       {/* Left: Prompt + Outlines */}
       <div className="lg:overflow-y-auto">
-        <OutlinesPanel prompt={prompt} initialOutlines={initialOutlines} />
+        <OutlinesPanel prompt={prompt} initialOutlines={initialOutlines} isGuest={isGuest} />
       </div>
 
       {/* Right: Timer + Writing */}
@@ -36,6 +38,7 @@ export default function PromptWritingClient({
           promptText={prompt.prompt_text}
           initialDraft={initialDraft}
           onSubmitSuccess={handleSubmitSuccess}
+          isGuest={isGuest}
         />
       </div>
     </div>

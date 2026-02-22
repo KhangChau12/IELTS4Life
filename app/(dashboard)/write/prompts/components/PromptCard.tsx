@@ -83,9 +83,9 @@ export default function PromptCard({ prompt, isAuthenticated }: PromptCardProps)
             </Button>
           ) : (
             <Button asChild size="sm" className="bg-ocean-600 hover:bg-ocean-700 text-white">
-              <Link href={`/login?redirect=/write/prompts/${prompt.id}`}>
+              <Link href={`/write/prompts/${prompt.id}`}>
                 <PenTool className="h-4 w-4 mr-1" />
-                Sign in to Write
+                Try Writing
               </Link>
             </Button>
           )}

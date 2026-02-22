@@ -13,6 +13,7 @@ import type { PromptOutlines, WritingPrompt } from '@/types/prompt'
 interface OutlinesPanelProps {
   prompt: WritingPrompt & { prompt_topics?: { id: string; name: string } }
   initialOutlines: PromptOutlines | null
+  isGuest: boolean
 }
 
 interface RichOutline {
@@ -155,7 +156,7 @@ function renderPlainText(text: string) {
   })
 }
 
-export default function OutlinesPanel({ prompt, initialOutlines }: OutlinesPanelProps) {
+export default function OutlinesPanel({ prompt, initialOutlines, isGuest }: OutlinesPanelProps) {
   const [outlines, setOutlines] = useState<PromptOutlines | null>(initialOutlines)
   const [isGenerating, setIsGenerating] = useState(false)
   const [error, setError] = useState('')
@@ -206,7 +207,24 @@ export default function OutlinesPanel({ prompt, initialOutlines }: OutlinesPanel
       </Card>
 
       {/* Outlines */}
-      <Card className="border-ocean-100 flex-1">
+      <div className="relative flex-1">
+        {isGuest && (
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-lg bg-white/80 backdrop-blur-sm border border-ocean-100 p-6 text-center gap-4">
+            <div className="flex flex-col items-center gap-2">
+              <div className="text-3xl">🔒</div>
+              <p className="text-sm text-gray-700 leading-relaxed max-w-xs">
+                Sign in to view free AI outline suggestions to develop your ideas and get your essay scored.
+              </p>
+            </div>
+            <a
+              href={`/login?redirect=/write/prompts/${prompt.id}`}
+              className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-ocean-600 hover:bg-ocean-700 text-white h-9 px-4 py-2 transition-colors"
+            >
+              Sign In
+            </a>
+          </div>
+        )}
+        <Card className={`border-ocean-100 h-full ${isGuest ? 'pointer-events-none select-none blur-sm' : ''}`}>
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base text-ocean-900 flex items-center gap-2">
@@ -275,7 +293,8 @@ export default function OutlinesPanel({ prompt, initialOutlines }: OutlinesPanel
             </Tabs>
           )}
         </CardContent>
-      </Card>
+        </Card>
+      </div>
     </div>
   )
 }

@@ -8,6 +8,8 @@ import { Play, Square, Send, Loader2, Clock } from 'lucide-react'
 import TimerDisplay from './TimerDisplay'
 import AutoSaveIndicator from './AutoSaveIndicator'
 import type { EssayDraft } from '@/types/prompt'
+import { checkGuestUsage } from '@/lib/guest-tracking'
+import { getDeviceFingerprint } from '@/lib/fingerprint'
 
 type SaveStatus = 'saved' | 'saving' | 'unsaved'
 
@@ -16,6 +18,7 @@ interface WritingPanelProps {
   promptText: string
   initialDraft: EssayDraft | null
   onSubmitSuccess: (essayId: string) => void
+  isGuest: boolean
 }
 
 export default function WritingPanel({
@@ -23,6 +26,7 @@ export default function WritingPanel({
   promptText,
   initialDraft,
   onSubmitSuccess,
+  isGuest,
 }: WritingPanelProps) {
   const [essay, setEssay] = useState(initialDraft?.draft_content ?? '')
   const [timerSeconds, setTimerSeconds] = useState(initialDraft?.timer_seconds ?? 0)
@@ -49,6 +53,7 @@ export default function WritingPanel({
   }, [isRunning])
 
   const triggerSave = useCallback(async () => {
+    if (isGuest) return
     setSaveStatus('saving')
     try {
       const res = await fetch(`/api/drafts/${promptId}`, {
@@ -69,7 +74,7 @@ export default function WritingPanel({
     } catch {
       setSaveStatus('unsaved')
     }
-  }, [promptId])
+  }, [promptId, isGuest])
 
   // Debounced save on essay change (only when running)
   useEffect(() => {
@@ -107,6 +112,18 @@ export default function WritingPanel({
     clearTimeout(saveTimeoutRef.current)
 
     try {
+      // Guest-specific pre-submission check
+      if (isGuest) {
+        const guestCheck = await checkGuestUsage()
+        if (guestCheck.hasUsed) {
+          setSubmitError("You've already used your 1 free grading. Sign in to keep practising.")
+          setIsSubmitting(false)
+          return
+        }
+      }
+
+      const fingerprint = isGuest ? await getDeviceFingerprint() : undefined
+
       const res = await fetch('/api/essays/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -114,20 +131,27 @@ export default function WritingPanel({
           prompt: promptText,
           essay_content: essay,
           prompt_id: promptId,
+          ...(isGuest && fingerprint ? { fingerprint } : {}),
         }),
       })
 
       const data = await res.json()
 
       if (!res.ok) {
-        setSubmitError(data.error || 'Failed to submit essay')
+        if (data.isGuestLimit) {
+          setSubmitError("You've already used your 1 free grading. Sign in to keep practising.")
+        } else {
+          setSubmitError(data.error || 'Failed to submit essay')
+        }
         setIsSubmitting(false)
         return
       }
 
       if (data.success && data.essay?.id) {
-        // Delete draft after successful submission
-        await fetch(`/api/drafts/${promptId}`, { method: 'DELETE' })
+        // Only delete draft for authenticated users
+        if (!isGuest) {
+          await fetch(`/api/drafts/${promptId}`, { method: 'DELETE' })
+        }
         onSubmitSuccess(data.essay.id)
       }
     } catch {
@@ -188,7 +212,7 @@ export default function WritingPanel({
                 {wordCount} word{wordCount !== 1 ? 's' : ''}
                 {wordCount >= 250 && ' ✓'}
               </span>
-              <AutoSaveIndicator status={saveStatus} lastSavedAt={lastSavedAt} />
+              {!isGuest && <AutoSaveIndicator status={saveStatus} lastSavedAt={lastSavedAt} />}
             </div>
           </div>
 
