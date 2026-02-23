@@ -54,7 +54,7 @@ export default function PromptCard({ prompt, isAuthenticated }: PromptCardProps)
           )}
         </div>
 
-        <p className="text-sm text-gray-700 line-clamp-3 mb-4 leading-relaxed">
+        <p className="text-sm text-gray-700 line-clamp-4 mb-4 leading-relaxed">
           {prompt.prompt_text}
         </p>
 

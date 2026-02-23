@@ -55,7 +55,7 @@ export function Header({ user }: HeaderProps) {
   const isPro = user?.email.endsWith('@ptnk.edu.vn') || false
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-ocean-900 shadow-md">
+    <header className="sticky top-0 z-50 w-full border-b border-ocean-600 bg-ocean-700 shadow-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center">
@@ -73,7 +73,7 @@ export function Header({ user }: HeaderProps) {
               <Link href="/dashboard">
                 <Button
                   variant={isActive('/dashboard') ? 'secondary' : 'ghost'}
-                  className={isActive('/dashboard') ? 'text-ocean-700' : 'text-white hover:bg-ocean-800'}
+                  className={isActive('/dashboard') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}
                 >
                   <Home className="mr-2 h-4 w-4" />
                   Dashboard
@@ -85,7 +85,7 @@ export function Header({ user }: HeaderProps) {
                   <div>
                     <Button
                       variant="ghost"
-                      className="text-white/60 hover:bg-ocean-800 cursor-not-allowed"
+                      className="text-white/60 hover:bg-ocean-600 cursor-not-allowed"
                       disabled
                     >
                       <Home className="mr-2 h-4 w-4" />
@@ -104,7 +104,7 @@ export function Header({ user }: HeaderProps) {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant={pathname.startsWith('/write') ? 'secondary' : 'ghost'}
-                  className={pathname.startsWith('/write') ? 'text-ocean-700' : 'text-white hover:bg-ocean-800'}
+                  className={pathname.startsWith('/write') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}
                 >
                   <FileText className="mr-2 h-4 w-4" />
                   Essay
@@ -132,7 +132,7 @@ export function Header({ user }: HeaderProps) {
               <Link href="/history">
                 <Button
                   variant={isActive('/history') ? 'secondary' : 'ghost'}
-                  className={isActive('/history') ? 'text-ocean-700' : 'text-white hover:bg-ocean-800'}
+                  className={isActive('/history') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}
                 >
                   <History className="mr-2 h-4 w-4" />
                   History
@@ -144,7 +144,7 @@ export function Header({ user }: HeaderProps) {
                   <div>
                     <Button
                       variant="ghost"
-                      className="text-white/60 hover:bg-ocean-800 cursor-not-allowed"
+                      className="text-white/60 hover:bg-ocean-600 cursor-not-allowed"
                       disabled
                     >
                       <History className="mr-2 h-4 w-4" />
@@ -163,7 +163,7 @@ export function Header({ user }: HeaderProps) {
               <Link href="/vocabulary">
                 <Button
                   variant={isActive('/vocabulary') ? 'secondary' : 'ghost'}
-                  className={isActive('/vocabulary') ? 'text-ocean-700' : 'text-white hover:bg-ocean-800'}
+                  className={isActive('/vocabulary') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}
                 >
                   <BookOpen className="mr-2 h-4 w-4" />
                   Vocabulary
@@ -175,7 +175,7 @@ export function Header({ user }: HeaderProps) {
                   <div>
                     <Button
                       variant="ghost"
-                      className="text-white/60 hover:bg-ocean-800 cursor-not-allowed"
+                      className="text-white/60 hover:bg-ocean-600 cursor-not-allowed"
                       disabled
                     >
                       <BookOpen className="mr-2 h-4 w-4" />
@@ -194,7 +194,7 @@ export function Header({ user }: HeaderProps) {
               <Link href="/invite">
                 <Button
                   variant={isActive('/invite') ? 'secondary' : 'ghost'}
-                  className={isActive('/invite') ? 'text-ocean-700' : 'text-white hover:bg-ocean-800'}
+                  className={isActive('/invite') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}
                 >
                   <Users className="mr-2 h-4 w-4" />
                   Invite
@@ -207,7 +207,7 @@ export function Header({ user }: HeaderProps) {
               <Link href="/admin">
                 <Button
                   variant={isActive('/admin') ? 'secondary' : 'ghost'}
-                  className={isActive('/admin') ? 'text-ocean-700' : 'text-white hover:bg-ocean-800'}
+                  className={isActive('/admin') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}
                 >
                   <Settings className="mr-2 h-4 w-4" />
                   Admin
@@ -221,11 +221,11 @@ export function Header({ user }: HeaderProps) {
         <div className="md:hidden">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-white hover:bg-ocean-800">
+              <Button variant="ghost" size="icon" className="text-white hover:bg-ocean-600">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[280px] bg-ocean-900 text-white border-l border-ocean-700">
+            <SheetContent side="right" className="w-[280px] bg-ocean-700 text-white border-l border-ocean-600">
               <SheetHeader>
                 <SheetTitle className="text-left text-xl font-[family-name:var(--font-shrikhand)]">
                   <span className="text-cyan-400">IELTS</span>
@@ -238,7 +238,7 @@ export function Header({ user }: HeaderProps) {
                   <Link href="/dashboard" onClick={() => setIsOpen(false)}>
                     <Button
                       variant={isActive('/dashboard') ? 'secondary' : 'ghost'}
-                      className={`w-full justify-start ${isActive('/dashboard') ? 'text-ocean-700' : 'text-white hover:bg-ocean-800'}`}
+                      className={`w-full justify-start ${isActive('/dashboard') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}`}
                     >
                       <Home className="mr-2 h-4 w-4" />
                       Dashboard
@@ -247,7 +247,7 @@ export function Header({ user }: HeaderProps) {
                 ) : (
                   <Button
                     variant="ghost"
-                    className="w-full justify-start text-white/60 hover:bg-ocean-800 cursor-not-allowed"
+                    className="w-full justify-start text-white/60 hover:bg-ocean-600 cursor-not-allowed"
                     disabled
                   >
                     <Home className="mr-2 h-4 w-4" />
@@ -261,7 +261,7 @@ export function Header({ user }: HeaderProps) {
                   <Link href="/write" onClick={() => setIsOpen(false)}>
                     <Button
                       variant={isActive('/write') ? 'secondary' : 'ghost'}
-                      className={`w-full justify-start pl-6 ${isActive('/write') ? 'text-ocean-700' : 'text-white hover:bg-ocean-800'}`}
+                      className={`w-full justify-start pl-6 ${isActive('/write') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}`}
                     >
                       <FileText className="mr-2 h-4 w-4" />
                       Score your Essay
@@ -270,7 +270,7 @@ export function Header({ user }: HeaderProps) {
                   <Link href="/write/prompts" onClick={() => setIsOpen(false)}>
                     <Button
                       variant={pathname.startsWith('/write/prompts') ? 'secondary' : 'ghost'}
-                      className={`w-full justify-start pl-6 ${pathname.startsWith('/write/prompts') ? 'text-ocean-700' : 'text-white hover:bg-ocean-800'}`}
+                      className={`w-full justify-start pl-6 ${pathname.startsWith('/write/prompts') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}`}
                     >
                       <PenTool className="mr-2 h-4 w-4" />
                       Write new essay
@@ -283,7 +283,7 @@ export function Header({ user }: HeaderProps) {
                   <Link href="/history" onClick={() => setIsOpen(false)}>
                     <Button
                       variant={isActive('/history') ? 'secondary' : 'ghost'}
-                      className={`w-full justify-start ${isActive('/history') ? 'text-ocean-700' : 'text-white hover:bg-ocean-800'}`}
+                      className={`w-full justify-start ${isActive('/history') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}`}
                     >
                       <History className="mr-2 h-4 w-4" />
                       History
@@ -292,7 +292,7 @@ export function Header({ user }: HeaderProps) {
                 ) : (
                   <Button
                     variant="ghost"
-                    className="w-full justify-start text-white/60 hover:bg-ocean-800 cursor-not-allowed"
+                    className="w-full justify-start text-white/60 hover:bg-ocean-600 cursor-not-allowed"
                     disabled
                   >
                     <History className="mr-2 h-4 w-4" />
@@ -305,7 +305,7 @@ export function Header({ user }: HeaderProps) {
                   <Link href="/vocabulary" onClick={() => setIsOpen(false)}>
                     <Button
                       variant={isActive('/vocabulary') ? 'secondary' : 'ghost'}
-                      className={`w-full justify-start ${isActive('/vocabulary') ? 'text-ocean-700' : 'text-white hover:bg-ocean-800'}`}
+                      className={`w-full justify-start ${isActive('/vocabulary') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}`}
                     >
                       <BookOpen className="mr-2 h-4 w-4" />
                       Vocabulary
@@ -314,7 +314,7 @@ export function Header({ user }: HeaderProps) {
                 ) : (
                   <Button
                     variant="ghost"
-                    className="w-full justify-start text-white/60 hover:bg-ocean-800 cursor-not-allowed"
+                    className="w-full justify-start text-white/60 hover:bg-ocean-600 cursor-not-allowed"
                     disabled
                   >
                     <BookOpen className="mr-2 h-4 w-4" />
@@ -327,7 +327,7 @@ export function Header({ user }: HeaderProps) {
                   <Link href="/invite" onClick={() => setIsOpen(false)}>
                     <Button
                       variant={isActive('/invite') ? 'secondary' : 'ghost'}
-                      className={`w-full justify-start ${isActive('/invite') ? 'text-ocean-700' : 'text-white hover:bg-ocean-800'}`}
+                      className={`w-full justify-start ${isActive('/invite') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}`}
                     >
                       <Users className="mr-2 h-4 w-4" />
                       Invite
@@ -340,7 +340,7 @@ export function Header({ user }: HeaderProps) {
                   <Link href="/admin" onClick={() => setIsOpen(false)}>
                     <Button
                       variant={isActive('/admin') ? 'secondary' : 'ghost'}
-                      className={`w-full justify-start ${isActive('/admin') ? 'text-ocean-700' : 'text-white hover:bg-ocean-800'}`}
+                      className={`w-full justify-start ${isActive('/admin') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}`}
                     >
                       <Settings className="mr-2 h-4 w-4" />
                       Admin
@@ -349,20 +349,20 @@ export function Header({ user }: HeaderProps) {
                 )}
 
                 {/* Divider */}
-                <div className="border-t border-ocean-700 my-2" />
+                <div className="border-t border-ocean-600 my-2" />
 
                 {/* User Actions */}
                 {user ? (
                   <>
                     <Link href="/subscription" onClick={() => setIsOpen(false)}>
-                      <Button variant="ghost" className="w-full justify-start text-white hover:bg-ocean-800">
+                      <Button variant="ghost" className="w-full justify-start text-white hover:bg-ocean-600">
                         <Crown className="mr-2 h-4 w-4" />
                         Subscription
                       </Button>
                     </Link>
                     <Button
                       variant="ghost"
-                      className="w-full justify-start text-red-400 hover:bg-ocean-800"
+                      className="w-full justify-start text-red-400 hover:bg-ocean-600"
                       onClick={() => {
                         handleSignOut()
                         setIsOpen(false)
@@ -375,7 +375,7 @@ export function Header({ user }: HeaderProps) {
                 ) : (
                   <>
                     <Link href="/login" onClick={() => setIsOpen(false)}>
-                      <Button variant="ghost" className="w-full justify-start text-white hover:bg-ocean-800">
+                      <Button variant="ghost" className="w-full justify-start text-white hover:bg-ocean-600">
                         Login
                       </Button>
                     </Link>
@@ -396,7 +396,7 @@ export function Header({ user }: HeaderProps) {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="text-white hover:bg-ocean-800">
+                <Button variant="ghost" className="text-white hover:bg-ocean-600">
                   <User className="h-4 w-4 md:mr-2" />
                   <span className="hidden md:inline">{user.email}</span>
                 </Button>
@@ -422,7 +422,7 @@ export function Header({ user }: HeaderProps) {
           ) : (
             <>
               <Link href="/login">
-                <Button variant="ghost" className="text-white hover:bg-ocean-800 text-sm md:text-base px-2 md:px-4">
+                <Button variant="ghost" className="text-white hover:bg-ocean-600 text-sm md:text-base px-2 md:px-4">
                   Login
                 </Button>
               </Link>

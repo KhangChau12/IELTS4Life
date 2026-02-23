@@ -10,6 +10,7 @@ interface ProgressRingProps {
   className?: string
   showPercentage?: boolean
   label?: string
+  color?: string
 }
 
 export function ProgressRing({
@@ -19,6 +20,7 @@ export function ProgressRing({
   className,
   showPercentage = true,
   label,
+  color: colorOverride,
 }: ProgressRingProps) {
   const [progress, setProgress] = useState(0)
 
@@ -41,7 +43,7 @@ export function ProgressRing({
     return '#64748b' // slate-500
   }
 
-  const color = getColor()
+  const color = colorOverride ?? getColor()
 
   return (
     <div className={cn('relative inline-flex items-center justify-center', className)}>
@@ -55,7 +57,7 @@ export function ProgressRing({
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke="#e0f2fe"
+          stroke="#bae6fd"
           strokeWidth={strokeWidth}
           fill="none"
         />

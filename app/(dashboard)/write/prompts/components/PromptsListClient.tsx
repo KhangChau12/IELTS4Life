@@ -58,6 +58,15 @@ export default function PromptsListClient({ prompts, topics, isAuthenticated }: 
 
   const completedCount = prompts.filter((p) => p.user_essay).length
 
+  const completedTopics = useMemo(() => {
+    const topicsWithEssay = new Set(
+      prompts
+        .filter((p) => p.user_essay && p.topic_id)
+        .map((p) => p.topic_id)
+    )
+    return topicsWithEssay.size
+  }, [prompts])
+
   const handleReset = () => {
     setSelectedType('')
     setSelectedTopic('')
@@ -89,7 +98,12 @@ export default function PromptsListClient({ prompts, topics, isAuthenticated }: 
 
       {/* Progress banner for authenticated users */}
       {isAuthenticated && (
-        <ProgressBanner total={prompts.length} completed={completedCount} />
+        <ProgressBanner
+          total={prompts.length}
+          completed={completedCount}
+          completedTopics={completedTopics}
+          totalTopics={topics.length}
+        />
       )}
 
       {/* Filters */}
@@ -148,7 +162,7 @@ export default function PromptsListClient({ prompts, topics, isAuthenticated }: 
           {viewMode === 'grouped' ? (
             <Accordion
               type="multiple"
-              defaultValue={grouped.length > 0 ? [grouped[0][0]] : []}
+              defaultValue={[]}
             >
               {grouped.map(([topicName, groupPrompts]) => {
                 const isExpanded = expandedGroups.has(topicName)
@@ -173,7 +187,7 @@ export default function PromptsListClient({ prompts, topics, isAuthenticated }: 
                       </div>
                     </AccordionTrigger>
                     <AccordionContent>
-                      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         {visiblePrompts.map((prompt) => (
                           <PromptCard key={prompt.id} prompt={prompt} isAuthenticated={isAuthenticated} />
                         ))}
@@ -195,7 +209,7 @@ export default function PromptsListClient({ prompts, topics, isAuthenticated }: 
             </Accordion>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {filtered.slice(0, flatVisibleCount).map((prompt) => (
                   <PromptCard key={prompt.id} prompt={prompt} isAuthenticated={isAuthenticated} />
                 ))}

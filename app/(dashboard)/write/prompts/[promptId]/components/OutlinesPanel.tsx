@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Badge } from '@/components/ui/badge'
-import { Sparkles, Loader2, Lightbulb, ArrowRight } from 'lucide-react'
+import { Sparkles, Loader2, Lightbulb, ArrowRight, Lock } from 'lucide-react'
 import { QUESTION_TYPES } from '@/types/prompt'
 import type { PromptOutlines, WritingPrompt } from '@/types/prompt'
 
@@ -211,7 +211,9 @@ export default function OutlinesPanel({ prompt, initialOutlines, isGuest }: Outl
         {isGuest && (
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-lg bg-white/80 backdrop-blur-sm border border-ocean-100 p-6 text-center gap-4">
             <div className="flex flex-col items-center gap-2">
-              <div className="text-3xl">🔒</div>
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-ocean-100">
+                <Lock className="h-5 w-5 text-ocean-600" />
+              </div>
               <p className="text-sm text-gray-700 leading-relaxed max-w-xs">
                 Sign in to view free AI outline suggestions to develop your ideas and get your essay scored.
               </p>
