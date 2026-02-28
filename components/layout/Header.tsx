@@ -16,10 +16,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { Home, FileText, BookOpen, User, LogOut, Settings, History, Crown, Users, Menu, ChevronDown, PenTool } from 'lucide-react'
+import { Home, FileText, BookOpen, User, LogOut, Settings, History, Crown, Users, Menu, PenTool, Bell } from 'lucide-react'
 import { createClient, resetClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Sheet,
   SheetContent,
@@ -31,7 +31,7 @@ import {
 interface HeaderProps {
   user?: {
     email: string
-    role: 'student' | 'admin'
+    role: 'student' | 'admin' | 'dev'
   } | null
 }
 
@@ -40,6 +40,25 @@ export function Header({ user }: HeaderProps) {
   const router = useRouter()
   const supabase = createClient()
   const [isOpen, setIsOpen] = useState(false)
+  const [unreadCount, setUnreadCount] = useState(0)
+
+  useEffect(() => {
+    if (!user) return
+
+    const fetchUnreadCount = async () => {
+      try {
+        const res = await fetch('/api/notifications?unread_only=true')
+        if (res.ok) {
+          const data = await res.json()
+          setUnreadCount(data.unreadCount || 0)
+        }
+      } catch {
+        // Silently fail - notifications are non-critical
+      }
+    }
+
+    fetchUnreadCount()
+  }, [user])
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
@@ -99,33 +118,27 @@ export function Header({ user }: HeaderProps) {
               </Tooltip>
             )}
 
-            {/* Essay Dropdown - Always accessible */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant={pathname.startsWith('/write') ? 'secondary' : 'ghost'}
-                  className={pathname.startsWith('/write') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}
-                >
-                  <FileText className="mr-2 h-4 w-4" />
-                  Essay
-                  <ChevronDown className="ml-1 h-3 w-3" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-52">
-                <DropdownMenuItem asChild>
-                  <Link href="/write" className="cursor-pointer flex items-center">
-                    <FileText className="mr-2 h-4 w-4" />
-                    Score your Essay
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/write/prompts" className="cursor-pointer flex items-center">
-                    <PenTool className="mr-2 h-4 w-4" />
-                    Write new essay
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {/* Score Essay */}
+            <Link href="/write">
+              <Button
+                variant={isActive('/write') ? 'secondary' : 'ghost'}
+                className={isActive('/write') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}
+              >
+                <FileText className="mr-2 h-4 w-4" />
+                Score Essay
+              </Button>
+            </Link>
+
+            {/* Write */}
+            <Link href="/write/prompts">
+              <Button
+                variant={pathname.startsWith('/write/prompts') ? 'secondary' : 'ghost'}
+                className={pathname.startsWith('/write/prompts') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}
+              >
+                <PenTool className="mr-2 h-4 w-4" />
+                Write
+              </Button>
+            </Link>
 
             {/* History - Show for all, tooltip for guests */}
             {user ? (
@@ -202,8 +215,8 @@ export function Header({ user }: HeaderProps) {
               </Link>
             )}
 
-            {/* Admin - Show for admin only */}
-            {user?.role === 'admin' && (
+            {/* Admin - Show for admin and dev */}
+            {(user?.role === 'admin' || user?.role === 'dev') && (
               <Link href="/admin">
                 <Button
                   variant={isActive('/admin') ? 'secondary' : 'ghost'}
@@ -255,28 +268,27 @@ export function Header({ user }: HeaderProps) {
                   </Button>
                 )}
 
-                {/* Essay Section */}
-                <div>
-                  <p className="text-xs font-semibold text-white/40 uppercase tracking-wider px-3 py-1">Essay</p>
-                  <Link href="/write" onClick={() => setIsOpen(false)}>
-                    <Button
-                      variant={isActive('/write') ? 'secondary' : 'ghost'}
-                      className={`w-full justify-start pl-6 ${isActive('/write') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}`}
-                    >
-                      <FileText className="mr-2 h-4 w-4" />
-                      Score your Essay
-                    </Button>
-                  </Link>
-                  <Link href="/write/prompts" onClick={() => setIsOpen(false)}>
-                    <Button
-                      variant={pathname.startsWith('/write/prompts') ? 'secondary' : 'ghost'}
-                      className={`w-full justify-start pl-6 ${pathname.startsWith('/write/prompts') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}`}
-                    >
-                      <PenTool className="mr-2 h-4 w-4" />
-                      Write new essay
-                    </Button>
-                  </Link>
-                </div>
+                {/* Score Essay */}
+                <Link href="/write" onClick={() => setIsOpen(false)}>
+                  <Button
+                    variant={isActive('/write') ? 'secondary' : 'ghost'}
+                    className={`w-full justify-start ${isActive('/write') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}`}
+                  >
+                    <FileText className="mr-2 h-4 w-4" />
+                    Score Essay
+                  </Button>
+                </Link>
+
+                {/* Write */}
+                <Link href="/write/prompts" onClick={() => setIsOpen(false)}>
+                  <Button
+                    variant={pathname.startsWith('/write/prompts') ? 'secondary' : 'ghost'}
+                    className={`w-full justify-start ${pathname.startsWith('/write/prompts') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}`}
+                  >
+                    <PenTool className="mr-2 h-4 w-4" />
+                    Write
+                  </Button>
+                </Link>
 
                 {/* History */}
                 {user ? (
@@ -335,8 +347,8 @@ export function Header({ user }: HeaderProps) {
                   </Link>
                 )}
 
-                {/* Admin - Show for admin only */}
-                {user?.role === 'admin' && (
+                {/* Admin - Show for admin and dev */}
+                {(user?.role === 'admin' || user?.role === 'dev') && (
                   <Link href="/admin" onClick={() => setIsOpen(false)}>
                     <Button
                       variant={isActive('/admin') ? 'secondary' : 'ghost'}
@@ -358,6 +370,17 @@ export function Header({ user }: HeaderProps) {
                       <Button variant="ghost" className="w-full justify-start text-white hover:bg-ocean-600">
                         <Crown className="mr-2 h-4 w-4" />
                         Subscription
+                      </Button>
+                    </Link>
+                    <Link href="/notifications" onClick={() => setIsOpen(false)}>
+                      <Button variant="ghost" className="w-full justify-start text-white hover:bg-ocean-600">
+                        <div className="flex items-center w-full">
+                          <Bell className="mr-2 h-4 w-4" />
+                          Notifications
+                          {unreadCount > 0 && (
+                            <span className="ml-2 flex h-2 w-2 rounded-full bg-red-500" />
+                          )}
+                        </div>
                       </Button>
                     </Link>
                     <Button
@@ -410,6 +433,17 @@ export function Header({ user }: HeaderProps) {
                   <Link href="/subscription" className="cursor-pointer">
                     <Crown className="mr-2 h-4 w-4" />
                     Subscription
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/notifications" className="cursor-pointer">
+                    <div className="flex items-center w-full">
+                      <Bell className="mr-2 h-4 w-4" />
+                      Notifications
+                      {unreadCount > 0 && (
+                        <span className="ml-auto flex h-2 w-2 rounded-full bg-red-500" />
+                      )}
+                    </div>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />

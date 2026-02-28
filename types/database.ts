@@ -14,7 +14,7 @@ export interface Database {
           id: string
           email: string
           full_name: string | null
-          role: 'student' | 'admin'
+          role: 'student' | 'admin' | 'dev'
           daily_essays_count: number
           last_reset_date: string
           total_essays_count: number
@@ -28,7 +28,7 @@ export interface Database {
           id: string
           email: string
           full_name?: string | null
-          role?: 'student' | 'admin'
+          role?: 'student' | 'admin' | 'dev'
           daily_essays_count?: number
           last_reset_date?: string
           total_essays_count?: number
@@ -42,7 +42,7 @@ export interface Database {
           id?: string
           email?: string
           full_name?: string | null
-          role?: 'student' | 'admin'
+          role?: 'student' | 'admin' | 'dev'
           daily_essays_count?: number
           last_reset_date?: string
           total_essays_count?: number
@@ -403,6 +403,52 @@ export interface Database {
           draft_content?: string
           timer_seconds?: number
           last_saved_at?: string
+        }
+      }
+      notifications: {
+        Row: {
+          id: string
+          title: string
+          content: string
+          target_audience: 'all' | 'student' | 'pro' | 'free'
+          created_by: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          content: string
+          target_audience: 'all' | 'student' | 'pro' | 'free'
+          created_by: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          content?: string
+          target_audience?: 'all' | 'student' | 'pro' | 'free'
+          created_by?: string
+          created_at?: string
+        }
+      }
+      notification_reads: {
+        Row: {
+          id: string
+          notification_id: string
+          user_id: string
+          read_at: string
+        }
+        Insert: {
+          id?: string
+          notification_id: string
+          user_id: string
+          read_at?: string
+        }
+        Update: {
+          id?: string
+          notification_id?: string
+          user_id?: string
+          read_at?: string
         }
       }
     }
