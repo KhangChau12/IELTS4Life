@@ -162,27 +162,27 @@ export default async function HomePage() {
                 {/* CTA Buttons for guests */}
                 {!user && (
                   <div className="flex flex-col items-center lg:items-start gap-4 pt-4">
-                    <div className="flex flex-col sm:flex-row items-center lg:items-start gap-3">
+                    <div className="flex flex-col items-center lg:items-start gap-3 max-w-sm w-full">
                       <Link href="/write">
                         <Button
-                          size="lg"
-                          className="group relative h-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-xl shadow-blue-500/25 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 rounded-2xl text-lg font-bold overflow-hidden"
+                          size="default"
+                          className="group relative h-auto px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-xl shadow-blue-500/25 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 rounded-2xl text-base font-bold overflow-hidden"
                         >
                           {/* Shine effect overlay */}
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
                           <span className="relative flex items-center gap-3">
-                            <Sparkles className="w-5 h-5 text-blue-100" />
-                            Try Free Essay Scoring Now
-                            <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1 text-blue-100" />
+                            <Sparkles className="w-4 h-4 text-blue-100" />
+                            Try Essay Scoring
+                            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 text-blue-100" />
                           </span>
                         </Button>
                       </Link>
 
                       <Link href="/write/prompts">
                         <Button
-                          size="lg"
+                          size="default"
                           variant="outline"
-                          className="group h-auto px-6 py-4 border-2 border-slate-300 hover:border-cyan-400 text-slate-700 hover:text-cyan-700 hover:bg-cyan-50 bg-white/80 rounded-2xl text-base font-semibold transition-all"
+                          className="group h-auto px-5 py-3 border-2 border-slate-300 hover:border-cyan-400 text-slate-700 hover:text-cyan-700 hover:bg-cyan-50 bg-white/80 rounded-2xl text-sm font-semibold transition-all"
                         >
                           <Library className="w-4 h-4 mr-2" />
                           Browse Prompts
