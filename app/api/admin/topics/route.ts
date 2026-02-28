@@ -22,7 +22,7 @@ export async function GET() {
       .eq('id', user.id)
       .single()
 
-    if (profile?.role !== 'admin') {
+    if (!['admin', 'dev'].includes(profile?.role ?? '')) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
       .eq('id', user.id)
       .single()
 
-    if (profile?.role !== 'admin') {
+    if (!['admin', 'dev'].includes(profile?.role ?? '')) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
