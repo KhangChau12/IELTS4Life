@@ -16,7 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { Home, FileText, BookOpen, User, LogOut, Settings, History, Crown, Users, Menu, PenTool, Bell } from 'lucide-react'
+import { Home, FileText, BookOpen, User, LogOut, Settings, History, Crown, Users, Menu, PenTool, Bell, ChevronDown } from 'lucide-react'
 import { createClient, resetClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
@@ -419,9 +419,13 @@ export function Header({ user }: HeaderProps) {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="text-white hover:bg-ocean-600">
+                <Button variant="ghost" className="text-white hover:bg-ocean-600 relative">
                   <User className="h-4 w-4 md:mr-2" />
                   <span className="hidden md:inline">{user.email}</span>
+                  <ChevronDown className="hidden md:inline h-3.5 w-3.5 ml-1 opacity-70" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-red-500 border border-ocean-700" />
+                  )}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
