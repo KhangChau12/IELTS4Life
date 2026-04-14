@@ -7,7 +7,8 @@ import { RecentEssaysTable } from './components/RecentEssaysTable'
 import { ErrorHistory } from './components/ErrorHistory'
 import { AISummaryButton } from './components/AISummaryButton'
 import { VocabularyProgress } from './components/VocabularyProgress'
-import { ScoreDistribution } from './components/ScoreDistribution'
+import { NextActionBanner } from './components/NextActionBanner'
+import { ProgressSummary } from './components/ProgressSummary'
 
 async function getAllDashboardData(userId: string) {
   const supabase = createServerClient()
@@ -194,9 +195,9 @@ export default async function DashboardPage() {
   })
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 md:space-y-8 px-4">
+    <div className="max-w-7xl mx-auto space-y-7 md:space-y-9 px-4 py-6">
       {/* Welcome Section */}
-      <div className="mb-6 md:mb-8">
+      <div className="mb-8 md:mb-10">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-ocean-800 mb-2">
           Welcome back, {displayName}!
         </h1>
@@ -205,40 +206,26 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      {/* Quick Stats Cards */}
-      {stats.totalEssays > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-          <Card className="border-ocean-200 shadow-lg bg-gradient-to-br from-ocean-100 to-cyan-100">
-            <CardContent className="pt-4 md:pt-6 px-4 md:px-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs md:text-sm font-medium text-ocean-600 mb-1">Total Essays</p>
-                  <p className="text-3xl md:text-4xl font-bold text-ocean-800">{stats.totalEssays}</p>
-                </div>
-                <div className="rounded-full bg-ocean-200/50 p-2 md:p-3">
-                  <FileText className="h-6 w-6 md:h-8 md:w-8 text-ocean-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-green-200 shadow-lg bg-gradient-to-br from-emerald-100 to-teal-100">
-            <CardContent className="pt-4 md:pt-6 px-4 md:px-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs md:text-sm font-medium text-emerald-600 mb-1">Average Band Score</p>
-                  <p className="text-3xl md:text-4xl font-bold text-emerald-800">
-                    {stats.averageScore?.toFixed(1) ?? '0.0'}
-                  </p>
-                </div>
-                <div className="rounded-full bg-emerald-200/50 p-2 md:p-3">
-                  <Award className="h-6 w-6 md:h-8 md:w-8 text-emerald-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+      {/* Next Action Banner */}
+      {stats.totalEssays >= 0 && (
+        <NextActionBanner
+          totalEssays={stats.totalEssays}
+          essaysWithoutVocab={userStats.vocabulary.essaysWithoutVocab}
+          avgScore={stats.averageScore}
+          quizScore={userStats.quiz.avgScore}
+        />
       )}
+
+      {/* Progress Summary */}
+      {stats.totalEssays > 0 && (
+        <ProgressSummary
+          totalEssays={stats.totalEssays}
+          averageScore={stats.averageScore}
+          latestScore={stats.latestScore}
+        />
+      )}
+
+      {/* Quick Stats Cards - Hidden for now, keeping design simpler */}
 
       {/* Empty State - First Time User */}
       {stats.totalEssays === 0 && (
@@ -275,7 +262,7 @@ export default async function DashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ScoreChart data={chartData} />
+            <ScoreChart data={chartData} criteriaOverTime={userStats.criteriaOverTime} />
           </CardContent>
         </Card>
       )}
@@ -290,15 +277,6 @@ export default async function DashboardPage() {
           topicScore={userStats.quiz.avgTopicScore}
           totalCorrect={userStats.quiz.totalCorrect}
           totalQuestions={userStats.quiz.totalQuestions}
-        />
-      )}
-
-      {/* Score Distribution Charts */}
-      {stats.totalEssays > 0 && (
-        <ScoreDistribution
-          scoreDistribution={userStats.scoreDistribution}
-          criteriaOverTime={userStats.criteriaOverTime}
-          hasEssays={stats.totalEssays > 0}
         />
       )}
 

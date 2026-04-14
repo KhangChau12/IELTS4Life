@@ -178,17 +178,20 @@ export default function WritingPanel({
               className={isRunning ? '' : 'bg-ocean-600 hover:bg-ocean-700 text-white'}
             >
               {isRunning ? (
-                <><Square className="h-4 w-4 mr-1" />Stop</>
+                <><Square className="h-4 w-4 mr-1" />Pause</>
               ) : (
                 <><Play className="h-4 w-4 mr-1" />{timerSeconds > 0 ? 'Resume' : 'Start'}</>
               )}
             </Button>
           </div>
           {!isRunning && timerSeconds === 0 && (
-            <p className="text-xs text-gray-400 mt-2">Press Start to begin writing. The textarea will be enabled.</p>
+            <p className="text-xs text-gray-400 mt-2">Press Start to begin counting your writing time.</p>
           )}
           {!isRunning && timerSeconds > 0 && (
-            <p className="text-xs text-amber-500 mt-2">Timer paused. Press Resume to continue writing.</p>
+            <p className="text-xs text-amber-500 mt-2">Timer paused for a short break. Press Resume to continue.</p>
+          )}
+          {isRunning && (
+            <p className="text-xs text-gray-400 mt-2">Need a break? Press Pause. Your draft and elapsed time are kept.</p>
           )}
         </CardContent>
       </Card>
@@ -202,8 +205,8 @@ export default function WritingPanel({
           <Textarea
             value={essay}
             onChange={(e) => setEssay(e.target.value)}
-            disabled={!isRunning || isSubmitting}
-            placeholder={isRunning ? 'Start writing your essay here...' : 'Start the timer to begin writing.'}
+            disabled={isSubmitting}
+            placeholder="Start writing your essay here..."
             className="flex-1 min-h-[300px] resize-none text-sm leading-relaxed disabled:opacity-60 disabled:cursor-not-allowed"
           />
           <div className="flex items-center justify-between">
@@ -222,7 +225,7 @@ export default function WritingPanel({
 
           <Button
             onClick={handleSubmit}
-            disabled={isSubmitting || essay.trim().length < 50 || isRunning}
+            disabled={isSubmitting || essay.trim().length < 50}
             className="w-full bg-ocean-600 hover:bg-ocean-700 text-white disabled:opacity-50"
           >
             {isSubmitting ? (
@@ -232,7 +235,7 @@ export default function WritingPanel({
             )}
           </Button>
           {isRunning && (
-            <p className="text-xs text-center text-gray-400">Stop the timer before submitting.</p>
+            <p className="text-xs text-center text-gray-400">Submitting will auto-stop the timer.</p>
           )}
         </CardContent>
       </Card>
