@@ -104,20 +104,20 @@ export default async function RootLayout({
   const supabase = createServerClient()
 
   const {
-    data: { session },
-  } = await supabase.auth.getSession()
+    data: { user: authUser },
+  } = await supabase.auth.getUser()
 
   let user = null
-  if (session?.user) {
+  if (authUser) {
     // Try to get profile, but fallback to session user data if profile doesn't exist yet
     const { data: profile } = await supabase
       .from('profiles')
       .select('email, role')
-      .eq('id', session.user.id)
+      .eq('id', authUser.id)
       .single()
 
     user = profile || {
-      email: session.user.email || '',
+      email: authUser.email || '',
       role: 'student' as const
     }
   }

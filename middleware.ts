@@ -6,10 +6,20 @@ export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
   const supabase = createMiddlewareClient({ req, res })
 
-  // Refresh session if expired - this is correct usage in middleware
-  // Note: getSession() in middleware is fine as it just refreshes cookies
-  // The warning applies to using session.user directly - always use getUser() for that
-  await supabase.auth.getSession()
+  // Only attempt refresh when Supabase auth cookies are present.
+  // This avoids hammering refresh endpoint for anonymous/public requests.
+  const hasSupabaseCookie = req.cookies
+    .getAll()
+    .some((cookie) => cookie.name.startsWith('sb-'))
+
+  if (hasSupabaseCookie) {
+    try {
+      await supabase.auth.getSession()
+    } catch {
+      // Ignore refresh errors in middleware to avoid noisy logs/rate spikes.
+      // Route handlers and pages will still enforce auth via getUser().
+    }
+  }
 
   return res
 }
@@ -44,7 +54,6 @@ export const config = {
     '/admin/:path*',
     '/invite/:path*',
     '/subscription/:path*',
-    '/api/:path*',
     '/auth/callback',
   ],
 }

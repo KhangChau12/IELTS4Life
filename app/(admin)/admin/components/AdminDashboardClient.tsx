@@ -183,71 +183,116 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
 
   return (
     <div className="space-y-6">
-      {/* Header with Refresh Button */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-cyan-700 to-teal-600 bg-clip-text text-transparent">
-            Dashboard Overview
-          </h1>
-          <p className="text-sm text-slate-600 mt-1">
-            Last updated: {format(lastUpdate, 'MMM dd, yyyy HH:mm:ss')}
-          </p>
-        </div>
-        <Button
-          onClick={handleRefresh}
-          disabled={isRefreshing}
-          className="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700"
-        >
-          <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-          Refresh
-        </Button>
-      </div>
+      {/* Hero Overview */}
+      <Card className="overflow-hidden border-0 bg-gradient-to-br from-slate-950 via-cyan-950 to-slate-900 text-white shadow-2xl">
+        <CardContent className="relative p-6 md:p-8">
+          <div className="absolute inset-0 opacity-25">
+            <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-cyan-400 blur-3xl" />
+            <div className="absolute bottom-0 left-1/3 h-32 w-32 rounded-full bg-teal-400 blur-3xl" />
+          </div>
 
-      {/* KPI Summary Cards - Top Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Total Users */}
-        <Card className="border-l-4 border-l-cyan-500 hover:shadow-lg transition-shadow">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-slate-600">Total Users</CardTitle>
-              <Users className="h-5 w-5 text-cyan-600" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-4xl font-bold text-cyan-700">{formatNumber(stats.totalUsers)}</div>
-            <p className="text-sm text-slate-500 mt-2">
-              <span className="text-teal-600 font-semibold">{stats.totalInvitedUsers}</span> via referrals
-              <span className="mx-2 text-slate-300">|</span>
-              <span className="text-cyan-600 font-semibold">{stats.ptnkUsers}</span> PTNK students
-            </p>
-          </CardContent>
-        </Card>
+          <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-2xl space-y-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium backdrop-blur-sm">
+                <Zap className="h-3.5 w-3.5 text-cyan-300" />
+                Admin / Dev Dashboard
+              </div>
+              <div className="space-y-3">
+                <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
+                  Dashboard Overview
+                </h1>
+                <p className="text-sm md:text-base text-slate-200 leading-relaxed max-w-xl">
+                  A cleaner look at platform health, user growth, writing activity, and prompt coverage.
+                </p>
+              </div>
 
-        {/* Total Essays */}
-        <Card className="border-l-4 border-l-teal-500 hover:shadow-lg transition-shadow">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-slate-600">Total Essays</CardTitle>
-              <FileText className="h-5 w-5 text-teal-600" />
+              <div className="flex flex-wrap gap-2 text-xs text-slate-100">
+                <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 backdrop-blur-sm">
+                  Updated: {format(lastUpdate, 'MMM dd, yyyy HH:mm:ss')}
+                </span>
+                <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 backdrop-blur-sm">
+                  {formatNumber(stats.totalUsers)} users
+                </span>
+                <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 backdrop-blur-sm">
+                  {formatNumber(stats.totalEssays)} essays
+                </span>
+              </div>
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-4xl font-bold text-teal-700">{formatNumber(stats.totalEssays)}</div>
-            <p className="text-sm text-slate-500 mt-2">
-              Avg score: <span className="text-teal-600 font-semibold">{stats.avgOverallScore.toFixed(1)}</span>
-              <span className="mx-2 text-slate-300">|</span>
-              <span className="text-teal-700 font-semibold">{formatNumber(stats.essaysFromPrompts)}</span> from prompts
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+
+            <Button
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="self-start bg-white text-slate-950 hover:bg-slate-100 shadow-lg"
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+              Refresh data
+            </Button>
+          </div>
+
+          <div className="relative mt-6 grid grid-cols-2 xl:grid-cols-4 gap-3 md:gap-4">
+            <div className="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4 shadow-sm">
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <span className="text-xs uppercase tracking-[0.18em] text-slate-200">Total Users</span>
+                <div className="rounded-xl bg-cyan-400/15 p-2 text-cyan-200">
+                  <Users className="h-4 w-4" />
+                </div>
+              </div>
+              <div className="text-3xl md:text-4xl font-bold leading-none">{formatNumber(stats.totalUsers)}</div>
+              <p className="mt-3 text-xs text-slate-200">
+                <span className="font-semibold text-white">{stats.totalInvitedUsers}</span> via referrals ·
+                <span className="font-semibold text-white"> {stats.ptnkUsers}</span> PTNK
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4 shadow-sm">
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <span className="text-xs uppercase tracking-[0.18em] text-slate-200">Total Essays</span>
+                <div className="rounded-xl bg-teal-400/15 p-2 text-teal-200">
+                  <FileText className="h-4 w-4" />
+                </div>
+              </div>
+              <div className="text-3xl md:text-4xl font-bold leading-none">{formatNumber(stats.totalEssays)}</div>
+              <p className="mt-3 text-xs text-slate-200">
+                Avg score <span className="font-semibold text-white">{stats.avgOverallScore.toFixed(1)}</span> ·
+                <span className="font-semibold text-white"> {formatNumber(stats.essaysFromPrompts)}</span> from prompts
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4 shadow-sm">
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <span className="text-xs uppercase tracking-[0.18em] text-slate-200">Avg Quiz</span>
+                <div className="rounded-xl bg-amber-400/15 p-2 text-amber-200">
+                  <Award className="h-4 w-4" />
+                </div>
+              </div>
+              <div className="text-3xl md:text-4xl font-bold leading-none">{stats.avgQuizScore}%</div>
+              <p className="mt-3 text-xs text-slate-200">
+                <span className="font-semibold text-white">{formatNumber(stats.totalQuizAttempts)}</span> quiz attempts
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4 shadow-sm">
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <span className="text-xs uppercase tracking-[0.18em] text-slate-200">Prompt Coverage</span>
+                <div className="rounded-xl bg-violet-400/15 p-2 text-violet-200">
+                  <Target className="h-4 w-4" />
+                </div>
+              </div>
+              <div className="text-3xl md:text-4xl font-bold leading-none">{formatNumber(stats.totalPrompts)}</div>
+              <p className="mt-3 text-xs text-slate-200">
+                <span className="font-semibold text-white">{stats.promptsWithOutlines}</span> with outlines
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Main Charts - 2 Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* User Distribution Donut Chart */}
-        <Card className="hover:shadow-lg transition-shadow">
-          <CardHeader>
-            <CardTitle className="text-lg text-slate-800">User Distribution</CardTitle>
+        <Card className="overflow-hidden border-slate-200/70 bg-white/90 shadow-sm transition-shadow hover:shadow-xl">
+          <CardHeader className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-cyan-50/60">
+            <CardTitle className="text-lg text-slate-900">User Distribution</CardTitle>
             <CardDescription>By account type</CardDescription>
           </CardHeader>
           <CardContent>
@@ -294,9 +339,9 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
         </Card>
 
         {/* Score Distribution Bar Chart */}
-        <Card className="hover:shadow-lg transition-shadow">
-          <CardHeader>
-            <CardTitle className="text-lg text-slate-800">Score Distribution</CardTitle>
+        <Card className="overflow-hidden border-slate-200/70 bg-white/90 shadow-sm transition-shadow hover:shadow-xl">
+          <CardHeader className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-teal-50/60">
+            <CardTitle className="text-lg text-slate-900">Score Distribution</CardTitle>
             <CardDescription>Essays by IELTS band</CardDescription>
           </CardHeader>
           <CardContent>
@@ -339,9 +384,9 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
       {/* Activity Charts - Full Width */}
       <div className="grid grid-cols-1 gap-6">
         {/* Daily Essay Activity */}
-        <Card className="hover:shadow-lg transition-shadow">
-          <CardHeader>
-            <CardTitle className="text-lg text-slate-800">Daily Essay Activity</CardTitle>
+        <Card className="overflow-hidden border-slate-200/70 bg-white/90 shadow-sm transition-shadow hover:shadow-xl">
+          <CardHeader className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-cyan-50/60">
+            <CardTitle className="text-lg text-slate-900">Daily Essay Activity</CardTitle>
             <CardDescription>New essays submitted per day (Last 14 days)</CardDescription>
           </CardHeader>
           <CardContent>
@@ -389,9 +434,9 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
         </Card>
 
         {/* User Growth */}
-        <Card className="hover:shadow-lg transition-shadow">
-          <CardHeader>
-            <CardTitle className="text-lg text-slate-800">User Growth</CardTitle>
+        <Card className="overflow-hidden border-slate-200/70 bg-white/90 shadow-sm transition-shadow hover:shadow-xl">
+          <CardHeader className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-violet-50/60">
+            <CardTitle className="text-lg text-slate-900">User Growth</CardTitle>
             <CardDescription>Total registered users ({userGrowthLabel})</CardDescription>
           </CardHeader>
           <CardContent>
@@ -437,11 +482,11 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
       {/* Secondary Metrics - 5 cards in responsive grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Vocabulary & Quiz Stats */}
-        <Card className="hover:shadow-lg transition-shadow">
-          <CardHeader className="pb-3">
+        <Card className="overflow-hidden border-slate-200/70 bg-white/90 shadow-sm transition-shadow hover:shadow-xl">
+          <CardHeader className="border-b border-slate-100 pb-3 bg-gradient-to-r from-slate-50 to-cyan-50/60">
             <div className="flex items-center gap-2">
               <BookOpen className="h-5 w-5 text-cyan-700" />
-              <CardTitle className="text-sm font-medium text-slate-700">Vocabulary & Quiz</CardTitle>
+              <CardTitle className="text-sm font-medium text-slate-900">Vocabulary & Quiz</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -465,11 +510,11 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
         </Card>
 
         {/* Quiz Breakdown */}
-        <Card className="hover:shadow-lg transition-shadow">
-          <CardHeader className="pb-3">
+        <Card className="overflow-hidden border-slate-200/70 bg-white/90 shadow-sm transition-shadow hover:shadow-xl">
+          <CardHeader className="border-b border-slate-100 pb-3 bg-gradient-to-r from-slate-50 to-teal-50/60">
             <div className="flex items-center gap-2">
               <Brain className="h-5 w-5 text-cyan-600" />
-              <CardTitle className="text-sm font-medium text-slate-700">Quiz Breakdown</CardTitle>
+              <CardTitle className="text-sm font-medium text-slate-900">Quiz Breakdown</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -489,11 +534,11 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
         </Card>
 
         {/* Prompt Stats */}
-        <Card className="hover:shadow-lg transition-shadow">
-          <CardHeader className="pb-3">
+        <Card className="overflow-hidden border-slate-200/70 bg-white/90 shadow-sm transition-shadow hover:shadow-xl">
+          <CardHeader className="border-b border-slate-100 pb-3 bg-gradient-to-r from-slate-50 to-violet-50/60">
             <div className="flex items-center gap-2">
               <PenTool className="h-5 w-5 text-teal-600" />
-              <CardTitle className="text-sm font-medium text-slate-700">Writing Prompts</CardTitle>
+              <CardTitle className="text-sm font-medium text-slate-900">Writing Prompts</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
