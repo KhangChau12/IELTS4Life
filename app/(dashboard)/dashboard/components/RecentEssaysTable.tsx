@@ -1,11 +1,12 @@
 'use client'
 
+import { useState } from 'react'
 import { Essay } from '@/types/essay'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { format } from 'date-fns'
 import { useRouter } from 'next/navigation'
-import { Eye } from 'lucide-react'
+import { Eye, ChevronDown, ChevronUp } from 'lucide-react'
 
 interface RecentEssaysTableProps {
   essays: Essay[]
@@ -25,12 +26,27 @@ function truncateText(text: string, maxLength: number): string {
 
 export function RecentEssaysTable({ essays }: RecentEssaysTableProps) {
   const router = useRouter()
+  const [visibleCount, setVisibleCount] = useState(5)
+  const initialCount = 5
+  const stepCount = 5
+  const canLoadMore = visibleCount < essays.length
+  const visibleEssays = essays.slice(0, visibleCount)
+
+  const handleToggle = () => {
+    setVisibleCount((current) => {
+      if (current >= essays.length) {
+        return initialCount
+      }
+
+      return Math.min(current + stepCount, essays.length)
+    })
+  }
 
   return (
-    <>
+    <div className="space-y-4">
       {/* Mobile Card View */}
       <div className="md:hidden space-y-4">
-        {essays.map((essay) => (
+        {visibleEssays.map((essay) => (
           <div
             key={essay.id}
             className="border border-ocean-200 rounded-lg p-4 bg-white hover:bg-ocean-50 transition-colors"
@@ -88,7 +104,7 @@ export function RecentEssaysTable({ essays }: RecentEssaysTableProps) {
             </tr>
           </thead>
           <tbody>
-            {essays.map((essay) => (
+            {visibleEssays.map((essay) => (
               <tr
                 key={essay.id}
                 className="border-b border-ocean-100 hover:bg-ocean-50 transition-colors"
@@ -133,6 +149,29 @@ export function RecentEssaysTable({ essays }: RecentEssaysTableProps) {
           </tbody>
         </table>
       </div>
-    </>
+
+      {essays.length > initialCount && (
+        <div className="flex justify-center pt-1">
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={handleToggle}
+            className="gap-2 text-cyan-700 hover:text-cyan-800 hover:bg-cyan-50"
+          >
+            {canLoadMore ? (
+              <>
+                <ChevronDown className="h-4 w-4" />
+                Show more ({Math.min(stepCount, essays.length - visibleCount)})
+              </>
+            ) : (
+              <>
+                <ChevronUp className="h-4 w-4" />
+                Show less
+              </>
+            )}
+          </Button>
+        </div>
+      )}
+    </div>
   )
 }
