@@ -18,9 +18,10 @@ export function AnimatedNumber({
   const [displayValue, setDisplayValue] = useState(0)
   const frameRef = useRef<number>()
   const startTimeRef = useRef<number>()
+  const previousValueRef = useRef(0)
 
   useEffect(() => {
-    const startValue = displayValue
+    const startValue = previousValueRef.current
     const difference = value - startValue
 
     const animate = (currentTime: number) => {
@@ -36,11 +37,13 @@ export function AnimatedNumber({
 
       const current = startValue + difference * easeProgress
       setDisplayValue(current)
+      previousValueRef.current = current
 
       if (progress < 1) {
         frameRef.current = requestAnimationFrame(animate)
       } else {
         setDisplayValue(value)
+        previousValueRef.current = value
         startTimeRef.current = undefined
       }
     }

@@ -2,6 +2,16 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
+function clearSupabaseAuthCookies(req: NextRequest, res: NextResponse) {
+  // Remove stale auth cookies so failed refresh tokens do not loop forever.
+  req.cookies
+    .getAll()
+    .filter((cookie) => cookie.name.startsWith('sb-'))
+    .forEach((cookie) => {
+      res.cookies.delete(cookie.name)
+    })
+}
+
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
   const supabase = createMiddlewareClient({ req, res })
@@ -14,10 +24,18 @@ export async function middleware(req: NextRequest) {
 
   if (hasSupabaseCookie) {
     try {
-      await supabase.auth.getSession()
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession()
+
+      // If refresh/session retrieval fails, clear stale cookies once.
+      // This prevents every subsequent request from retrying refresh.
+      if (error || !session) {
+        clearSupabaseAuthCookies(req, res)
+      }
     } catch {
-      // Ignore refresh errors in middleware to avoid noisy logs/rate spikes.
-      // Route handlers and pages will still enforce auth via getUser().
+      clearSupabaseAuthCookies(req, res)
     }
   }
 
@@ -54,6 +72,7 @@ export const config = {
     '/admin/:path*',
     '/invite/:path*',
     '/subscription/:path*',
+    '/api/:path*',
     '/auth/callback',
   ],
 }

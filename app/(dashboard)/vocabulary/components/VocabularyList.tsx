@@ -5,9 +5,10 @@ import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
-import { BookOpen, Loader2, Sparkles, Lightbulb, Clock, CheckCircle, Eye, Target, Award, Filter } from 'lucide-react'
+import { BookOpen, Loader2, Sparkles, Lightbulb, Clock, CheckCircle, Eye, Target, Award, Filter, Search } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { useRouter } from 'next/navigation'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
@@ -37,9 +38,13 @@ interface EssayWithVocab {
 
 interface VocabularyListProps {
   essays: EssayWithVocab[]
+  stats: {
+    totalWordsLearned: number
+    lastQuizScore: number | null
+  }
 }
 
-export function VocabularyList({ essays }: VocabularyListProps) {
+export function VocabularyList({ essays, stats }: VocabularyListProps) {
   const router = useRouter()
   const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({})
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
@@ -47,6 +52,7 @@ export function VocabularyList({ essays }: VocabularyListProps) {
   const [elapsedTime, setElapsedTime] = useState<{ [key: string]: number }>({})
   const [currentLoadingKey, setCurrentLoadingKey] = useState<string | null>(null)
   const [filterOption, setFilterOption] = useState<string>('all')
+  const [searchQuery, setSearchQuery] = useState('')
   const [optimisticUpdates, setOptimisticUpdates] = useState<{ [key: string]: { hasParaphraseVocab?: boolean; hasTopicVocab?: boolean } }>({})
 
   // Timer for elapsed time
@@ -198,6 +204,13 @@ export function VocabularyList({ essays }: VocabularyListProps) {
   const filteredEssays = useMemo(() => {
     let filtered = [...essaysWithOptimisticUpdates]
 
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase()
+      filtered = filtered.filter((essay) =>
+        essay.prompt.toLowerCase().includes(query)
+      )
+    }
+
     switch (filterOption) {
       case 'not-generated':
         // Show essays that haven't generated any vocabulary yet
@@ -241,17 +254,45 @@ export function VocabularyList({ essays }: VocabularyListProps) {
     }
 
     return filtered
-  }, [essaysWithOptimisticUpdates, filterOption])
+  }, [essaysWithOptimisticUpdates, filterOption, searchQuery])
 
   return (
     <div className="space-y-4">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <Card className="border-slate-200 shadow-sm">
+          <CardContent className="flex items-center justify-between p-4">
+            <div>
+              <p className="text-xs uppercase tracking-wide text-slate-500">Total words learned</p>
+              <p className="text-2xl font-bold text-ocean-800">{stats.totalWordsLearned}</p>
+            </div>
+            <BookOpen className="h-8 w-8 text-ocean-500" />
+          </CardContent>
+        </Card>
+        <Card className="border-slate-200 shadow-sm">
+          <CardContent className="flex items-center justify-between p-4">
+            <div>
+              <p className="text-xs uppercase tracking-wide text-slate-500">Last quiz score</p>
+              <p className="text-2xl font-bold text-ocean-800">
+                {stats.lastQuizScore !== null ? `${stats.lastQuizScore}%` : 'No quiz yet'}
+              </p>
+            </div>
+            <Award className="h-8 w-8 text-cyan-600" />
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Filter Controls */}
       <Card className="border-ocean-200 shadow-sm">
         <CardContent className="pt-4 md:pt-6 px-4">
-          <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
-            <div className="flex items-center gap-2 text-ocean-700">
-              <Filter className="h-4 w-4" />
-              <span className="text-xs md:text-sm font-medium">Filter:</span>
+          <div className="grid gap-3 md:grid-cols-[1.2fr_auto_220px] md:items-center">
+            <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500">
+              <Search className="h-4 w-4 text-ocean-500" />
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search essay prompt"
+                className="h-8 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+              />
             </div>
             <Select value={filterOption} onValueChange={setFilterOption}>
               <SelectTrigger className="w-full md:w-[220px]">

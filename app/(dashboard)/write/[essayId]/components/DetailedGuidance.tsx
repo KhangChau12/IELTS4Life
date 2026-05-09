@@ -129,7 +129,7 @@ export function DetailedGuidance({ essayId, hasImprovedEssay, initialGuidance }:
     checkImprovedEssay()
 
     return () => clearInterval(interval)
-  }, [essayId]) // Only depend on essayId - early return handles the rest
+  }, [essayId, guidance, hasStarted, improvedEssayExists])
 
   // Auto-generate when improved essay is ready (and guidance doesn't exist yet)
   useEffect(() => {

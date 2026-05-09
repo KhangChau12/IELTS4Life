@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -57,11 +57,7 @@ export default function VocabularyDetailPage({ params }: VocabularyPageProps) {
   const [topicVocab, setTopicVocab] = useState<VocabularyItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    fetchData()
-  }, [params.essayId])
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const response = await fetch(`/api/vocabulary/${params.essayId}`)
       const data = await response.json()
@@ -80,7 +76,11 @@ export default function VocabularyDetailPage({ params }: VocabularyPageProps) {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [params.essayId, router])
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
 
   if (isLoading || !essay) {
     return (

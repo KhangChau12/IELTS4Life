@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -28,11 +28,7 @@ export default function FlashcardsPage({ params }: { params: { essayId: string }
   const [hasParaphraseVocab, setHasParaphraseVocab] = useState(false)
   const [hasTopicVocab, setHasTopicVocab] = useState(false)
 
-  useEffect(() => {
-    fetchVocabulary()
-  }, [params.essayId, vocabType])
-
-  const fetchVocabulary = async () => {
+  const fetchVocabulary = useCallback(async () => {
     try {
       const response = await fetch(`/api/vocabulary/${params.essayId}?type=${vocabType}`)
       const data = await response.json()
@@ -57,7 +53,11 @@ export default function FlashcardsPage({ params }: { params: { essayId: string }
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [params.essayId, vocabType])
+
+  useEffect(() => {
+    fetchVocabulary()
+  }, [fetchVocabulary])
 
   const handleNext = () => {
     if (currentIndex < vocabulary.length - 1) {

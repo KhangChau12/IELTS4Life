@@ -43,11 +43,25 @@ export function Header({ user }: HeaderProps) {
   const [unreadCount, setUnreadCount] = useState(0)
 
   useEffect(() => {
-    if (!user) return
+    if (!user) {
+      setUnreadCount(0)
+      return
+    }
 
     const fetchUnreadCount = async () => {
       try {
-        const res = await fetch('/api/notifications?unread_only=true')
+        const res = await fetch('/api/notifications?unread_only=true', {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache',
+          },
+        })
+
+        if (res.status === 401) {
+          setUnreadCount(0)
+          return
+        }
+
         if (res.ok) {
           const data = await res.json()
           setUnreadCount(data.unreadCount || 0)
@@ -58,7 +72,7 @@ export function Header({ user }: HeaderProps) {
     }
 
     fetchUnreadCount()
-  }, [user])
+  }, [user, pathname])
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
@@ -424,7 +438,7 @@ export function Header({ user }: HeaderProps) {
                   <span className="hidden md:inline">{user.email}</span>
                   <ChevronDown className="hidden md:inline h-3.5 w-3.5 ml-1 opacity-70" />
                   {unreadCount > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-red-500 border border-ocean-700" />
+                    <span className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-red-500 border border-ocean-700" />
                   )}
                 </Button>
               </DropdownMenuTrigger>

@@ -25,7 +25,15 @@ interface EssayWithVocab {
   }
 }
 
-async function getEssaysWithVocabulary(): Promise<EssayWithVocab[]> {
+interface VocabularyPageStats {
+  totalWordsLearned: number
+  lastQuizScore: number | null
+}
+
+async function getEssaysWithVocabulary(): Promise<{
+  essays: EssayWithVocab[]
+  stats: VocabularyPageStats
+}> {
   const supabase = createServerClient()
 
   const { data: { user } } = await supabase.auth.getUser()
@@ -57,7 +65,13 @@ async function getEssaysWithVocabulary(): Promise<EssayWithVocab[]> {
   ])
 
   if (essaysResult.error || !essaysResult.data?.length) {
-    return []
+    return {
+      essays: [],
+      stats: {
+        totalWordsLearned: 0,
+        lastQuizScore: null,
+      },
+    }
   }
 
   const essays = essaysResult.data
@@ -78,7 +92,14 @@ async function getEssaysWithVocabulary(): Promise<EssayWithVocab[]> {
     }
   }
 
-  return essays.map((essay) => {
+  const lastQuizAttempt = allQuiz[0]
+  const lastQuizScore =
+    lastQuizAttempt && lastQuizAttempt.total_questions > 0
+      ? Math.round((lastQuizAttempt.score / lastQuizAttempt.total_questions) * 100)
+      : null
+
+  return {
+    essays: essays.map((essay) => {
     const paraphraseQuiz = quizMap.get(`${essay.id}:paraphrase`)
     const topicQuiz = quizMap.get(`${essay.id}:topic`)
 
@@ -100,14 +121,19 @@ async function getEssaysWithVocabulary(): Promise<EssayWithVocab[]> {
         totalQuestions: topicQuiz?.total_questions ?? null,
       },
     }
-  })
+  }),
+    stats: {
+      totalWordsLearned: allVocab.length,
+      lastQuizScore,
+    },
+  }
 }
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 export default async function VocabularyPage() {
-  const essays = await getEssaysWithVocabulary()
+  const { essays, stats } = await getEssaysWithVocabulary()
 
   return (
     <div className="max-w-6xl mx-auto px-4">
@@ -140,7 +166,7 @@ export default async function VocabularyPage() {
           </CardContent>
         </Card>
       ) : (
-        <VocabularyList essays={essays} />
+        <VocabularyList essays={essays} stats={stats} />
       )}
     </div>
   )

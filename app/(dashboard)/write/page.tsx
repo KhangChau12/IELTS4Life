@@ -16,6 +16,9 @@ import { getDeviceFingerprint } from '@/lib/fingerprint'
 import { GuestLimitModal } from '@/components/guest/GuestLimitModal'
 import { GuestBanner } from '@/components/guest/GuestBanner'
 
+const SAMPLE_PROMPT =
+  'Some people believe that schools should focus on academic subjects such as mathematics and science, while others think practical skills like cooking and financial management are more important. Discuss both views and give your opinion.'
+
 export default function WritePage() {
   const router = useRouter()
   const [prompt, setPrompt] = useState('')
@@ -29,6 +32,9 @@ export default function WritePage() {
   const [showGuestLimit, setShowGuestLimit] = useState(false)
   const [existingEssayId, setExistingEssayId] = useState<string>()
   const [fingerprint, setFingerprint] = useState<string>('')
+  const [draftKey, setDraftKey] = useState<string | null>(null)
+  const [hasHydratedDraft, setHasHydratedDraft] = useState(false)
+  const [lastSavedAt, setLastSavedAt] = useState<string | null>(null)
 
   // Check if user is guest and if they've used their trial
   useEffect(() => {
@@ -36,24 +42,86 @@ export default function WritePage() {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
 
-      if (!user) {
-        setIsGuest(true)
+      if (user) {
+        setDraftKey(`write-draft:user:${user.id}`)
+        return
+      }
 
-        // Get fingerprint
-        const fp = await getDeviceFingerprint()
-        setFingerprint(fp)
+      setIsGuest(true)
 
-        // Check if guest already used trial
-        const guestCheck = await checkGuestUsage()
-        if (guestCheck.hasUsed) {
-          setShowGuestLimit(true)
-          setExistingEssayId(guestCheck.essayId)
-        }
+      // Get fingerprint
+      const fp = await getDeviceFingerprint()
+      setFingerprint(fp)
+      setDraftKey(`write-draft:guest:${fp}`)
+
+      // Check if guest already used trial
+      const guestCheck = await checkGuestUsage()
+      if (guestCheck.hasUsed) {
+        setShowGuestLimit(true)
+        setExistingEssayId(guestCheck.essayId)
       }
     }
 
     checkAuth()
   }, [])
+
+  useEffect(() => {
+    if (!draftKey || hasHydratedDraft) {
+      return
+    }
+
+    try {
+      const savedDraft = window.localStorage.getItem(draftKey)
+
+      if (savedDraft) {
+        const parsed = JSON.parse(savedDraft) as {
+          prompt?: string
+          essay?: string
+          updatedAt?: string
+        }
+
+        if (parsed.prompt) setPrompt(parsed.prompt)
+        if (parsed.essay) setEssay(parsed.essay)
+        if (parsed.updatedAt) setLastSavedAt(parsed.updatedAt)
+      }
+    } catch {
+      // Ignore invalid local drafts and continue with a clean form.
+    } finally {
+      setHasHydratedDraft(true)
+    }
+  }, [draftKey, hasHydratedDraft])
+
+  useEffect(() => {
+    if (!draftKey || !hasHydratedDraft || isSubmitting) {
+      return
+    }
+
+    const timeout = window.setTimeout(() => {
+      try {
+        const updatedAt = new Date().toISOString()
+        window.localStorage.setItem(
+          draftKey,
+          JSON.stringify({
+            prompt,
+            essay,
+            updatedAt,
+          })
+        )
+        setLastSavedAt(updatedAt)
+      } catch {
+        // Autosave should never block writing.
+      }
+    }, 500)
+
+    return () => window.clearTimeout(timeout)
+  }, [draftKey, essay, hasHydratedDraft, isSubmitting, prompt])
+
+  const clearDraft = () => {
+    if (draftKey) {
+      window.localStorage.removeItem(draftKey)
+    }
+    setLastSavedAt(null)
+  }
 
   // Timer for elapsed time
   useEffect(() => {
@@ -145,6 +213,7 @@ export default function WritePage() {
           await markGuestUsed(data.essay.id)
         }
 
+        clearDraft()
         setProgress(100)
         setTimeout(() => {
           router.push(`/write/${data.essay.id}`)
@@ -161,6 +230,9 @@ export default function WritePage() {
 
   const wordCount = essay.trim().split(/\s+/).filter(word => word.length > 0).length
   const hasReachedTarget = wordCount >= 250
+  const autosaveLabel = lastSavedAt
+    ? `Saved locally at ${new Date(lastSavedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+    : 'Autosave is on for this draft.'
 
   return (
     <div className="min-h-screen">
@@ -194,11 +266,23 @@ export default function WritePage() {
             <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
               {/* Essay Prompt Field */}
               <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <FileText className="h-5 w-5 text-cyan-600" />
-                  <Label htmlFor="prompt" className="text-cyan-700 font-semibold text-base">
-                    Essay Prompt
-                  </Label>
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-5 w-5 text-cyan-600" />
+                    <Label htmlFor="prompt" className="text-cyan-700 font-semibold text-base">
+                      Essay Prompt
+                    </Label>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => setPrompt(SAMPLE_PROMPT)}
+                    disabled={isSubmitting}
+                    className="self-start sm:self-auto text-cyan-700 hover:text-cyan-800 hover:bg-cyan-50 px-2"
+                  >
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Use sample prompt
+                  </Button>
                 </div>
                 <Textarea
                   id="prompt"
@@ -245,16 +329,17 @@ export default function WritePage() {
                     )}
                   </div>
                 </div>
+                <p className="text-xs text-slate-500">{autosaveLabel}</p>
               </div>
 
               {/* Error Display */}
               {error && (
-                <div className={`p-4 border-2 rounded-xl space-y-3 ${
+                <div className={`p-5 border-2 rounded-xl space-y-4 ${
                   error.includes('valid IELTS')
                     ? 'bg-amber-50 border-amber-200'
                     : 'bg-red-50 border-red-200'
                 }`}>
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-start gap-4">
                     {error.includes('valid IELTS') && (
                       <svg className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
@@ -303,6 +388,7 @@ export default function WritePage() {
                     setPrompt('')
                     setEssay('')
                     setError('')
+                    clearDraft()
                   }}
                   disabled={isSubmitting}
                   className="px-6"

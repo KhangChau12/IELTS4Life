@@ -210,18 +210,81 @@ export default async function EssayResultsPage({
     },
   ]
 
+  const wordCount = typedEssay.essay_content.trim().split(/\s+/).filter(word => word.length > 0).length
+  const scoredCriteria = criteria.filter((criterion) => criterion.score !== null) as Array<CriterionData & { score: number }>
+  const highestCriterion = scoredCriteria.reduce<CriterionData | null>((best, current) => {
+    if (!best || (current.score ?? 0) > (best.score ?? 0)) {
+      return current
+    }
+    return best
+  }, null)
+  const lowestCriterion = scoredCriteria.reduce<CriterionData | null>((worst, current) => {
+    if (!worst || (current.score ?? 0) < (worst.score ?? 0)) {
+      return current
+    }
+    return worst
+  }, null)
+
+  const summaryItems = [
+    typedEssay.overall_score !== null
+      ? `Overall score ${typedEssay.overall_score.toFixed(1)} across ${wordCount} words`
+      : `Essay submitted with ${wordCount} words, score still pending`,
+    highestCriterion
+      ? `Strongest area: ${highestCriterion.name} (${highestCriterion.score?.toFixed(1)})`
+      : 'No scored criteria available yet',
+    lowestCriterion
+      ? `Focus next on: ${lowestCriterion.name} (${lowestCriterion.score?.toFixed(1)})`
+      : 'Generate vocabulary to keep improving the draft',
+  ]
+
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto space-y-8">
       {/* Guest Banner */}
       {isGuest && <GuestBanner />}
 
-      <div className="mb-8">
+      <div className="space-y-4">
         <h1 className="text-4xl font-bold text-ocean-800 mb-2">Essay Results</h1>
         <p className="text-ocean-600">Detailed scoring and feedback for your IELTS essay</p>
+
+        <div className="sticky top-20 z-30">
+          <div className="flex flex-wrap gap-2 rounded-2xl border border-slate-200 bg-white/90 p-2 shadow-sm backdrop-blur">
+            {[
+              { label: 'Score', href: '#score' },
+              { label: 'Criteria', href: '#criteria' },
+              { label: 'Improved Essay', href: '#improved-essay' },
+              { label: 'Vocab', href: '#vocab' },
+            ].map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-ocean-50 hover:text-ocean-700"
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <Card className="border-cyan-200 bg-gradient-to-br from-cyan-50 to-blue-50 shadow-sm">
+          <CardContent className="space-y-3 p-4 md:p-5">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-cyan-600" />
+              <h2 className="text-sm font-semibold text-ocean-800">Quick Summary</h2>
+            </div>
+            <ul className="space-y-2 text-sm text-ocean-700">
+              {summaryItems.map((item) => (
+                <li key={item} className="flex items-start gap-2 leading-relaxed">
+                  <span className="mt-1 h-2 w-2 rounded-full bg-cyan-500" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Overall Score Card */}
-      <Card className="border-ocean-300 shadow-lg mb-8 overflow-hidden">
+      <Card id="score" className="scroll-mt-24 border-ocean-300 shadow-lg overflow-hidden">
         <div className={`${typedEssay.overall_score !== null && typedEssay.overall_score >= 8.0
           ? 'bg-amber-700'
           : 'bg-ocean-700'} text-white p-8`}>
@@ -257,7 +320,7 @@ export default async function EssayResultsPage({
       </Card>
 
       {/* Essay Content */}
-      <Card className="border-ocean-200 shadow-lg mb-8">
+      <Card className="border-ocean-200 shadow-lg">
         <CardHeader className="border-b border-slate-100">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-ocean-600" />
@@ -288,7 +351,7 @@ export default async function EssayResultsPage({
       </Card>
 
       {/* Criteria Cards */}
-      <div className="mb-8">
+      <div id="criteria" className="scroll-mt-24 space-y-4">
         <h2 className="text-2xl font-bold text-ocean-800 mb-4">Detailed Criteria Scores</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {criteria.map((criterion, index) => (
@@ -298,7 +361,7 @@ export default async function EssayResultsPage({
       </div>
 
       {/* Essay Improvement Section */}
-      <div className="mb-8">
+      <div id="improved-essay" className="scroll-mt-24 space-y-4">
         <h2 className="text-2xl font-bold text-ocean-800 mb-4">Improved Essay Example</h2>
         <EssayImprovement
           essayId={params.essayId}
@@ -309,7 +372,7 @@ export default async function EssayResultsPage({
       </div>
 
       {/* Detailed Guidance Section */}
-      <div className="mb-8">
+      <div className="space-y-4">
         <DetailedGuidance
           essayId={params.essayId}
           hasImprovedEssay={!!essay.improved_essay}
@@ -318,7 +381,7 @@ export default async function EssayResultsPage({
       </div>
 
       {/* Next Steps - Vocabulary */}
-      <Card className="border-ocean-200 shadow-lg mb-6">
+      <Card id="vocab" className="scroll-mt-24 border-ocean-200 shadow-lg">
         <CardHeader className="border-b border-slate-100">
           <div className="flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-ocean-600" />

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -38,11 +38,7 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  useEffect(() => {
-    fetchVocabulary()
-  }, [params.essayId, vocabType])
-
-  const fetchVocabulary = async () => {
+  const fetchVocabulary = useCallback(async () => {
     try {
       const response = await fetch(`/api/vocabulary/${params.essayId}?type=${vocabType}`)
       const data = await response.json()
@@ -61,7 +57,11 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [params.essayId, vocabType])
+
+  useEffect(() => {
+    fetchVocabulary()
+  }, [fetchVocabulary])
 
   const generateQuestions = (type: QuizType) => {
     if (!type) return

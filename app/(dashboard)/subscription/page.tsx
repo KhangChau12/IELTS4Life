@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation'
+import Image from 'next/image'
 import { createServerClient } from '@/lib/supabase/server'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -320,18 +321,49 @@ export default async function SubscriptionPage() {
                 <Crown className="mr-2 h-4 w-4" /> Active Plan
               </Badge>
             ) : (
-              <div className="bg-gradient-to-r from-green-100 to-emerald-100 border border-green-300 rounded-lg p-4 text-center">
+              <div className="bg-gradient-to-r from-green-100 to-emerald-100 border border-green-300 rounded-lg p-4">
                 <p className="text-sm font-semibold text-green-800 mb-1">
-                  Pro subscriptions launching soon!
+                  Want Pro access? Message us on Zalo!
                 </p>
-                <p className="text-xs text-green-700">
-                  We're working on payment integration. Stay tuned!
+                <p className="text-xs text-green-700 leading-relaxed">
+                  While we&apos;re building the payment system, message the developer on Zalo at{' '}
+                  <strong>0971240808</strong> to get a temporary Pro upgrade. We&apos;re happy to help!
                 </p>
               </div>
             )}
           </CardContent>
         </Card>
       </div>
+
+      {/* Support / Donation */}
+      <Card className="border-amber-200 shadow-lg mb-8">
+        <CardHeader className="bg-gradient-to-r from-amber-50 to-yellow-50 border-b border-amber-200">
+          <CardTitle className="text-amber-800">Support This Free Project ☕</CardTitle>
+          <CardDescription>Buy us a coffee to keep IELTS4Life running</CardDescription>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <div className="flex-1">
+              <p className="text-sm text-amber-700 leading-relaxed mb-3">
+                If you find IELTS4Life helpful, consider sending any amount to support the developer.
+                Every contribution helps keep the platform ad-free and makes it better for everyone!
+              </p>
+              <p className="text-sm font-semibold text-amber-800">
+                SHB Bank · <span className="font-mono">0971240808</span>
+              </p>
+            </div>
+            <div className="flex-shrink-0">
+              <Image
+                src="/images/qr code.jpg"
+                alt="SHB Bank QR Code"
+                width={240}
+                height={240}
+                className="rounded-xl border-2 border-amber-200 shadow-sm"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* FAQ / Info */}
       <Card className="border-ocean-200 shadow-lg">
