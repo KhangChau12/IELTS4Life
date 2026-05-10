@@ -4,13 +4,13 @@ import { Skeleton } from '@/components/ui/skeleton'
 export default function DashboardLoading() {
   return (
     <div className="max-w-7xl mx-auto space-y-7 md:space-y-9 px-4 py-6">
-      {/* Welcome Section Skeleton */}
+      {/* Welcome Section */}
       <div className="mb-8 md:mb-10 space-y-2">
         <Skeleton className="h-8 md:h-10 w-64 md:w-80" />
         <Skeleton className="h-5 md:h-6 w-56 md:w-72" />
       </div>
 
-      {/* Next Action Banner Skeleton */}
+      {/* Next Action Banner */}
       <Card className="border-ocean-200 shadow-lg bg-gradient-to-br from-ocean-50 to-cyan-50">
         <CardContent className="p-5 md:p-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -24,7 +24,7 @@ export default function DashboardLoading() {
         </CardContent>
       </Card>
 
-      {/* Progress Summary Skeleton */}
+      {/* Progress Summary — 4 stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         {[1, 2, 3, 4].map((item) => (
           <Card key={item} className="border-ocean-200 shadow-lg">
@@ -42,14 +42,14 @@ export default function DashboardLoading() {
         ))}
       </div>
 
-      {/* Chart Skeleton */}
+      {/* Score Chart */}
       <Card className="border-ocean-200 shadow-lg">
         <CardHeader className="space-y-4">
           <Skeleton className="h-6 w-56" />
           <div className="flex flex-wrap gap-2">
-            <Skeleton className="h-7 w-24 rounded-full" />
-            <Skeleton className="h-7 w-32 rounded-full" />
+            <Skeleton className="h-7 w-20 rounded-full" />
             <Skeleton className="h-7 w-28 rounded-full" />
+            <Skeleton className="h-7 w-24 rounded-full" />
             <Skeleton className="h-7 w-24 rounded-full" />
             <Skeleton className="h-7 w-24 rounded-full" />
           </div>
@@ -59,64 +59,81 @@ export default function DashboardLoading() {
         </CardContent>
       </Card>
 
-      {/* Vocabulary Progress Skeleton */}
-      <Card className="border-ocean-200 shadow-lg">
-        <CardHeader className="space-y-2">
-          <Skeleton className="h-6 w-56" />
-          <Skeleton className="h-4 w-72" />
+      {/* Vocabulary Progress */}
+      <Card className="border-0 shadow-lg overflow-hidden">
+        <CardHeader className="pb-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-5 w-5 rounded" />
+              <Skeleton className="h-6 w-44" />
+            </div>
+            <Skeleton className="h-5 w-24" />
+          </div>
+          <Skeleton className="h-4 w-56 mt-1" />
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3].map((item) => (
-              <Skeleton key={item} className="h-24 w-full rounded-xl" />
-            ))}
+        <CardContent className="space-y-8">
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Left: progress bars */}
+            <div className="space-y-4">
+              <Skeleton className="h-5 w-36 mb-2" />
+              {[1, 2].map((i) => (
+                <div key={i} className="space-y-2">
+                  <div className="flex justify-between">
+                    <Skeleton className="h-4 w-28" />
+                    <Skeleton className="h-4 w-10" />
+                  </div>
+                  <Skeleton className="h-2.5 w-full rounded-full" />
+                </div>
+              ))}
+            </div>
+            {/* Right: pie chart placeholder */}
+            <div className="flex items-center justify-center">
+              <Skeleton className="h-[180px] w-[180px] rounded-full" />
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Recent Essays Skeleton */}
-      <Card className="border-ocean-200 shadow-lg">
-        <CardHeader className="space-y-2">
-          <Skeleton className="h-6 w-40" />
-          <Skeleton className="h-4 w-48" />
+      {/* LookBack Tabs */}
+      <Card className="overflow-hidden border-0 bg-white shadow-lg">
+        {/* Gradient top border */}
+        <div className="h-1 bg-gradient-to-r from-cyan-500 via-ocean-500 to-blue-500" />
+        <CardHeader className="bg-gradient-to-br from-ocean-50 via-white to-cyan-50/60 pb-0">
+          <div className="flex items-center gap-2 mb-1">
+            <Skeleton className="h-5 w-5 rounded" />
+            <Skeleton className="h-6 w-28" />
+          </div>
+          <Skeleton className="h-4 w-56 mb-4" />
+          {/* Tab triggers */}
+          <div className="grid grid-cols-3 gap-2 pb-4">
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} className="h-9 w-full rounded-md" />
+            ))}
+          </div>
         </CardHeader>
-        <CardContent>
-          {/* Mobile Card View Skeleton */}
+        <CardContent className="pt-4">
+          {/* Mobile card view */}
           <div className="md:hidden space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="border border-ocean-200 rounded-lg p-4">
-                <Skeleton className="h-4 w-full mb-3" />
-                <Skeleton className="h-4 w-3/4 mb-3" />
-                <Skeleton className="h-10 w-full" />
+              <div key={i} className="border border-ocean-100 rounded-2xl p-4 space-y-3">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-9 w-full rounded-lg" />
               </div>
             ))}
           </div>
 
-          {/* Desktop Table Skeleton */}
+          {/* Desktop table rows */}
           <div className="hidden md:block space-y-3">
             {[1, 2, 3, 4, 5].map((i) => (
               <div key={i} className="flex items-center gap-4 p-3 border-b border-ocean-100">
                 <Skeleton className="h-4 flex-1" />
                 <Skeleton className="h-6 w-16" />
                 <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-9 w-32" />
+                <Skeleton className="h-9 w-32 rounded-lg" />
               </div>
             ))}
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Error History Skeleton */}
-      <Card className="border-ocean-200 shadow-lg">
-        <CardHeader className="space-y-2">
-          <Skeleton className="h-6 w-44" />
-          <Skeleton className="h-4 w-56" />
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <Skeleton className="h-10 w-full rounded-lg" />
-          <Skeleton className="h-10 w-full rounded-lg" />
-          <Skeleton className="h-10 w-full rounded-lg" />
-          <Skeleton className="h-10 w-full rounded-lg" />
         </CardContent>
       </Card>
     </div>
