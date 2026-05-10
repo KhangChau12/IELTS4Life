@@ -292,13 +292,13 @@ export function EssayResultsClient({
       {/* Tabbed content */}
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         {/* Sticky tab bar */}
-        <div className="sticky top-20 z-30 -mx-4 px-4 bg-white/95 backdrop-blur-sm border-b border-slate-200">
+        <div className="sticky top-20 z-30 -mx-4 px-4 bg-ocean-50/95 backdrop-blur-sm border-b border-ocean-100">
           <TabsList className="w-full h-auto bg-transparent p-0 rounded-none border-0 gap-0">
             {TABS.map(({ value, label, Icon }) => (
               <TabsTrigger
                 key={value}
                 value={value}
-                className="flex-1 flex items-center justify-center gap-2 rounded-none border-b-2 border-transparent px-4 py-3 text-sm font-medium text-slate-500 transition-colors hover:text-ocean-700 hover:bg-ocean-50 data-[state=active]:border-ocean-600 data-[state=active]:text-ocean-700 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+                className="flex-1 flex items-center justify-center gap-2 rounded-none border-b-2 border-transparent px-4 py-3 text-sm font-medium text-slate-500 transition-colors hover:text-ocean-700 hover:bg-ocean-100 data-[state=active]:border-ocean-600 data-[state=active]:text-ocean-700 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
               >
                 <Icon className="h-4 w-4 flex-shrink-0" />
                 <span className="hidden sm:inline">{label}</span>
