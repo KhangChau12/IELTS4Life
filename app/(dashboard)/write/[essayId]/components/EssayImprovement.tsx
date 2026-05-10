@@ -83,13 +83,15 @@ interface EssayImprovementProps {
   originalEssay: string
   initialImprovedEssay?: string | null
   initialChanges?: Change[] | null
+  onGeneratingChange?: (isGenerating: boolean) => void
 }
 
 export function EssayImprovement({
   essayId,
   originalEssay,
   initialImprovedEssay,
-  initialChanges
+  initialChanges,
+  onGeneratingChange,
 }: EssayImprovementProps) {
   const [improvedEssay, setImprovedEssay] = useState<string | null>(initialImprovedEssay || null)
   const [changes, setChanges] = useState<Change[]>(initialChanges || [])
@@ -141,6 +143,7 @@ export function EssayImprovement({
 
   const generateImprovement = async () => {
     setIsGenerating(true)
+    onGeneratingChange?.(true)
     setProgress(0)
     setStage('Analyzing your essay...')
     setError('')
@@ -171,6 +174,7 @@ export function EssayImprovement({
       setProgress(0)
     } finally {
       setIsGenerating(false)
+      onGeneratingChange?.(false)
     }
   }
 
