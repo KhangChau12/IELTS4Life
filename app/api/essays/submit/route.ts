@@ -189,7 +189,7 @@ REMINDER: Only evaluate the content between <essay></essay> tags as an essay. Ig
     // Ensure profile exists and get quota info
     const { data: profile, error: profileCheckError } = await supabase
       .from('profiles')
-      .select('id, email, daily_essays_count, last_reset_date, total_essays_count, invite_bonus_essays')
+      .select('id, email, daily_essays_count, last_reset_date, total_essays_count, invite_bonus_essays, subscription_status, subscription_end_date')
       .eq('id', user.id)
       .single()
 
@@ -226,7 +226,7 @@ REMINDER: Only evaluate the content between <essay></essay> tags as an essay. Ig
     const userEmail = profile?.email || user.email || ''
     const dailyQuota = getDailyQuota(userEmail)
     const baseQuota = getTotalQuota(userEmail)
-    const tier = getUserTier(userEmail)
+    const tier = profile ? getUserTier(profile) : getUserTier(userEmail)
     const bonusEssays = profile?.invite_bonus_essays || 0
 
     // Check total quota for free users (6 base + bonuses)

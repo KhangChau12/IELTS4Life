@@ -21,6 +21,9 @@ export interface Database {
           invite_code: string | null
           invited_by: string | null
           invite_bonus_essays: number
+          subscription_status: 'free' | 'active' | 'expired'
+          subscription_end_date: string | null
+          subscription_order_code: string | null
           created_at: string
           updated_at: string
         }
@@ -35,6 +38,9 @@ export interface Database {
           invite_code?: string | null
           invited_by?: string | null
           invite_bonus_essays?: number
+          subscription_status?: 'free' | 'active' | 'expired'
+          subscription_end_date?: string | null
+          subscription_order_code?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -49,8 +55,46 @@ export interface Database {
           invite_code?: string | null
           invited_by?: string | null
           invite_bonus_essays?: number
+          subscription_status?: 'free' | 'active' | 'expired'
+          subscription_end_date?: string | null
+          subscription_order_code?: string | null
           created_at?: string
           updated_at?: string
+        }
+      }
+      payment_transactions: {
+        Row: {
+          id: string
+          user_id: string
+          order_code: string
+          amount: number
+          status: 'pending' | 'completed' | 'failed'
+          sepay_transaction_id: number | null
+          transaction_content: string | null
+          created_at: string
+          completed_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          order_code: string
+          amount: number
+          status?: 'pending' | 'completed' | 'failed'
+          sepay_transaction_id?: number | null
+          transaction_content?: string | null
+          created_at?: string
+          completed_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          order_code?: string
+          amount?: number
+          status?: 'pending' | 'completed' | 'failed'
+          sepay_transaction_id?: number | null
+          transaction_content?: string | null
+          created_at?: string
+          completed_at?: string | null
         }
       }
       essays: {

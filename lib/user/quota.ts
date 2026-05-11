@@ -1,38 +1,33 @@
-/**
- * User quota utilities
- * Determines daily essay submission limits based on email domain
- */
-
 export type UserTier = 'pro' | 'free'
 
-/**
- * Get daily essay quota based on email domain
- * Pro (@ptnk.edu.vn): 5 essays/day, unlimited total
- * Free: 3 essays/day, 9 essays total max
- */
+export type SubscriptionProfile = {
+  email: string
+  subscription_status?: 'free' | 'active' | 'expired' | null
+  subscription_end_date?: string | null
+}
+
 export function getDailyQuota(email: string): number {
-  if (email.endsWith('@ptnk.edu.vn')) {
-    return 5 // Pro tier (PTNK students/staff)
-  }
-  return 3 // Free tier
+  if (email.endsWith('@ptnk.edu.vn')) return 5
+  return 3
 }
 
-/**
- * Get total essay limit (lifetime)
- * Pro: unlimited
- * Free: 6 essays base (+ invite bonuses)
- */
 export function getTotalQuota(email: string): number | null {
-  if (email.endsWith('@ptnk.edu.vn')) {
-    return null // Unlimited for Pro
-  }
-  return 6 // Free tier limit (can earn more via invites)
+  if (email.endsWith('@ptnk.edu.vn')) return null
+  return 6
 }
 
 /**
- * Get user tier based on email domain
+ * Get user tier. Accepts either an email string (legacy) or a profile object.
+ * DB subscription status takes priority over email-based check.
  */
-export function getUserTier(email: string): UserTier {
+export function getUserTier(emailOrProfile: string | SubscriptionProfile): UserTier {
+  if (typeof emailOrProfile === 'string') {
+    return emailOrProfile.endsWith('@ptnk.edu.vn') ? 'pro' : 'free'
+  }
+  const { email, subscription_status, subscription_end_date } = emailOrProfile
+  if (subscription_status === 'active' && subscription_end_date) {
+    if (new Date(subscription_end_date) > new Date()) return 'pro'
+  }
   return email.endsWith('@ptnk.edu.vn') ? 'pro' : 'free'
 }
 
@@ -66,16 +61,14 @@ export function getQuotaExhaustedMessage(tier: UserTier, isDaily: boolean): {
   }
 
   if (isDaily) {
-    // Free user hit DAILY limit (can still use more tomorrow if have quota left)
     return {
-      message: "You've reached your daily limit of 3 essays. Come back tomorrow to continue! Upgrade to Pro for 5 essays per day.",
+      message: "You've reached your daily limit of 3 essays. Come back tomorrow to continue!",
       showUpgradeButton: true
     }
   }
 
-  // Free user hit TOTAL limit (completely out of essays)
   return {
-    message: "You've used all your free essays! To continue, invite friends to earn +6 essays per successful signup (they get +3 bonus too). Or upgrade to Pro for unlimited essays.",
+    message: "You've used all your free essays! To continue, invite friends to earn +6 essays per successful signup (they get +3 bonus too).",
     showUpgradeButton: true
   }
 }
