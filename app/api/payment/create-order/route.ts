@@ -1,17 +1,22 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase/server'
 import { createServiceRoleClient } from '@/lib/supabase/service'
 import { getUserTier } from '@/lib/user/quota'
 
-const AMOUNT = parseInt(process.env.PRO_PRICE_VND || '75000')
+const PRO_AMOUNT = parseInt(process.env.PRO_PRICE_VND || '75000')
+const PACK_AMOUNT = parseInt(process.env.ESSAY_PACK_PRICE_VND || '50000')
+const PACK_BONUS = parseInt(process.env.ESSAY_PACK_BONUS || '15')
 
-export async function POST() {
+export async function POST(req: NextRequest) {
   const supabase = createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+
+  const { searchParams } = new URL(req.url)
+  const type = searchParams.get('type') === 'pack' ? 'pack' : 'pro'
 
   const serviceClient = createServiceRoleClient()
   const { data: profile } = await serviceClient
@@ -24,27 +29,35 @@ export async function POST() {
     return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
   }
 
-  const tier = getUserTier(profile)
-  if (tier === 'pro') {
-    return NextResponse.json({ error: 'Already Pro' }, { status: 400 })
+  if (type === 'pro') {
+    const tier = getUserTier(profile)
+    if (tier === 'pro') {
+      return NextResponse.json({ error: 'Already Pro' }, { status: 400 })
+    }
   }
 
-  const orderCode = `PRO${user.id.slice(0, 8).replace(/-/g, '')}${Date.now()}`
+  const prefix = type === 'pack' ? 'PACK' : 'PRO'
+  const amount = type === 'pack' ? PACK_AMOUNT : PRO_AMOUNT
+  const orderCode = `${prefix}${user.id.slice(0, 8).replace(/-/g, '')}${Date.now()}`
 
   await serviceClient.from('payment_transactions').insert({
     user_id: user.id,
     order_code: orderCode,
-    amount: AMOUNT,
+    amount,
     status: 'pending',
   })
 
-  await serviceClient.from('profiles').update({
-    subscription_order_code: orderCode,
-  }).eq('id', user.id)
+  if (type === 'pro') {
+    await serviceClient.from('profiles').update({
+      subscription_order_code: orderCode,
+    }).eq('id', user.id)
+  }
 
   return NextResponse.json({
+    type,
     orderCode,
-    amount: AMOUNT,
+    amount,
+    essayBonus: type === 'pack' ? PACK_BONUS : null,
     accountNumber: process.env.MB_ACCOUNT_NUMBER || '0971240808',
     accountName: process.env.MB_ACCOUNT_NAME || 'CHAU PHUC KHANG',
     bankBin: process.env.MB_BANK_BIN || '970422',

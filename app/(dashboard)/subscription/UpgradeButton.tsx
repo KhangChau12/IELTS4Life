@@ -3,11 +3,13 @@
 import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Crown, Copy, Check, Loader2, AlertCircle } from 'lucide-react'
+import { Crown, Copy, Check, Loader2, AlertCircle, BookOpen } from 'lucide-react'
 
 type OrderInfo = {
+  type: 'pro' | 'pack'
   orderCode: string
   amount: number
+  essayBonus: number | null
   accountNumber: string
   accountName: string
   bankBin: string
@@ -16,10 +18,15 @@ type OrderInfo = {
 const POLL_INTERVAL_MS = 5000
 const POLL_MAX_MS = 5 * 60 * 1000
 
-export function UpgradeButton() {
-  const [loading, setLoading] = useState(false)
-  const [order, setOrder] = useState<OrderInfo | null>(null)
-  const [open, setOpen] = useState(false)
+function PaymentModal({
+  order,
+  open,
+  onClose,
+}: {
+  order: OrderInfo
+  open: boolean
+  onClose: () => void
+}) {
   const [copied, setCopied] = useState(false)
   const [pollStatus, setPollStatus] = useState<'waiting' | 'success' | 'timeout'>('waiting')
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -32,7 +39,9 @@ export function UpgradeButton() {
     }
   }
 
-  const startPolling = () => {
+  useEffect(() => {
+    if (!open) return
+    setPollStatus('waiting')
     pollStartRef.current = Date.now()
     pollRef.current = setInterval(async () => {
       if (Date.now() - pollStartRef.current > POLL_MAX_MS) {
@@ -41,10 +50,16 @@ export function UpgradeButton() {
         return
       }
       try {
-        const res = await fetch('/api/payment/status')
+        const url = order.type === 'pack'
+          ? `/api/payment/status?orderCode=${order.orderCode}`
+          : '/api/payment/status'
+        const res = await fetch(url)
         if (!res.ok) return
         const data = await res.json()
-        if (data.subscriptionStatus === 'active') {
+        const done = order.type === 'pro'
+          ? data.subscriptionStatus === 'active'
+          : data.packCompleted
+        if (done) {
           setPollStatus('success')
           stopPolling()
           setTimeout(() => window.location.reload(), 1500)
@@ -53,16 +68,120 @@ export function UpgradeButton() {
         // network hiccup, keep polling
       }
     }, POLL_INTERVAL_MS)
+    return () => stopPolling()
+  }, [open, order.type, order.orderCode])
+
+  const handleClose = () => {
+    stopPolling()
+    onClose()
   }
 
-  useEffect(() => {
-    return () => stopPolling()
-  }, [])
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(order.orderCode)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
-  const handleUpgrade = async () => {
+  const qrUrl = `https://img.vietqr.io/image/${order.bankBin}-${order.accountNumber}-compact.png?amount=${order.amount}&addInfo=${encodeURIComponent(order.orderCode)}&accountName=${encodeURIComponent(order.accountName)}`
+
+  const title = order.type === 'pro' ? 'Pro Subscription Payment' : 'Essay Pack Payment'
+  const successMsg = order.type === 'pro'
+    ? 'Payment confirmed! Updating your account...'
+    : `Payment confirmed! ${order.essayBonus} essays added to your account...`
+
+  return (
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 text-green-800">
+            {order.type === 'pro'
+              ? <Crown className="h-5 w-5" />
+              : <BookOpen className="h-5 w-5" />
+            }
+            {title}
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <div className="flex justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={qrUrl}
+              alt="VietQR MB Bank"
+              className="w-56 h-56 rounded-xl border border-green-200 shadow"
+            />
+          </div>
+
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-ocean-600">Bank</span>
+              <span className="font-semibold">MB Bank</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-ocean-600">Account number</span>
+              <span className="font-mono font-semibold">{order.accountNumber}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-ocean-600">Account name</span>
+              <span className="font-semibold">{order.accountName}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-ocean-600">Amount</span>
+              <span className="font-bold text-green-700">{order.amount.toLocaleString('vi-VN')} VND</span>
+            </div>
+          </div>
+
+          <div className="bg-amber-50 border border-amber-300 rounded-lg p-4">
+            <p className="text-xs text-amber-700 font-semibold mb-2">
+              Transfer note (must be exact):
+            </p>
+            <div className="flex items-center gap-2">
+              <code className="flex-1 font-mono text-sm bg-white border border-amber-200 rounded px-3 py-2 break-all">
+                {order.orderCode}
+              </code>
+              <Button variant="outline" size="sm" onClick={handleCopy} className="flex-shrink-0">
+                {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 py-2">
+            {pollStatus === 'waiting' && (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin text-ocean-500 flex-shrink-0" />
+                <p className="text-sm text-ocean-600">Waiting for payment confirmation...</p>
+              </>
+            )}
+            {pollStatus === 'success' && (
+              <>
+                <Check className="h-5 w-5 text-green-600 flex-shrink-0" />
+                <p className="text-sm text-green-700 font-semibold">{successMsg}</p>
+              </>
+            )}
+            {pollStatus === 'timeout' && (
+              <>
+                <AlertCircle className="h-5 w-5 text-amber-500 flex-shrink-0" />
+                <p className="text-sm text-amber-700">
+                  Payment not detected yet. If you&apos;ve already transferred, please wait a few minutes and reload the page.
+                </p>
+              </>
+            )}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+function usePaymentOrder(type: 'pro' | 'pack') {
+  const [loading, setLoading] = useState(false)
+  const [order, setOrder] = useState<OrderInfo | null>(null)
+  const [modalOpen, setModalOpen] = useState(false)
+
+  const handleOrder = async () => {
     setLoading(true)
     try {
-      const res = await fetch('/api/payment/create-order', { method: 'POST' })
+      const res = await fetch(`/api/payment/create-order?type=${type}`, { method: 'POST' })
       if (!res.ok) {
         const err = await res.json()
         alert(err.error || 'Something went wrong. Please try again.')
@@ -70,34 +189,22 @@ export function UpgradeButton() {
       }
       const data: OrderInfo = await res.json()
       setOrder(data)
-      setPollStatus('waiting')
-      setOpen(true)
-      startPolling()
+      setModalOpen(true)
     } finally {
       setLoading(false)
     }
   }
 
-  const handleClose = () => {
-    stopPolling()
-    setOpen(false)
-  }
+  return { loading, order, modalOpen, setModalOpen, handleOrder }
+}
 
-  const handleCopy = async () => {
-    if (!order) return
-    await navigator.clipboard.writeText(order.orderCode)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
-  const qrUrl = order
-    ? `https://img.vietqr.io/image/${order.bankBin}-${order.accountNumber}-compact.png?amount=${order.amount}&addInfo=${encodeURIComponent(order.orderCode)}&accountName=${encodeURIComponent(order.accountName)}`
-    : ''
+export function UpgradeProButton() {
+  const { loading, order, modalOpen, setModalOpen, handleOrder } = usePaymentOrder('pro')
 
   return (
     <>
       <Button
-        onClick={handleUpgrade}
+        onClick={handleOrder}
         disabled={loading}
         className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-2"
       >
@@ -106,91 +213,37 @@ export function UpgradeButton() {
         ) : (
           <Crown className="mr-2 h-4 w-4" />
         )}
-        Upgrade to Pro — 75,000 VND/month
+        Upgrade to Pro
       </Button>
 
-      <Dialog open={open} onOpenChange={handleClose}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-green-800">
-              <Crown className="h-5 w-5" /> Pro Payment
-            </DialogTitle>
-          </DialogHeader>
+      {order && (
+        <PaymentModal order={order} open={modalOpen} onClose={() => setModalOpen(false)} />
+      )}
+    </>
+  )
+}
 
-          {order && (
-            <div className="space-y-4">
-              {/* QR Code */}
-              <div className="flex justify-center">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={qrUrl}
-                  alt="VietQR MB Bank"
-                  className="w-56 h-56 rounded-xl border border-green-200 shadow"
-                />
-              </div>
+export function BuyPackButton() {
+  const { loading, order, modalOpen, setModalOpen, handleOrder } = usePaymentOrder('pack')
 
-              {/* Bank info */}
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4 space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-ocean-600">Bank</span>
-                  <span className="font-semibold">MB Bank</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-ocean-600">Account number</span>
-                  <span className="font-mono font-semibold">{order.accountNumber}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-ocean-600">Account name</span>
-                  <span className="font-semibold">{order.accountName}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-ocean-600">Amount</span>
-                  <span className="font-bold text-green-700">{order.amount.toLocaleString('vi-VN')} VND</span>
-                </div>
-              </div>
+  return (
+    <>
+      <Button
+        onClick={handleOrder}
+        disabled={loading}
+        className="w-full bg-ocean-600 hover:bg-ocean-700 text-white py-2"
+      >
+        {loading ? (
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          <BookOpen className="mr-2 h-4 w-4" />
+        )}
+        Buy Pack
+      </Button>
 
-              {/* Transfer note — required */}
-              <div className="bg-amber-50 border border-amber-300 rounded-lg p-4">
-                <p className="text-xs text-amber-700 font-semibold mb-2">
-                  Transfer note (must be exact):
-                </p>
-                <div className="flex items-center gap-2">
-                  <code className="flex-1 font-mono text-sm bg-white border border-amber-200 rounded px-3 py-2 break-all">
-                    {order.orderCode}
-                  </code>
-                  <Button variant="outline" size="sm" onClick={handleCopy} className="flex-shrink-0">
-                    {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
-                  </Button>
-                </div>
-              </div>
-
-              {/* Poll status */}
-              <div className="flex items-center gap-3 py-2">
-                {pollStatus === 'waiting' && (
-                  <>
-                    <Loader2 className="h-5 w-5 animate-spin text-ocean-500 flex-shrink-0" />
-                    <p className="text-sm text-ocean-600">Waiting for payment confirmation...</p>
-                  </>
-                )}
-                {pollStatus === 'success' && (
-                  <>
-                    <Check className="h-5 w-5 text-green-600 flex-shrink-0" />
-                    <p className="text-sm text-green-700 font-semibold">Payment confirmed! Updating your account...</p>
-                  </>
-                )}
-                {pollStatus === 'timeout' && (
-                  <>
-                    <AlertCircle className="h-5 w-5 text-amber-500 flex-shrink-0" />
-                    <p className="text-sm text-amber-700">
-                      Payment not detected yet. If you&apos;ve already transferred, please wait a few minutes and reload the page.
-                    </p>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      {order && (
+        <PaymentModal order={order} open={modalOpen} onClose={() => setModalOpen(false)} />
+      )}
     </>
   )
 }
