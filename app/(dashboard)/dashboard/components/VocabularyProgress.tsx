@@ -44,7 +44,7 @@ export function VocabularyProgress({
             Vocabulary Learning Journey
           </CardTitle>
         </CardHeader>
-        <CardContent className="py-16 relative z-10">
+        <CardContent className="py-8 sm:py-12 md:py-16 relative z-10">
           <div className="text-center">
             <div className="inline-flex items-center justify-center h-24 w-24 rounded-2xl bg-white/60 backdrop-blur mb-6">
               <BookOpen className="h-12 w-12 text-ocean-300" />
@@ -105,7 +105,7 @@ export function VocabularyProgress({
 
         {/* Quiz Performance Section */}
         {totalQuestions > 0 ? (
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid sm:grid-cols-2 gap-6 md:gap-8">
             {/* Left: Quiz Breakdown with Progress Bars */}
             <div className="space-y-6">
               <div>
@@ -150,8 +150,9 @@ export function VocabularyProgress({
             </div>
 
             {/* Right: Pie Chart */}
-            <div className="flex flex-col items-center justify-center bg-gradient-to-br from-ocean-50/50 to-cyan-50/50 rounded-lg p-6 border border-ocean-100">
-              <ResponsiveContainer width="100%" height={220}>
+            <div className="flex flex-col items-center justify-center bg-gradient-to-br from-ocean-50/50 to-cyan-50/50 rounded-lg p-4 sm:p-6 border border-ocean-100">
+              <div className="w-full h-[160px] sm:h-[200px] md:h-[220px]">
+              <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={quizData}
@@ -171,6 +172,7 @@ export function VocabularyProgress({
                   <Tooltip formatter={(value) => `${value} questions`} />
                 </PieChart>
               </ResponsiveContainer>
+              </div>
               <div className="mt-4 w-full">
                 <div className="flex gap-4 justify-center text-sm">
                   <div className="flex items-center gap-2">

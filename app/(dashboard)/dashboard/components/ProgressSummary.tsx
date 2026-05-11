@@ -30,7 +30,7 @@ export function ProgressSummary({
             </div>
             <div>
               <p className="text-xs text-ocean-600 font-medium">Essays Written</p>
-              <p className="text-2xl font-bold text-ocean-800">{totalEssays}</p>
+              <p className="text-xl sm:text-2xl font-bold text-ocean-800">{totalEssays}</p>
             </div>
           </div>
 
@@ -41,7 +41,7 @@ export function ProgressSummary({
             </div>
             <div>
               <p className="text-xs text-ocean-600 font-medium">Average Band</p>
-              <p className="text-2xl font-bold bg-gradient-to-r from-ocean-600 to-cyan-600 bg-clip-text text-transparent">
+              <p className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-ocean-600 to-cyan-600 bg-clip-text text-transparent">
                 {averageScore?.toFixed(1) ?? '—'}
               </p>
             </div>
@@ -54,7 +54,7 @@ export function ProgressSummary({
             </div>
             <div>
               <p className="text-xs text-ocean-600 font-medium">Latest Score</p>
-              <p className="text-2xl font-bold text-ocean-800">{latestScore?.toFixed(1) ?? '—'}</p>
+              <p className="text-xl sm:text-2xl font-bold text-ocean-800">{latestScore?.toFixed(1) ?? '—'}</p>
             </div>
           </div>
 
@@ -66,7 +66,7 @@ export function ProgressSummary({
               </div>
               <div>
                 <p className="text-xs text-ocean-600 font-medium">Improvement</p>
-                <p className="text-2xl font-bold text-green-600">+{improvementValue.toFixed(1)}</p>
+                <p className="text-xl sm:text-2xl font-bold text-green-600">+{improvementValue.toFixed(1)}</p>
               </div>
             </div>
           )}

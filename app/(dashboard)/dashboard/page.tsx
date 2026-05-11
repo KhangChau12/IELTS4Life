@@ -1,7 +1,15 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { createServerClient } from '@/lib/supabase/server'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { TrendingUp, FileText } from 'lucide-react'
+
+export const metadata: Metadata = {
+  title: 'My Dashboard | IELTS4Life',
+  description:
+    'Track your IELTS Writing progress — score trends, vocabulary growth, and personalized insights.',
+  robots: { index: false, follow: false },
+}
 import { ScoreChart } from './components/ScoreChart'
 import { VocabularyProgress } from './components/VocabularyProgress'
 import { NextActionBanner } from './components/NextActionBanner'

@@ -1,7 +1,37 @@
 import { redirect } from 'next/navigation'
+import type { Metadata } from 'next'
 import { createServerClient } from '@/lib/supabase/server'
 import type { Essay } from '@/types/essay'
 import { EssayResultsClient } from './components/EssayResultsClient'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { essayId: string }
+}): Promise<Metadata> {
+  const supabase = createServerClient()
+  const { data: essay } = await supabase
+    .from('essays')
+    .select('overall_score, prompt')
+    .eq('id', params.essayId)
+    .single()
+
+  if (!essay) return { title: 'Essay Results | IELTS4Life' }
+
+  const shortPrompt =
+    essay.prompt.length > 100 ? essay.prompt.slice(0, 97) + '...' : essay.prompt
+  const scoreText =
+    essay.overall_score !== null ? `Band ${essay.overall_score.toFixed(1)}` : 'Essay Feedback'
+  const title = `${scoreText} — IELTS Writing Feedback | IELTS4Life`
+  const description = `View your AI-powered IELTS Writing Task 2 feedback for: "${shortPrompt}".`
+
+  return {
+    title,
+    description,
+    robots: { index: false, follow: false },
+    openGraph: { title, description, url: `https://ielts4life.com/write/${params.essayId}` },
+  }
+}
 
 export default async function EssayResultsPage({
   params,

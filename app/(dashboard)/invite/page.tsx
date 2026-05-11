@@ -1,9 +1,17 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { createServerClient } from '@/lib/supabase/server'
 import { formatInviteCode } from '@/lib/invite/utils'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { InviteCard } from '@/components/invite/InviteCard'
 import { InviteStats } from '@/components/invite/InviteStats'
+
+export const metadata: Metadata = {
+  title: 'Invite Friends & Earn Free Essays | IELTS4Life',
+  description:
+    'Share your invite code. Both you and your friend earn 6 bonus IELTS essays when they join.',
+  robots: { index: false, follow: false },
+}
 
 async function getInviteData(userId: string) {
   const supabase = createServerClient()

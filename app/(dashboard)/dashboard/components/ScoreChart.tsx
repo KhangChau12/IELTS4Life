@@ -97,7 +97,7 @@ export function ScoreChart({ data, criteriaOverTime }: ScoreChartProps) {
         ))}
       </div>
 
-      <div className="w-full h-[360px]">
+      <div className="w-full h-[240px] sm:h-[300px] md:h-[360px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={formattedData} margin={{ top: 12, right: 28, left: 0, bottom: 8 }}>
             <defs>

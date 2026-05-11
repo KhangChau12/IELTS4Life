@@ -41,6 +41,25 @@ export default async function HomePage() {
     ],
   }
 
+  // VideoObject Schema for SEO
+  const videoJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: 'IELTS4Life — How AI Essay Scoring Works',
+    description:
+      'See how to submit your IELTS Writing Task 2 essay and get instant AI band score feedback, detailed error analysis, and vocabulary suggestions.',
+    thumbnailUrl: 'https://img.youtube.com/vi/kqPYIquPSsU/maxresdefault.jpg',
+    uploadDate: '2024-01-01',
+    duration: 'PT2M',
+    contentUrl: 'https://www.youtube.com/watch?v=kqPYIquPSsU',
+    embedUrl: 'https://www.youtube.com/embed/kqPYIquPSsU',
+    publisher: {
+      '@type': 'Organization',
+      name: 'IELTS4Life',
+      url: 'https://ielts4life.com',
+    },
+  }
+
   // FAQ Schema for SEO
   const faqJsonLd = {
     '@context': 'https://schema.org',
@@ -131,6 +150,10 @@ export default async function HomePage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(videoJsonLd) }}
       />
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-sky-50 via-cyan-50 to-blue-50 py-8 md:py-12 lg:py-16">

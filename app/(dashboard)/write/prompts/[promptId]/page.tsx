@@ -117,11 +117,40 @@ export default async function PromptWritingPage({ params }: PageProps) {
     },
   }
 
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://ielts4life.com',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Writing Prompts',
+        item: 'https://ielts4life.com/write/prompts',
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: topicName ? `${topicName} — Practice Prompt` : 'Write Essay',
+        item: `https://ielts4life.com/write/prompts/${promptId}`,
+      },
+    ],
+  }
+
   return (
     <div className="container mx-auto px-4 py-6 max-w-7xl">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <div className="mb-4">
         <nav className="text-sm text-gray-400 mb-2">
