@@ -72,7 +72,7 @@ export const config = {
     '/admin/:path*',
     '/invite/:path*',
     '/subscription/:path*',
-    '/api/:path*',
+    '/api/((?!webhooks/).*)',
     '/auth/callback',
   ],
 }
