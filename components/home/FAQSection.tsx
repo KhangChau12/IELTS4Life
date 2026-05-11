@@ -137,7 +137,7 @@ export function FAQSection() {
 
       <div className="container relative z-10 mx-auto px-4">
         {/* Header */}
-        <div className="mb-8 md:mb-16 text-center space-y-3 md:space-y-4">
+        <div className="mb-6 sm:mb-10 md:mb-16 text-center space-y-3 md:space-y-4">
           <div className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-cyan-700 shadow-lg">
             <MessageCircle className="h-4 w-4" />
             Got Questions?
@@ -161,7 +161,7 @@ export function FAQSection() {
                   <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${category.gradient} shadow-lg`}>
                     <Icon className="h-5 w-5 text-white" />
                   </div>
-                  <h3 className="text-xl md:text-2xl font-bold text-slate-900">
+                  <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900">
                     {category.title}
                   </h3>
                 </div>

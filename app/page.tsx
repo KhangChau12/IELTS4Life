@@ -156,7 +156,7 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(videoJsonLd) }}
       />
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-sky-50 via-cyan-50 to-blue-50 py-8 md:py-12 lg:py-16">
+      <section className="relative overflow-hidden bg-gradient-to-br from-sky-50 via-cyan-50 to-blue-50 py-6 sm:py-8 md:py-12 lg:py-16">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-[200px] -right-[200px] h-[800px] w-[800px] rounded-full bg-gradient-to-br from-cyan-400/30 to-blue-500/30 blur-3xl opacity-50" />
@@ -186,10 +186,10 @@ export default async function HomePage() {
                 {!user && (
                   <div className="flex flex-col items-center lg:items-start gap-4 pt-4">
                     <div className="flex flex-col items-center lg:items-start gap-3 max-w-sm w-full">
-                      <Link href="/write">
+                      <Link href="/write" className="w-full">
                         <Button
                           size="default"
-                          className="group relative h-auto px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-xl shadow-blue-500/25 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 rounded-2xl text-base font-bold overflow-hidden"
+                          className="group relative w-full h-auto px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-xl shadow-blue-500/25 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 rounded-2xl text-base font-bold overflow-hidden"
                         >
                           {/* Shine effect overlay */}
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
@@ -201,11 +201,11 @@ export default async function HomePage() {
                         </Button>
                       </Link>
 
-                      <Link href="/write/prompts">
+                      <Link href="/write/prompts" className="w-full">
                         <Button
                           size="default"
                           variant="outline"
-                          className="group h-auto px-5 py-3 border-2 border-slate-300 hover:border-cyan-400 text-slate-700 hover:text-cyan-700 hover:bg-cyan-50 bg-white/80 rounded-2xl text-sm font-semibold transition-all"
+                          className="group w-full h-auto px-5 py-3 border-2 border-slate-300 hover:border-cyan-400 text-slate-700 hover:text-cyan-700 hover:bg-cyan-50 bg-white/80 rounded-2xl text-sm font-semibold transition-all"
                         >
                           <Library className="w-4 h-4 mr-2" />
                           Browse Prompts
@@ -214,7 +214,7 @@ export default async function HomePage() {
                       </Link>
                     </div>
 
-                    <div className="flex items-center gap-6 text-sm text-slate-600 font-medium">
+                    <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-sm text-slate-600 font-medium">
                       <div className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-cyan-600" />
                         <span>No sign-up required</span>
@@ -339,7 +339,7 @@ export default async function HomePage() {
       {/* Features Section with Video */}
       <section className="bg-white py-12 md:py-24">
         <div className="container mx-auto px-4">
-          <div className="mb-8 md:mb-16 text-center space-y-3 md:space-y-4">
+          <div className="mb-6 sm:mb-10 md:mb-16 text-center space-y-3 md:space-y-4">
             <div className="inline-flex items-center gap-2 rounded-full bg-cyan-50 px-4 py-2 text-sm font-semibold text-cyan-700">
               <Target className="h-4 w-4" />
               Everything You Need
@@ -359,8 +359,8 @@ export default async function HomePage() {
               {/* Feature 1 */}
               <Card className="group border-0 bg-gradient-to-br from-white to-cyan-50/30 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
                 <CardHeader className="space-y-3 p-4 md:p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/50 group-hover:scale-110 transition-transform duration-300">
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="flex h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/50 group-hover:scale-110 transition-transform duration-300">
                       <FileText className="h-6 w-6 text-white" />
                     </div>
                     <div>
@@ -376,8 +376,8 @@ export default async function HomePage() {
               {/* Feature 2 */}
               <Card className="group border-0 bg-gradient-to-br from-white to-blue-50/30 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
                 <CardHeader className="space-y-3 p-4 md:p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg shadow-blue-500/50 group-hover:scale-110 transition-transform duration-300">
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="flex h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg shadow-blue-500/50 group-hover:scale-110 transition-transform duration-300">
                       <Target className="h-6 w-6 text-white" />
                     </div>
                     <div>
@@ -393,8 +393,8 @@ export default async function HomePage() {
               {/* Feature 3 */}
               <Card className="group border-0 bg-gradient-to-br from-white to-cyan-50/30 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
                 <CardHeader className="space-y-3 p-4 md:p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-teal-500 shadow-lg shadow-cyan-500/50 group-hover:scale-110 transition-transform duration-300">
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="flex h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-teal-500 shadow-lg shadow-cyan-500/50 group-hover:scale-110 transition-transform duration-300">
                       <BookOpen className="h-6 w-6 text-white" />
                     </div>
                     <div>
@@ -410,8 +410,8 @@ export default async function HomePage() {
               {/* Feature 4 */}
               <Card className="group border-0 bg-gradient-to-br from-white to-sky-50/30 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
                 <CardHeader className="space-y-3 p-4 md:p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-cyan-500 shadow-lg shadow-sky-500/50 group-hover:scale-110 transition-transform duration-300">
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="flex h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-cyan-500 shadow-lg shadow-sky-500/50 group-hover:scale-110 transition-transform duration-300">
                       <TrendingUp className="h-6 w-6 text-white" />
                     </div>
                     <div>
@@ -462,7 +462,7 @@ export default async function HomePage() {
       <section className="bg-gradient-to-br from-slate-50 to-cyan-50/30 py-12 md:py-24">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-7xl">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
 
               {/* Left Column: Text */}
               <div className="space-y-6 md:space-y-8">
@@ -472,8 +472,7 @@ export default async function HomePage() {
                     Writing Prompts Library
                   </div>
                   <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 leading-tight">
-                    Practice with Real
-                    <br />
+                    Practice with Real{' '}
                     <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">IELTS Prompts</span>
                   </h2>
                   <p className="text-sm md:text-base lg:text-lg text-slate-600 leading-relaxed max-w-lg">
@@ -482,9 +481,9 @@ export default async function HomePage() {
                 </div>
 
                 {/* 3 Feature Bullets */}
-                <div className="space-y-4">
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg shadow-blue-500/30">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg shadow-blue-500/30">
                       <BookOpen className="h-5 w-5 text-white" />
                     </div>
                     <div>
@@ -492,8 +491,8 @@ export default async function HomePage() {
                       <p className="text-sm text-slate-600">7 formats including Agree/Disagree, Advantages & Disadvantages, Cause & Solution, and more — filterable by topic with your best score tracked</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-500 shadow-lg shadow-violet-500/30">
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-500 shadow-lg shadow-violet-500/30">
                       <Lightbulb className="h-5 w-5 text-white" />
                     </div>
                     <div>
@@ -501,8 +500,8 @@ export default async function HomePage() {
                       <p className="text-sm text-slate-600">Two AI-generated outlines per prompt to help you plan your essay structure before you start writing</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/30">
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/30">
                       <Timer className="h-5 w-5 text-white" />
                     </div>
                     <div>
@@ -526,7 +525,7 @@ export default async function HomePage() {
               {/* Right Column: Mock Prompt Card */}
               <div className="flex justify-center lg:justify-end">
                 <div className="w-full max-w-md animate-float">
-                  <div className="relative rounded-2xl shadow-2xl border-2 border-cyan-200 bg-gradient-to-br from-white to-cyan-50/50 p-6 space-y-4">
+                  <div className="relative rounded-2xl shadow-2xl border-2 border-cyan-200 bg-gradient-to-br from-white to-cyan-50/50 p-4 sm:p-6 space-y-3 sm:space-y-4">
                     {/* Timer badge */}
                     <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-emerald-100 text-emerald-700 text-xs font-mono px-2.5 py-1 rounded-full">
                       <Timer className="h-3 w-3" />
@@ -558,7 +557,7 @@ export default async function HomePage() {
                     {/* Outline columns */}
                     <div>
                       <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">AI Outline Suggestions</p>
-                      <div className="grid grid-cols-2 gap-3">
+                      <div className="grid grid-cols-2 gap-2 sm:gap-3">
                         {[1, 2].map((n) => (
                           <div key={n} className="rounded-xl bg-gradient-to-br from-slate-50 to-blue-50/50 border border-slate-200 p-3 space-y-2">
                             <p className="text-xs font-bold text-slate-700">Outline {n}</p>
@@ -584,7 +583,7 @@ export default async function HomePage() {
       {/* How It Works */}
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 to-cyan-50/50 py-12 md:py-24">
         <div className="container relative z-10 mx-auto px-4">
-          <div className="mb-8 md:mb-16 text-center space-y-3 md:space-y-4">
+          <div className="mb-6 sm:mb-10 md:mb-16 text-center space-y-3 md:space-y-4">
             <div className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-cyan-700 shadow-lg">
               <Zap className="h-4 w-4" />
               Simple Process
@@ -600,9 +599,9 @@ export default async function HomePage() {
           <div className="mx-auto max-w-6xl">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
               {/* Step 1 */}
-              <div className="group relative flex flex-col rounded-2xl md:rounded-3xl bg-white p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 hover:border-cyan-200 hover:-translate-y-1 border-t-4 border-t-cyan-500 overflow-hidden">
+              <div className="group relative flex flex-col rounded-2xl md:rounded-3xl bg-white p-4 sm:p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 hover:border-cyan-200 hover:-translate-y-1 border-t-4 border-t-cyan-500 overflow-hidden">
                 <p className="text-xs font-bold uppercase tracking-widest text-cyan-500 mb-3">Step 1</p>
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-500 text-2xl font-black text-white shadow-lg shadow-cyan-500/50 mb-5 group-hover:scale-110 transition-transform duration-300">
+                <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-500 text-2xl font-black text-white shadow-lg shadow-cyan-500/50 mb-5 group-hover:scale-110 transition-transform duration-300">
                   1
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2">Submit Your Essay</h3>
@@ -615,9 +614,9 @@ export default async function HomePage() {
               </div>
 
               {/* Step 2 */}
-              <div className="group relative flex flex-col rounded-2xl md:rounded-3xl bg-white p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 hover:border-blue-200 hover:-translate-y-1 border-t-4 border-t-blue-500 overflow-hidden">
+              <div className="group relative flex flex-col rounded-2xl md:rounded-3xl bg-white p-4 sm:p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 hover:border-blue-200 hover:-translate-y-1 border-t-4 border-t-blue-500 overflow-hidden">
                 <p className="text-xs font-bold uppercase tracking-widest text-blue-500 mb-3">Step 2</p>
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-violet-500 text-2xl font-black text-white shadow-lg shadow-blue-500/50 mb-5 group-hover:scale-110 transition-transform duration-300">
+                <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-violet-500 text-2xl font-black text-white shadow-lg shadow-blue-500/50 mb-5 group-hover:scale-110 transition-transform duration-300">
                   2
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2">Get Instant Feedback</h3>
@@ -630,9 +629,9 @@ export default async function HomePage() {
               </div>
 
               {/* Step 3 */}
-              <div className="group relative flex flex-col rounded-2xl md:rounded-3xl bg-white p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 hover:border-emerald-200 hover:-translate-y-1 border-t-4 border-t-emerald-500 overflow-hidden">
+              <div className="group relative flex flex-col rounded-2xl md:rounded-3xl bg-white p-4 sm:p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 hover:border-emerald-200 hover:-translate-y-1 border-t-4 border-t-emerald-500 overflow-hidden">
                 <p className="text-xs font-bold uppercase tracking-widest text-emerald-500 mb-3">Step 3</p>
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-500 text-2xl font-black text-white shadow-lg shadow-emerald-500/50 mb-5 group-hover:scale-110 transition-transform duration-300">
+                <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-500 text-2xl font-black text-white shadow-lg shadow-emerald-500/50 mb-5 group-hover:scale-110 transition-transform duration-300">
                   3
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2">Learn & Improve</h3>
@@ -684,14 +683,14 @@ export default async function HomePage() {
               <br />
               Target Band Score?
             </h2>
-            <p className="text-base md:text-xl lg:text-2xl leading-relaxed text-cyan-50 px-4">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-cyan-50 px-4">
               Start improving your IELTS writing with AI-powered feedback
             </p>
             <div className="pt-2 md:pt-4">
               <Link href="/register">
                 <Button
                   size="lg"
-                  className="group relative overflow-hidden bg-white text-cyan-600 hover:bg-cyan-50 hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-white/50 px-6 py-4 md:px-10 md:py-7 text-base md:text-xl font-bold rounded-xl md:rounded-2xl"
+                  className="group relative overflow-hidden bg-white text-cyan-600 hover:bg-cyan-50 hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-white/50 px-5 py-3 sm:px-6 sm:py-4 md:px-10 md:py-7 text-sm sm:text-base md:text-lg font-bold rounded-xl md:rounded-2xl"
                 >
                   <Sparkles className="mr-2 h-4 md:h-5 w-4 md:w-5" />
                   Get Started Free

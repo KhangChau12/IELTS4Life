@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Loader2, Mail, Lock, Waves, CheckCircle2 } from 'lucide-react'
+import GoogleAuthButton from '@/components/auth/GoogleAuthButton'
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -137,9 +138,33 @@ export default function LoginClient() {
 
           {/* Form card */}
           <div className="bg-white rounded-2xl shadow-xl p-5 md:p-8">
-            <div className="mb-6 md:mb-8">
+            <div className="mb-5 md:mb-6">
               <h2 className="text-2xl md:text-3xl font-bold text-ocean-800 mb-2">Sign in</h2>
               <p className="text-sm md:text-base text-ocean-600">Continue your IELTS journey</p>
+            </div>
+
+            {/* Quick sign-in options */}
+            <div className="flex flex-col gap-4">
+              <GoogleAuthButton label="Sign in with Google" />
+
+              <Link href="/write" className="block">
+                <Button
+                  variant="outline"
+                  className="w-full h-11 border-ocean-200 hover:bg-ocean-50 text-ocean-700"
+                >
+                  Try as Guest (1 Free Essay)
+                </Button>
+              </Link>
+            </div>
+
+            {/* Divider */}
+            <div className="relative my-5">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-ocean-100"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-ocean-500">or continue with email</span>
+              </div>
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -213,35 +238,15 @@ export default function LoginClient() {
               </Button>
             </form>
 
-            <div className="mt-6 space-y-4">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-ocean-100"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-ocean-500">or</span>
-                </div>
-              </div>
-
-              <Link href="/write">
-                <Button
-                  variant="outline"
-                  className="w-full h-11 border-ocean-200 hover:bg-ocean-50 text-ocean-700"
-                >
-                  Try as Guest (1 Free Essay)
-                </Button>
+            <p className="text-center text-sm text-ocean-600 mt-5">
+              Don&apos;t have an account?{' '}
+              <Link
+                href="/register"
+                className="font-semibold text-ocean-700 hover:text-ocean-800"
+              >
+                Sign up
               </Link>
-
-              <p className="text-center text-sm text-ocean-600">
-                Don&apos;t have an account?{' '}
-                <Link
-                  href="/register"
-                  className="font-semibold text-ocean-700 hover:text-ocean-800"
-                >
-                  Sign up
-                </Link>
-              </p>
-            </div>
+            </p>
           </div>
         </div>
       </div>

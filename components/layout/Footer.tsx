@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export function Footer() {
   return (
     <footer className="mt-auto border-t border-slate-200 bg-slate-50 py-6 md:py-8">
@@ -6,14 +8,18 @@ export function Footer() {
           <div className="text-center text-xs md:text-sm text-slate-600 md:text-left">
             <p>&copy; {new Date().getFullYear()} IELTS4Life. All rights reserved.</p>
           </div>
-          <div className="text-xs md:text-sm text-slate-600 text-center md:text-left">
-            <p>
-              Contact{' '}
-              <a href="mailto:phuckhangtdn@gmail.com" className="text-ocean-600 hover:text-ocean-700 transition-colors break-all md:break-normal">
-                phuckhangtdn@gmail.com
-              </a>
-              {' '}if you need further discussion
-            </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs md:text-sm text-slate-600">
+            <Link href="/privacy" className="text-ocean-600 hover:text-ocean-700 transition-colors">
+              Privacy Policy
+            </Link>
+            <span className="text-slate-300">|</span>
+            <Link href="/terms" className="text-ocean-600 hover:text-ocean-700 transition-colors">
+              Terms of Service
+            </Link>
+            <span className="text-slate-300">|</span>
+            <a href="mailto:phuckhangtdn@gmail.com" className="hover:text-ocean-600 transition-colors break-all md:break-normal">
+              phuckhangtdn@gmail.com
+            </a>
           </div>
         </div>
       </div>
