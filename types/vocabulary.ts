@@ -47,7 +47,7 @@ export interface QuizResult {
   id: string
   user_id: string
   essay_id: string
-  quiz_type: 'multiple_choice' | 'fill_in'
+  quiz_type: 'multiple_choice'
   score: number
   total_questions: number
   correct_answers: string[]

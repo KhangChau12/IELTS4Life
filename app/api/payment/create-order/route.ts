@@ -2,9 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase/server'
 import { createServiceRoleClient } from '@/lib/supabase/service'
 import { getUserTier } from '@/lib/user/quota'
+import { getPricing } from '@/lib/pricing'
 
-const PRO_AMOUNT = parseInt(process.env.PRO_PRICE_VND || '75000')
-const PACK_AMOUNT = parseInt(process.env.ESSAY_PACK_PRICE_VND || '50000')
 const PACK_BONUS = parseInt(process.env.ESSAY_PACK_BONUS || '15')
 
 export async function POST(req: NextRequest) {
@@ -37,7 +36,8 @@ export async function POST(req: NextRequest) {
   }
 
   const prefix = type === 'pack' ? 'PACK' : 'PRO'
-  const amount = type === 'pack' ? PACK_AMOUNT : PRO_AMOUNT
+  const pricing = getPricing()
+  const amount = type === 'pack' ? pricing.pack.current : pricing.pro.current
   const orderCode = `${prefix}${user.id.slice(0, 8).replace(/-/g, '')}${Date.now()}`
 
   await serviceClient.from('payment_transactions').insert({

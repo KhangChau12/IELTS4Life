@@ -4,9 +4,8 @@ import { useCallback, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
-import { ArrowLeft, CheckCircle, XCircle, BrainCircuit } from 'lucide-react'
+import { ArrowLeft, CheckCircle, XCircle } from 'lucide-react'
 import Link from 'next/link'
 import type { VocabularyItem } from '@/types/vocabulary'
 import { saveGuestQuizResult } from '@/lib/guest-vocabulary'
@@ -21,7 +20,7 @@ interface QuizQuestion {
   vocabType?: string // Track which vocab type this question belongs to
 }
 
-type QuizType = 'multiple_choice' | 'fill_in' | null
+type QuizType = 'multiple_choice' | null
 
 export default function QuizPage({ params }: { params: { essayId: string } }) {
   const searchParams = useSearchParams()
@@ -62,6 +61,13 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
   useEffect(() => {
     fetchVocabulary()
   }, [fetchVocabulary])
+
+  useEffect(() => {
+    if (vocabulary.length > 0 && !quizType) {
+      generateQuestions('multiple_choice')
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vocabulary])
 
   const generateQuestions = (type: QuizType) => {
     if (!type) return
@@ -287,12 +293,7 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
   }
 
   const restartQuiz = () => {
-    setQuizType(null)
-    setQuestions([])
-    setCurrentIndex(0)
-    setUserAnswers([])
-    setCurrentAnswer('')
-    setShowResults(false)
+    generateQuestions('multiple_choice')
   }
 
   if (isLoading) {
@@ -343,53 +344,6 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
         </p>
       </div>
 
-      {/* Quiz Type Selection */}
-      {!quizType && (
-        <div className="space-y-6">
-          <Card className="border-ocean-200">
-            <CardHeader className="bg-gradient-to-r from-ocean-50 to-cyan-50 border-b border-ocean-200">
-              <CardTitle className="text-ocean-800">Choose Quiz Type</CardTitle>
-              <CardDescription>Select how you want to test your vocabulary knowledge</CardDescription>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Card
-                  className="border-2 border-ocean-200 hover:border-ocean-400 cursor-pointer transition-all hover:shadow-lg"
-                  onClick={() => generateQuestions('multiple_choice')}
-                >
-                  <CardContent className="pt-6 text-center">
-                    <BrainCircuit className="h-12 w-12 text-ocean-600 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-ocean-800 mb-2">Multiple Choice</h3>
-                    <p className="text-sm text-ocean-600">
-                      Choose the correct word from 4 options based on the definition
-                    </p>
-                  </CardContent>
-                </Card>
-
-                <Card
-                  className="border-2 border-ocean-200 hover:border-ocean-400 cursor-pointer transition-all hover:shadow-lg"
-                  onClick={() => generateQuestions('fill_in')}
-                >
-                  <CardContent className="pt-6 text-center">
-                    <BrainCircuit className="h-12 w-12 text-ocean-600 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-ocean-800 mb-2">Fill in the Blank</h3>
-                    <p className="text-sm text-ocean-600">
-                      Type the correct word based on the definition and first letter hint
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="p-4 bg-cyan-50 border border-cyan-200 rounded-lg">
-            <p className="text-sm text-ocean-700">
-              <strong>Total Questions:</strong> {vocabulary.length}
-            </p>
-          </div>
-        </div>
-      )}
-
       {/* Quiz Questions */}
       {quizType && !showResults && currentQuestion && (
         <div className="space-y-6">
@@ -436,27 +390,6 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
                 </div>
               )}
 
-              {quizType === 'fill_in' && (
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-sm text-ocean-600 mb-2">
-                      First letter: <span className="font-bold text-ocean-800 text-lg">{currentQuestion.firstLetter.toUpperCase()}</span>
-                    </p>
-                    <Input
-                      type="text"
-                      placeholder="Type your answer..."
-                      value={currentAnswer}
-                      onChange={(e) => setCurrentAnswer(e.target.value)}
-                      className="border-ocean-300 focus:border-ocean-500 focus:ring-ocean-500"
-                      onKeyPress={(e) => {
-                        if (e.key === 'Enter' && currentAnswer.trim()) {
-                          handleNextQuestion()
-                        }
-                      }}
-                    />
-                  </div>
-                </div>
-              )}
             </CardContent>
           </Card>
 

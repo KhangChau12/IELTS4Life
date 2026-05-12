@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceRoleClient } from '@/lib/supabase/service'
+import { getPricing } from '@/lib/pricing'
 
 const PRO_REGEX = /PRO[a-f0-9]{8}\d+/i
 const PACK_REGEX = /PACK[a-f0-9]{8}\d+/i
-const PRO_MIN_AMOUNT = parseInt(process.env.PRO_PRICE_VND || '75000')
-const PACK_MIN_AMOUNT = parseInt(process.env.ESSAY_PACK_PRICE_VND || '50000')
 const PACK_BONUS = parseInt(process.env.ESSAY_PACK_BONUS || '15')
 
 export async function POST(req: NextRequest) {
@@ -30,7 +29,8 @@ export async function POST(req: NextRequest) {
 
   const isPack = !!packMatch && !proMatch
   const orderCode: string = isPack ? packMatch![0] : proMatch![0]
-  const minAmount = isPack ? PACK_MIN_AMOUNT : PRO_MIN_AMOUNT
+  const pricing = getPricing()
+  const minAmount = isPack ? pricing.pack.current : pricing.pro.current
 
   if (transferAmount < minAmount) {
     return NextResponse.json({ success: true })

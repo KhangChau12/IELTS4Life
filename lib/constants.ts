@@ -46,7 +46,6 @@ export const VOCAB_TYPES = {
 // Quiz Types
 export const QUIZ_TYPES = {
   multiple_choice: 'Multiple Choice',
-  fill_in: 'Fill in the Blank',
 } as const
 
 // Word Count Recommendations

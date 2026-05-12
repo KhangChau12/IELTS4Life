@@ -6,6 +6,8 @@ import { BookOpen, Check, Crown, FileText, CalendarDays, Zap } from 'lucide-reac
 import { getDailyQuota, getTotalQuota, getUserTier } from '@/lib/user/quota'
 import { UpgradeProButton, BuyPackButton } from './UpgradeButton'
 import { formatDate } from '@/lib/utils/date'
+import { getPricing, isSaleActive, getSaleEndDate } from '@/lib/pricing'
+import { SaleCountdown } from './components/SaleCountdown'
 
 export const metadata = {
   title: 'Subscription - IELTS4Life',
@@ -52,6 +54,10 @@ export default async function SubscriptionPage() {
 
   const dailyPercentage = dailyQuota > 0 ? (dailyCount / dailyQuota) * 100 : 0
   const totalPercentage = totalQuota && totalQuota > 0 ? (totalCount / totalQuota) * 100 : 0
+
+  const pricing = getPricing()
+  const onSale = isSaleActive()
+  const saleEndIso = getSaleEndDate().toISOString()
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -206,6 +212,25 @@ export default async function SubscriptionPage() {
         </div>
       </div>
 
+      {/* Sale Banner */}
+      {onSale && (
+        <div className="rounded-2xl mb-6 px-6 py-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-amber-100 rounded-lg flex-shrink-0">
+              <Zap className="h-5 w-5 text-amber-600" />
+            </div>
+            <div>
+              <p className="font-semibold text-amber-900 leading-tight">Limited-time offer</p>
+              <p className="text-amber-700 text-sm">Pro 25% off · Essay Pack 40% off — ends soon</p>
+            </div>
+          </div>
+          <div className="flex-shrink-0 text-right">
+            <p className="text-amber-500 text-xs uppercase tracking-wide mb-0.5">Offer ends in</p>
+            <SaleCountdown saleEndIso={saleEndIso} />
+          </div>
+        </div>
+      )}
+
       {/* Plans */}
       <div className="grid md:grid-cols-3 gap-6 mb-8">
         {/* Free Plan */}
@@ -285,12 +310,18 @@ export default async function SubscriptionPage() {
           </CardHeader>
           <CardContent className="pt-6">
             <div className="mb-6">
+              {onSale && (
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-sm text-ocean-400 line-through">100,000 VND</span>
+                  <span className="text-xs font-semibold bg-amber-100 text-amber-700 rounded-full px-2 py-0.5">25% off</span>
+                </div>
+              )}
               <div className="flex items-baseline gap-1 mb-1">
-                <span className="text-4xl font-bold text-green-700">75,000</span>
+                <span className="text-4xl font-bold text-green-700">{pricing.pro.current.toLocaleString('vi-VN')}</span>
                 <span className="text-lg font-semibold text-green-600">VND</span>
                 <span className="text-sm font-normal text-ocean-400">/month</span>
               </div>
-              <p className="text-xs text-ocean-400">≈ $3 — the price of a coffee</p>
+              <p className="text-xs text-ocean-400">{onSale ? 'Limited-time price' : '≈ $4 — the price of a coffee'}</p>
             </div>
 
             <div className="space-y-3 mb-6">
@@ -350,12 +381,18 @@ export default async function SubscriptionPage() {
           </CardHeader>
           <CardContent className="pt-6">
             <div className="mb-6">
+              {onSale && (
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-sm text-ocean-400 line-through">50,000 VND</span>
+                  <span className="text-xs font-semibold bg-amber-100 text-amber-700 rounded-full px-2 py-0.5">40% off</span>
+                </div>
+              )}
               <div className="flex items-baseline gap-1 mb-1">
-                <span className="text-4xl font-bold text-ocean-700">50,000</span>
+                <span className="text-4xl font-bold text-ocean-700">{pricing.pack.current.toLocaleString('vi-VN')}</span>
                 <span className="text-lg font-semibold text-ocean-600">VND</span>
                 <span className="text-sm font-normal text-ocean-400">/pack</span>
               </div>
-              <p className="text-xs text-ocean-400">One-time, stackable</p>
+              <p className="text-xs text-ocean-400">{onSale ? 'Limited-time price' : 'One-time, stackable'}</p>
             </div>
 
             <div className="space-y-3 mb-6">
