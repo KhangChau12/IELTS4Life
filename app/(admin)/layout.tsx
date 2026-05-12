@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { createServerClient } from '@/lib/supabase/server'
+import { getAdminUser } from '@/lib/admin/auth'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -12,25 +12,13 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  const supabase = createServerClient()
+  const adminUser = await getAdminUser()
 
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser()
-
-  if (authError || !user) {
+  if (!adminUser) {
     redirect('/login')
   }
 
-  // Check if user is admin
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-
-  if (!['admin', 'dev'].includes(profile?.role ?? '')) {
+  if (!['admin', 'dev'].includes(adminUser.profile?.role ?? '')) {
     redirect('/dashboard')
   }
 

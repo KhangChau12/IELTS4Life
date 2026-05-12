@@ -1,130 +1,49 @@
 import Link from 'next/link'
-import { headers } from 'next/headers'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, BarChart3, Sparkles } from 'lucide-react'
 import { AdminDashboardClient } from '../components/AdminDashboardClient'
+import { fetchAdminStats } from '@/lib/admin/stats'
+import { getAdminUser } from '@/lib/admin/auth'
+import { redirect } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
 
-interface AdminStats {
-  totalUsers: number
-  ptnkUsers: number
-  paidProUsers: number
-  totalEssays: number
-  totalInputTokens: number
-  totalOutputTokens: number
-  scoreDistribution: { [key: string]: number }
-  avgOverallScore: number
-  allUsers: Array<{
-    id: string
-    email: string
-    created_at: string
-    role: string
-    essay_count: number
-  }>
-  essaysOverTime: Array<{
-    date: string
-    count: number
-  }>
-  totalVocabulary: number
-  totalQuizAttempts: number
-  totalCorrectAnswers: number
-  totalQuestions: number
-  avgQuizScore: number
-  avgParaphraseScore: number
-  avgTopicScore: number
-  quizAttemptsOverTime: Array<{
-    score: number
-    total_questions: number
-    vocab_type: string
-    created_at: string
-    percentage: number
-  }>
-  usersOverTime: Array<{
-    date: string
-    count: number
-  }>
-  totalInvitedUsers: number
-  uniqueReferrers: number
-  inviteConversionRate: number
-  totalPrompts: number
-  promptsWithOutlines: number
-  essaysFromPrompts: number
-  essaysFromExternal: number
-}
-
-async function getAdminStats(): Promise<AdminStats> {
-  try {
-    const headersList = await headers()
-    const host = headersList.get('host') || 'localhost:3000'
-    const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https'
-    const cookie = headersList.get('cookie') || ''
-
-    const response = await fetch(`${protocol}://${host}/api/admin/stats`, {
-      cache: 'no-store',
-      headers: {
-        'Content-Type': 'application/json',
-        cookie,
-      },
-    })
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch admin stats')
-    }
-
-    return response.json()
-  } catch (error) {
-    console.error('Error fetching admin stats:', error)
-    return {
-      totalUsers: 0,
-      ptnkUsers: 0,
-      paidProUsers: 0,
-      totalEssays: 0,
-      totalInputTokens: 0,
-      totalOutputTokens: 0,
-      scoreDistribution: {},
-      avgOverallScore: 0,
-      allUsers: [],
-      essaysOverTime: [],
-      totalVocabulary: 0,
-      totalQuizAttempts: 0,
-      totalCorrectAnswers: 0,
-      totalQuestions: 0,
-      avgQuizScore: 0,
-      avgParaphraseScore: 0,
-      avgTopicScore: 0,
-      quizAttemptsOverTime: [],
-      usersOverTime: [],
-      totalInvitedUsers: 0,
-      uniqueReferrers: 0,
-      inviteConversionRate: 0,
-      totalPrompts: 0,
-      promptsWithOutlines: 0,
-      essaysFromPrompts: 0,
-      essaysFromExternal: 0,
-    }
-  }
-}
-
 export default async function StatisticsPage() {
-  const stats = await getAdminStats()
+  const adminUser = await getAdminUser()
+
+  if (!adminUser) redirect('/login')
+  if (!['admin', 'dev'].includes(adminUser.profile?.role ?? '')) redirect('/dashboard')
+
+  const stats = await fetchAdminStats()
 
   return (
     <div className="max-w-7xl mx-auto space-y-6 md:space-y-8 px-4">
-      {/* Header with Back Button */}
-      <div className="flex items-center gap-4 mb-6 md:mb-8 animate-fadeInUp">
-        <Link
-          href="/admin"
-          className="flex items-center justify-center w-10 h-10 rounded-lg bg-white/80 border border-ocean-200 text-ocean-600 hover:text-ocean-800 hover:bg-white transition-all shadow-sm"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Link>
-        <div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-ocean-800 to-cyan-700 bg-clip-text text-transparent">
-            Platform Statistics
-          </h1>
-          <p className="text-ocean-600 text-sm md:text-base lg:text-lg">
-            Monitor system statistics and user activity
-          </p>
+      {/* Header */}
+      <div className="rounded-3xl border border-slate-200/70 bg-gradient-to-br from-white via-cyan-50/35 to-blue-50/35 shadow-sm p-6 md:p-8">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-center gap-4">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-lg flex-shrink-0">
+              <BarChart3 className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-xs font-medium text-cyan-700 mb-2">
+                <Sparkles className="h-3.5 w-3.5" />
+                Platform Analytics
+              </div>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900">
+                Platform Statistics
+              </h1>
+              <p className="text-slate-600 text-sm md:text-base">
+                Monitor system statistics and user activity
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/admin"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition-all hover:bg-slate-50 self-start"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Admin
+          </Link>
         </div>
       </div>
 

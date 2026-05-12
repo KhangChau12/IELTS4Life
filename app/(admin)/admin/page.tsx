@@ -1,25 +1,17 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { BarChart3, FileText, Bell, Lock, ArrowRight, LayoutDashboard, Sparkles, ShieldCheck, ChevronRight } from 'lucide-react'
+import { BarChart3, FileText, Bell, Lock, LayoutDashboard, Sparkles, ShieldCheck, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
-import { createServerClient } from '@/lib/supabase/server'
+import { getAdminUser } from '@/lib/admin/auth'
+import { redirect } from 'next/navigation'
 
 export default async function AdminPage() {
-  const supabase = createServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const adminUser = await getAdminUser()
 
-  let role = 'admin'
-  let displayName = 'Admin'
-  if (user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role, full_name')
-      .eq('id', user.id)
-      .single()
-    role = profile?.role ?? 'admin'
-    displayName = profile?.full_name || user.email?.split('@')[0] || 'Admin'
-  }
+  if (!adminUser) redirect('/login')
 
+  const role = adminUser.profile?.role ?? 'admin'
+  const displayName = adminUser.profile?.full_name || adminUser.user.email?.split('@')[0] || 'Admin'
   const isDev = role === 'dev'
 
   const shortcutCards = [
@@ -31,6 +23,7 @@ export default async function AdminPage() {
       icon: BarChart3,
       accent: 'from-cyan-500 to-blue-600',
       hoverText: 'group-hover:text-cyan-700',
+      locked: false,
     },
     {
       href: '/admin/prompts',
@@ -40,6 +33,7 @@ export default async function AdminPage() {
       icon: FileText,
       accent: 'from-teal-500 to-cyan-600',
       hoverText: 'group-hover:text-teal-700',
+      locked: false,
     },
     {
       href: '/admin/notifications',
@@ -112,41 +106,56 @@ export default async function AdminPage() {
           <div className="relative mt-6 grid gap-3 sm:grid-cols-3">
             {shortcutCards.map((card) => {
               const Icon = card.icon
+              const inner = (
+                <div className={`relative flex flex-col h-full overflow-hidden rounded-2xl border border-white/10 bg-white/10 p-5 shadow-sm backdrop-blur-sm transition-all duration-200 ${
+                  card.locked
+                    ? 'cursor-not-allowed opacity-60'
+                    : 'group-hover:-translate-y-1 group-hover:bg-white/15 group-hover:shadow-xl'
+                }`}>
+                  {/* Accent glow on hover */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${card.accent} opacity-0 transition-opacity duration-200 ${!card.locked && 'group-hover:opacity-10'}`} />
 
-              return (
-                <Link key={card.href} href={card.href} className="group block">
-                  <div className={`relative overflow-hidden rounded-2xl border border-white/10 bg-white/10 p-4 shadow-sm backdrop-blur-sm transition-all duration-200 hover:-translate-y-1 hover:bg-white/15 hover:shadow-xl ${card.locked ? 'opacity-70' : ''}`}>
-                    <div className={`absolute inset-0 bg-gradient-to-br ${card.accent} opacity-0 transition-opacity group-hover:opacity-10`} />
-                    <div className="relative flex items-start justify-between gap-4">
-                      <div className="flex items-start gap-4">
-                        <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${card.accent} shadow-lg`}>
-                          <Icon className="h-6 w-6 text-white" />
-                        </div>
-                        <div className="space-y-1">
-                          <h2 className={`text-lg font-semibold text-white transition-colors ${card.hoverText}`}>
-                            {card.title}
-                          </h2>
-                          <p className="text-sm text-slate-200">{card.description}</p>
-                        </div>
-                      </div>
-                      <ChevronRight className="mt-1 h-4 w-4 text-slate-300 transition-transform group-hover:translate-x-1" />
+                  {/* Top row: icon + chevron */}
+                  <div className="relative flex items-start justify-between mb-4">
+                    <div className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${card.accent} shadow-lg ring-4 ring-white/10`}>
+                      <Icon className="h-7 w-7 text-white" />
                     </div>
-
-                    <div className="relative mt-4 flex items-center justify-between gap-3">
-                      <span className="text-xs text-slate-200">{card.detail}</span>
-                      {card.locked ? (
-                        <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/20 px-2.5 py-1 text-[11px] text-slate-200">
-                          <Lock className="h-3 w-3" />
-                          Locked
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-300/20 bg-cyan-400/10 px-2.5 py-1 text-[11px] text-cyan-100">
-                          <ShieldCheck className="h-3 w-3" />
-                          Active
-                        </span>
-                      )}
-                    </div>
+                    {!card.locked && (
+                      <ChevronRight className="h-4 w-4 text-slate-400 transition-transform group-hover:translate-x-1 group-hover:text-white mt-1" />
+                    )}
                   </div>
+
+                  {/* Title + description — grows to fill space */}
+                  <div className="relative flex-1 space-y-1.5 mb-4">
+                    <h2 className="text-lg font-semibold text-white leading-snug">
+                      {card.title}
+                    </h2>
+                    <p className="text-sm text-slate-300 leading-relaxed">{card.description}</p>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="relative border-t border-white/10 pt-3 flex items-center justify-between gap-3">
+                    <span className="text-xs text-slate-400">{card.detail}</span>
+                    {card.locked ? (
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/20 px-2.5 py-1 text-[11px] text-slate-300">
+                        <Lock className="h-3 w-3" />
+                        Locked
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-300/20 bg-cyan-400/10 px-2.5 py-1 text-[11px] text-cyan-200">
+                        <ShieldCheck className="h-3 w-3" />
+                        Active
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )
+
+              return card.locked ? (
+                <div key={card.href} className="h-full">{inner}</div>
+              ) : (
+                <Link key={card.href} href={card.href} className="group block">
+                  {inner}
                 </Link>
               )
             })}
