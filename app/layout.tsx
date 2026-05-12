@@ -17,7 +17,7 @@ const shrikhand = Shrikhand({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://ielts4life.com'),
-  title: 'IELTS for Life - AI IELTS Writing Scorer | IELTS 4 Life Writing Assistant',
+  title: 'IELTS4Life — AI Writing Coach',
   description: 'Free AI-powered IELTS writing scorer and feedback tool. Get instant band scores, detailed feedback, and vocabulary enhancement for IELTS Writing Task 2. Master IELTS writing with AI scoring, essay correction, and personalized tips. Perfect for IELTS preparation, band 7+ writing, and exam practice.',
   keywords: [
     'IELTS for life',
