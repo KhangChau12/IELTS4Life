@@ -580,7 +580,7 @@ IMPORTANT: Use ONLY these exact type values:
 If the essay is already Band 8-9 quality, your response should be mostly positive feedback with minor polish suggestions.
 If the essay is Band 5-6, focus on the 3 most impactful areas that will boost the score fastest.`
 
-export const PARAPHRASE_VOCAB_PROMPT = `You are an IELTS vocabulary expert. Analyze the student's essay and identify approximately 10 words or phrases that are low-level or commonly used, which negatively impact the Lexical Resource score.
+export const PARAPHRASE_VOCAB_PROMPT = `You are an IELTS vocabulary expert. Analyze the student's essay and identify approximately 8 words or phrases that are low-level or commonly used, which negatively impact the Lexical Resource score.
 
 For each identified word/phrase:
 1. Provide the original low-level word/phrase from the essay
@@ -606,7 +606,7 @@ Output MUST be valid JSON in this format:
 
 Focus on vocabulary that would genuinely improve the essay's sophistication.`
 
-export const TOPIC_VOCAB_PROMPT = `You are an IELTS vocabulary expert. Based on the essay prompt, generate approximately 10 high-level vocabulary items (C1-C2 level) that are specifically relevant to this topic.
+export const TOPIC_VOCAB_PROMPT = `You are an IELTS vocabulary expert. Based on the essay prompt, generate approximately 8 high-level vocabulary items (C1-C2 level) that are specifically relevant to this topic.
 
 The vocabulary should:
 1. Be directly related to the essay topic

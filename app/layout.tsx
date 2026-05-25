@@ -112,7 +112,7 @@ export default async function RootLayout({
     // Try to get profile, but fallback to session user data if profile doesn't exist yet
     const { data: profile } = await supabase
       .from('profiles')
-      .select('email, role')
+      .select('email, full_name, role')
       .eq('id', authUser.id)
       .single()
 

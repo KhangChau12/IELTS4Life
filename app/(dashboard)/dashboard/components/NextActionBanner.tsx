@@ -43,7 +43,7 @@ export function NextActionBanner({
       title: 'Expand your vocabulary',
       description: `Generate vocabulary for ${essaysWithoutVocab} essay${essaysWithoutVocab > 1 ? 's' : ''} to strengthen your word bank`,
       cta: 'Generate Vocabulary',
-      href: '/vocabulary',
+      href: '/history',
       bgClass: 'from-amber-500 to-orange-600',
     }
   } else if (avgScore && avgScore < 6.5) {
@@ -61,7 +61,7 @@ export function NextActionBanner({
       title: 'Reinforce vocabulary',
       description: `Your quiz accuracy is ${quizScore}%, practice more quizzes to improve retention`,
       cta: 'Take Quiz',
-      href: '/vocabulary',
+      href: '/history',
       bgClass: 'from-teal-500 to-cyan-600',
     }
   } else {

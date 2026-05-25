@@ -40,6 +40,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Essay not found' }, { status: 404 })
     }
 
+    // Guard: return existing vocab if already generated for this essay
+    if (user) {
+      const { data: existing } = await supabase
+        .from('vocabulary')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('essay_id', essay_id)
+        .eq('vocab_type', 'paraphrase')
+        .limit(1)
+
+      if (existing && existing.length > 0) {
+        const { data: currentVocab } = await supabase
+          .from('vocabulary')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('essay_id', essay_id)
+          .eq('vocab_type', 'paraphrase')
+        return NextResponse.json({ success: true, vocabulary: currentVocab })
+      }
+    }
+
     // Call OpenAI to generate paraphrase vocabulary with prompt caching
     const completion = await openaiClient.chat.completions.create({
       model: MODELS.VOCABULARY,

@@ -288,7 +288,7 @@ export function VocabGenerateButtons({
               ))}
             </div>
             <button
-              onClick={() => router.push(`/vocabulary/${essayId}`)}
+              onClick={() => router.push(`/history/${essayId}/vocabulary`)}
               className="flex items-center gap-1.5 text-sm text-ocean-600 hover:text-ocean-800 font-medium transition-colors"
             >
               See all {paraphrasePreview.length} words
@@ -332,7 +332,7 @@ export function VocabGenerateButtons({
               ))}
             </div>
             <button
-              onClick={() => router.push(`/vocabulary/${essayId}`)}
+              onClick={() => router.push(`/history/${essayId}/vocabulary`)}
               className="flex items-center gap-1.5 text-sm text-ocean-600 hover:text-ocean-800 font-medium transition-colors"
             >
               See all {topicPreview.length} words
@@ -346,7 +346,7 @@ export function VocabGenerateButtons({
       {(hasParaphrase || hasTopic) && !isGeneratingParaphrase && !isGeneratingTopic && (
         <div className="pt-2 border-t border-slate-100">
           <Button
-            onClick={() => router.push(`/vocabulary/${essayId}`)}
+            onClick={() => router.push(`/history/${essayId}/vocabulary`)}
             className="w-full bg-ocean-700 hover:bg-ocean-800 text-white"
           >
             <BookOpen className="h-4 w-4 mr-2" />

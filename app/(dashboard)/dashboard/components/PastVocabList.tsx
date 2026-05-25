@@ -97,7 +97,7 @@ export function PastVocabList({ entries }: PastVocabListProps) {
               <div className="flex items-center justify-between gap-3 pt-1">
                 <p className="text-xs text-ocean-500">Showing the first 3 items from this essay</p>
                 <Link
-                  href={`/vocabulary/${entry.essayId}`}
+                  href={`/history/${entry.essayId}/vocabulary`}
                   className="inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-700 transition-colors hover:text-cyan-800"
                 >
                   Open essay vocab

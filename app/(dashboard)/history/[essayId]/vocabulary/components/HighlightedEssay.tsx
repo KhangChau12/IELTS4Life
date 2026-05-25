@@ -10,12 +10,10 @@ interface HighlightedEssayProps {
 }
 
 export function HighlightedEssay({ essayContent, vocabularyItems }: HighlightedEssayProps) {
-  // Function to highlight original words in the essay
   const highlightText = () => {
     let highlightedContent = essayContent
     const wordsToHighlight: { word: string; suggested: string }[] = []
 
-    // Collect all original words that need highlighting
     vocabularyItems.forEach(item => {
       if (item.original_word) {
         wordsToHighlight.push({
@@ -25,12 +23,9 @@ export function HighlightedEssay({ essayContent, vocabularyItems }: HighlightedE
       }
     })
 
-    // Sort by length (longest first) to avoid partial matches
     wordsToHighlight.sort((a, b) => b.word.length - a.word.length)
 
-    // Replace each word with highlighted version
     wordsToHighlight.forEach(({ word, suggested }) => {
-      // Case-insensitive regex to find all occurrences
       const regex = new RegExp(`\\b(${word})\\b`, 'gi')
       highlightedContent = highlightedContent.replace(
         regex,

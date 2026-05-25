@@ -16,7 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { Home, FileText, BookOpen, User, LogOut, Settings, History, Crown, Users, Menu, PenTool, Bell, ChevronDown } from 'lucide-react'
+import { Home, FileText, User, LogOut, Settings, History, Crown, Users, Menu, PenTool, Bell, ChevronDown } from 'lucide-react'
 import { createClient, resetClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect, useRef } from 'react'
@@ -31,6 +31,7 @@ import {
 interface HeaderProps {
   user?: {
     email: string
+    full_name?: string | null
     role: 'student' | 'admin' | 'dev'
   } | null
 }
@@ -88,7 +89,7 @@ export function Header({ user }: HeaderProps) {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-ocean-600 bg-ocean-700 shadow-md">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+      <div className="container mx-auto relative flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <span className="text-2xl md:text-3xl lg:text-4xl font-[family-name:var(--font-shrikhand)]">
@@ -97,9 +98,9 @@ export function Header({ user }: HeaderProps) {
           </span>
         </Link>
 
-        {/* Navigation - Desktop */}
+        {/* Navigation - Desktop (absolute center of header) */}
         <TooltipProvider>
-          <nav className="hidden md:flex items-center space-x-1">
+          <nav className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center space-x-1">
             {/* Dashboard - Show for all, tooltip for guests */}
             {user ? (
               <Link href="/dashboard">
@@ -180,37 +181,6 @@ export function Header({ user }: HeaderProps) {
                 </TooltipTrigger>
                 <TooltipContent>
                   <p className="text-sm">Sign up to access History & review past essays</p>
-                </TooltipContent>
-              </Tooltip>
-            )}
-
-            {/* Vocabulary - Show for all, tooltip for guests */}
-            {user ? (
-              <Link href="/vocabulary">
-                <Button
-                  variant={isActive('/vocabulary') ? 'secondary' : 'ghost'}
-                  className={isActive('/vocabulary') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}
-                >
-                  <BookOpen className="mr-2 h-4 w-4" />
-                  Vocabulary
-                </Button>
-              </Link>
-            ) : (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div>
-                    <Button
-                      variant="ghost"
-                      className="text-white/60 hover:bg-ocean-600 cursor-not-allowed"
-                      disabled
-                    >
-                      <BookOpen className="mr-2 h-4 w-4" />
-                      Vocabulary
-                    </Button>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className="text-sm">Sign up to access your Vocabulary collection</p>
                 </TooltipContent>
               </Tooltip>
             )}
@@ -300,28 +270,6 @@ export function Header({ user }: HeaderProps) {
                   </Button>
                 )}
 
-                {/* Vocabulary */}
-                {user ? (
-                  <Link href="/vocabulary" onClick={() => setIsOpen(false)}>
-                    <Button
-                      variant={isActive('/vocabulary') ? 'secondary' : 'ghost'}
-                      className={`w-full justify-start ${isActive('/vocabulary') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}`}
-                    >
-                      <BookOpen className="mr-2 h-4 w-4" />
-                      Vocabulary
-                    </Button>
-                  </Link>
-                ) : (
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start text-white/60 hover:bg-ocean-600 cursor-not-allowed"
-                    disabled
-                  >
-                    <BookOpen className="mr-2 h-4 w-4" />
-                    Vocabulary
-                  </Button>
-                )}
-
                 {/* Divider */}
                 <div className="border-t border-ocean-600 my-2" />
 
@@ -399,7 +347,7 @@ export function Header({ user }: HeaderProps) {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="text-white hover:bg-ocean-600 relative">
                   <User className="h-4 w-4 md:mr-2" />
-                  <span className="hidden md:inline">{user.email}</span>
+                  <span className="hidden md:inline max-w-[140px] truncate">{user.full_name || user.email}</span>
                   <ChevronDown className="hidden md:inline h-3.5 w-3.5 ml-1 opacity-70" />
                   {unreadCount > 0 && (
                     <span className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-red-500 border border-ocean-700" />

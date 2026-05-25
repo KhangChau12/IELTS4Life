@@ -17,7 +17,7 @@ interface QuizQuestion {
   options?: string[]
   firstLetter: string
   originalWord?: string
-  vocabType?: string // Track which vocab type this question belongs to
+  vocabType?: string
 }
 
 type QuizType = 'multiple_choice' | null
@@ -81,7 +81,7 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
         correctAnswer: item.suggested_word.toLowerCase(),
         firstLetter: item.suggested_word[0].toLowerCase(),
         originalWord: item.original_word || undefined,
-        vocabType: item.vocab_type, // Store the vocab type for each question
+        vocabType: item.vocab_type,
       }
 
       if (type === 'multiple_choice') {
@@ -144,9 +144,7 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
     setIsSubmitting(true)
 
     try {
-      // If this is a mixed quiz (both/mixed), we need to save separate results for each vocab type
       if (vocabType === 'both' || vocabType === 'mixed') {
-        // Separate questions by vocab type
         const paraphraseResults = {
           correct: [] as string[],
           incorrect: [] as string[],
@@ -181,13 +179,10 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
           }
         })
 
-        // Save paraphrase results if any
         if (paraphraseResults.total > 0) {
           const response = await fetch('/api/vocabulary/quiz-results', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               essay_id: params.essayId,
               vocab_type: 'paraphrase',
@@ -198,10 +193,7 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
               incorrect_answers: paraphraseResults.incorrect,
             }),
           })
-
           const data = await response.json()
-
-          // If guest, save to localStorage
           if (data.isGuest) {
             saveGuestQuizResult({
               essay_id: params.essayId,
@@ -215,13 +207,10 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
           }
         }
 
-        // Save topic results if any
         if (topicResults.total > 0) {
           const response = await fetch('/api/vocabulary/quiz-results', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               essay_id: params.essayId,
               vocab_type: 'topic',
@@ -232,10 +221,7 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
               incorrect_answers: topicResults.incorrect,
             }),
           })
-
           const data = await response.json()
-
-          // If guest, save to localStorage
           if (data.isGuest) {
             saveGuestQuizResult({
               essay_id: params.essayId,
@@ -249,12 +235,9 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
           }
         }
       } else {
-        // Single vocab type quiz - save as before
         const response = await fetch('/api/vocabulary/quiz-results', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             essay_id: params.essayId,
             vocab_type: vocabType,
@@ -268,8 +251,6 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
 
         if (response.ok) {
           const data = await response.json()
-
-          // If guest, save to localStorage
           if (data.isGuest) {
             saveGuestQuizResult({
               essay_id: params.essayId,
@@ -298,7 +279,7 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
 
   if (isLoading) {
     return (
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-center h-96">
           <div className="text-ocean-600">Loading quiz...</div>
         </div>
@@ -308,9 +289,9 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
 
   if (error || vocabulary.length === 0) {
     return (
-      <div className="max-w-4xl mx-auto">
-        <Link href={`/vocabulary/${params.essayId}`}>
-          <Button variant="ghost" className="mb-4 text-ocean-600 hover:text-ocean-800 hover:bg-ocean-50">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+        <Link href={`/history/${params.essayId}/vocabulary`}>
+          <Button variant="ghost" className="mb-4 text-ocean-600 hover:text-ocean-800 hover:bg-ocean-50 -ml-2">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Vocabulary
           </Button>
@@ -329,17 +310,17 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
   const correctCount = userAnswers.filter((ans, i) => ans === questions[i]?.correctAnswer).length
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6">
       {/* Header */}
-      <div className="mb-6">
-        <Link href={`/vocabulary/${params.essayId}`}>
-          <Button variant="ghost" className="mb-4 text-ocean-600 hover:text-ocean-800 hover:bg-ocean-50">
+      <div className="mb-4 sm:mb-6">
+        <Link href={`/history/${params.essayId}/vocabulary`}>
+          <Button variant="ghost" className="mb-3 text-ocean-600 hover:text-ocean-800 hover:bg-ocean-50 -ml-2">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Vocabulary
           </Button>
         </Link>
-        <h1 className="text-4xl font-bold text-ocean-800 mb-2">Vocabulary Quiz</h1>
-        <p className="text-ocean-600 capitalize">
+        <h1 className="text-2xl sm:text-4xl font-bold text-ocean-800 mb-2">Vocabulary Quiz</h1>
+        <p className="text-sm sm:text-base text-ocean-600 capitalize">
           {vocabType === 'both' ? 'Mixed (Paraphrase + Topic)' : `${vocabType} Vocabulary`}
         </p>
       </div>
@@ -389,7 +370,6 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
                   ))}
                 </div>
               )}
-
             </CardContent>
           </Card>
 
@@ -467,7 +447,7 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
             >
               Take Another Quiz
             </Button>
-            <Link href={`/vocabulary/${params.essayId}`}>
+            <Link href={`/history/${params.essayId}/vocabulary`}>
               <Button variant="outline" className="border-ocean-300 text-ocean-700 hover:bg-ocean-50">
                 Back to Vocabulary
               </Button>

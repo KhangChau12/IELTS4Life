@@ -195,7 +195,7 @@ export function VocabularyProgress({
             <h4 className="text-sm font-semibold text-ocean-900 mb-1">Ready to Test Your Knowledge?</h4>
             <p className="text-sm text-ocean-600 mb-4">Start practicing quizzes to see your progress tracked here</p>
             <Link
-              href="/vocabulary"
+              href="/history"
               className="inline-flex items-center gap-2 text-sm font-semibold text-cyan-600 hover:text-cyan-700 transition-colors"
             >
               Begin a Quiz

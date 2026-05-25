@@ -256,7 +256,7 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
                           View Details
                         </Button>
                       </Link>
-                      <Link href={`/vocabulary?essay=${essay.id}`} className="sm:w-auto">
+                      <Link href={`/history/${essay.id}/vocabulary`} className="sm:w-auto">
                         <Button variant="outline" className="w-full border-slate-300 text-slate-700 hover:bg-slate-50">
                           Vocabulary
                         </Button>
