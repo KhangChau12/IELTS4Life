@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { BouncingDots } from '@/components/common/BouncingDots'
 import { Badge } from '@/components/ui/badge'
 import { Lightbulb, CheckCircle2, AlertCircle, Target } from 'lucide-react'
 
@@ -85,7 +85,6 @@ interface DetailedGuidanceProps {
 
 export function DetailedGuidance({ essayId, hasImprovedEssay, initialGuidance }: DetailedGuidanceProps) {
   const [isGenerating, setIsGenerating] = useState(false)
-  const [progress, setProgress] = useState(0)
   const [guidance, setGuidance] = useState<DetailedGuidanceData | null>(initialGuidance || null)
   const [error, setError] = useState<string | null>(null)
   const [hasStarted, setHasStarted] = useState(!!initialGuidance)
@@ -140,27 +139,8 @@ export function DetailedGuidance({ essayId, hasImprovedEssay, initialGuidance }:
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [improvedEssayExists])
 
-  useEffect(() => {
-    // Simulate progress - 5 seconds total
-    let interval: NodeJS.Timeout
-    if (isGenerating && progress < 95) {
-      interval = setInterval(() => {
-        setProgress(prev => {
-          // 5 seconds = 5000ms, update every 100ms = 50 updates
-          // Each update = ~1.9% to reach 95% in 5s
-          if (prev < 95) {
-            return prev + 1.9
-          }
-          return prev
-        })
-      }, 100)
-    }
-    return () => clearInterval(interval)
-  }, [isGenerating, progress])
-
   const generateGuidance = async () => {
     setIsGenerating(true)
-    setProgress(0)
     setError(null)
 
     try {
@@ -177,10 +157,8 @@ export function DetailedGuidance({ essayId, hasImprovedEssay, initialGuidance }:
       }
 
       setGuidance(data.guidance)
-      setProgress(100)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
-      setProgress(0)
     } finally {
       setIsGenerating(false)
     }
@@ -204,12 +182,9 @@ export function DetailedGuidance({ essayId, hasImprovedEssay, initialGuidance }:
       </CardHeader>
       <CardContent className="pt-6">
         {isGenerating && (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-ocean-700">Analyzing your essay and generating personalized guidance...</span>
-              <span className="font-semibold text-ocean-600">{Math.round(progress)}%</span>
-            </div>
-            <Progress value={progress} className="h-2" />
+          <div className="flex items-center gap-3 text-sm text-ocean-700 pb-2">
+            <span>Analyzing your essay and generating personalized guidance</span>
+            <BouncingDots size="sm" color="bg-ocean-500" />
           </div>
         )}
 

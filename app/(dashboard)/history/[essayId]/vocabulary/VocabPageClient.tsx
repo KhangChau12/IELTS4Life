@@ -4,10 +4,10 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
-import { BookOpen, BrainCircuit, ArrowLeft, Sparkles, Loader2, FileText } from 'lucide-react'
+import { BookOpen, BrainCircuit, ArrowLeft, Sparkles, FileText } from 'lucide-react'
+import { BouncingDots } from '@/components/common/BouncingDots'
 import type { VocabularyItem } from '@/types/vocabulary'
 import type { Essay } from '@/types/essay'
 
@@ -73,8 +73,6 @@ export default function VocabularyDetailPage({ params }: VocabularyPageProps) {
   const [isLoading, setIsLoading] = useState(true)
 
   const [generateStep, setGenerateStep] = useState<GenerateStep>('idle')
-  const [paraphraseProgress, setParaphraseProgress] = useState(0)
-  const [topicProgress, setTopicProgress] = useState(0)
   const [generateError, setGenerateError] = useState('')
 
   // Word hovered in the essay panel — lowercased original_word
@@ -115,10 +113,6 @@ export default function VocabularyDetailPage({ params }: VocabularyPageProps) {
     setGenerateError('')
 
     setGenerateStep('paraphrase')
-    setParaphraseProgress(0)
-    const paraInterval = setInterval(() => {
-      setParaphraseProgress(prev => prev < 95 ? prev + 1.19 : prev)
-    }, 100)
     try {
       const res = await fetch('/api/vocabulary/paraphrase', {
         method: 'POST',
@@ -126,22 +120,15 @@ export default function VocabularyDetailPage({ params }: VocabularyPageProps) {
         body: JSON.stringify({ essay_id: params.essayId }),
       })
       const data = await res.json()
-      clearInterval(paraInterval)
-      setParaphraseProgress(100)
       if (!res.ok) throw new Error(data.error || 'Failed')
       if (data.vocabulary) setParaphraseVocab(data.vocabulary)
     } catch (err) {
-      clearInterval(paraInterval)
       setGenerateError(err instanceof Error ? err.message : 'Failed to generate')
       setGenerateStep('idle')
       return
     }
 
     setGenerateStep('topic')
-    setTopicProgress(0)
-    const topicInterval = setInterval(() => {
-      setTopicProgress(prev => prev < 95 ? prev + 1.19 : prev)
-    }, 100)
     try {
       const res = await fetch('/api/vocabulary/topic', {
         method: 'POST',
@@ -149,12 +136,9 @@ export default function VocabularyDetailPage({ params }: VocabularyPageProps) {
         body: JSON.stringify({ essay_id: params.essayId }),
       })
       const data = await res.json()
-      clearInterval(topicInterval)
-      setTopicProgress(100)
       if (!res.ok) throw new Error(data.error || 'Failed')
       if (data.vocabulary) setTopicVocab(data.vocabulary)
     } catch (err) {
-      clearInterval(topicInterval)
       setGenerateError(err instanceof Error ? err.message : 'Failed to generate')
       setGenerateStep('idle')
       return
@@ -205,28 +189,19 @@ export default function VocabularyDetailPage({ params }: VocabularyPageProps) {
           />
           <div className="relative z-10 text-center max-w-sm w-full">
             {isGenerating ? (
-              <div className="space-y-5">
-                <div className="flex items-center justify-center gap-2 mb-1">
-                  <Loader2 className="h-5 w-5 text-ocean-600 animate-spin" />
-                  <p className="text-ocean-800 font-semibold text-sm sm:text-base">
-                    {generateStep === 'paraphrase' ? 'Generating paraphrase vocabulary...' : 'Finding topic vocabulary...'}
-                  </p>
-                </div>
-                <div className="space-y-3 text-left">
-                  <div className="space-y-1.5">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-ocean-700 font-medium">Paraphrase</span>
-                      <span className="text-ocean-500">{generateStep === 'paraphrase' ? `${Math.round(paraphraseProgress)}%` : '✓'}</span>
-                    </div>
-                    <Progress value={generateStep === 'paraphrase' ? paraphraseProgress : 100} className="h-1.5" />
-                  </div>
-                  <div className="space-y-1.5">
-                    <div className="flex justify-between text-sm">
-                      <span className={generateStep === 'topic' ? 'text-ocean-700 font-medium' : 'text-ocean-400'}>Topic</span>
-                      <span className="text-ocean-500">{generateStep === 'topic' ? `${Math.round(topicProgress)}%` : ''}</span>
-                    </div>
-                    <Progress value={generateStep === 'topic' ? topicProgress : 0} className="h-1.5" />
-                  </div>
+              <div className="flex flex-col items-center gap-3">
+                <BouncingDots size="md" color="bg-ocean-500" />
+                <p className="text-ocean-800 font-semibold text-sm sm:text-base">
+                  {generateStep === 'paraphrase' ? 'Generating paraphrase vocabulary...' : 'Finding topic vocabulary...'}
+                </p>
+                <div className="flex items-center gap-4 text-sm">
+                  <span className={generateStep === 'topic' ? 'text-ocean-400 line-through' : 'text-ocean-700 font-medium'}>
+                    Paraphrase{generateStep === 'topic' ? ' ✓' : ''}
+                  </span>
+                  <span className="text-ocean-300">→</span>
+                  <span className={generateStep === 'topic' ? 'text-ocean-700 font-medium' : 'text-ocean-400'}>
+                    Topic
+                  </span>
                 </div>
               </div>
             ) : (

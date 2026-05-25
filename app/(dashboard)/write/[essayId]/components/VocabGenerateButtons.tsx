@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import {
   Sparkles,
@@ -10,9 +9,9 @@ import {
   GraduationCap,
   BarChart3,
   Zap,
-  Loader2,
   ArrowRight,
 } from 'lucide-react'
+import { BouncingDots } from '@/components/common/BouncingDots'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
@@ -62,8 +61,6 @@ export function VocabGenerateButtons({
   const router = useRouter()
   const [isGeneratingParaphrase, setIsGeneratingParaphrase] = useState(false)
   const [isGeneratingTopic, setIsGeneratingTopic] = useState(false)
-  const [paraphraseProgress, setParaphraseProgress] = useState(0)
-  const [topicProgress, setTopicProgress] = useState(0)
   const [hasParaphrase, setHasParaphrase] = useState(initialHasParaphrase)
   const [hasTopic, setHasTopic] = useState(initialHasTopic)
   const [error, setError] = useState('')
@@ -111,15 +108,7 @@ export function VocabGenerateButtons({
 
   async function runGenerateParaphrase() {
     setIsGeneratingParaphrase(true)
-    setParaphraseProgress(0)
     setError('')
-
-    const interval = setInterval(() => {
-      setParaphraseProgress(prev => {
-        if (prev < 95) return prev + 1.19
-        return prev
-      })
-    }, 100)
 
     try {
       const response = await fetch('/api/vocabulary/paraphrase', {
@@ -134,7 +123,6 @@ export function VocabGenerateButtons({
         throw new Error(data.error || 'Failed to generate')
       }
 
-      setParaphraseProgress(100)
       setHasParaphrase(true)
       if (data.vocabulary) {
         setParaphrasePreview(data.vocabulary)
@@ -143,24 +131,14 @@ export function VocabGenerateButtons({
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to generate paraphrase vocabulary')
-      setParaphraseProgress(0)
     } finally {
-      clearInterval(interval)
       setIsGeneratingParaphrase(false)
     }
   }
 
   async function runGenerateTopic() {
     setIsGeneratingTopic(true)
-    setTopicProgress(0)
     setError('')
-
-    const interval = setInterval(() => {
-      setTopicProgress(prev => {
-        if (prev < 95) return prev + 1.19
-        return prev
-      })
-    }, 100)
 
     try {
       const response = await fetch('/api/vocabulary/topic', {
@@ -175,7 +153,6 @@ export function VocabGenerateButtons({
         throw new Error(data.error || 'Failed to generate')
       }
 
-      setTopicProgress(100)
       setHasTopic(true)
       if (data.vocabulary) {
         setTopicPreview(data.vocabulary)
@@ -184,9 +161,7 @@ export function VocabGenerateButtons({
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to generate topic vocabulary')
-      setTopicProgress(0)
     } finally {
-      clearInterval(interval)
       setIsGeneratingTopic(false)
     }
   }
@@ -273,11 +248,9 @@ export function VocabGenerateButtons({
         {isGeneratingParaphrase ? (
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-sm text-ocean-600">
-              <Loader2 className="h-4 w-4 animate-spin flex-shrink-0" />
-              <span>Generating paraphrase vocabulary...</span>
-              <span className="font-medium ml-auto">{Math.round(paraphraseProgress)}%</span>
+              <span>Generating paraphrase vocabulary</span>
+              <BouncingDots size="sm" color="bg-ocean-400" />
             </div>
-            <Progress value={paraphraseProgress} className="h-1.5" />
             <SkeletonCards />
           </div>
         ) : paraphrasePreview.length > 0 ? (
@@ -317,11 +290,9 @@ export function VocabGenerateButtons({
         {isGeneratingTopic ? (
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-sm text-ocean-600">
-              <Loader2 className="h-4 w-4 animate-spin flex-shrink-0" />
-              <span>Finding topic-specific vocabulary...</span>
-              <span className="font-medium ml-auto">{Math.round(topicProgress)}%</span>
+              <span>Finding topic-specific vocabulary</span>
+              <BouncingDots size="sm" color="bg-ocean-400" />
             </div>
-            <Progress value={topicProgress} className="h-1.5" />
             <SkeletonCards />
           </div>
         ) : topicPreview.length > 0 ? (
