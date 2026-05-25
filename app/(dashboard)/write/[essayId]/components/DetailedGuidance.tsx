@@ -98,7 +98,7 @@ export function DetailedGuidance({ essayId, hasImprovedEssay, initialGuidance }:
     }
 
     let pollCount = 0
-    const MAX_POLLS = 30 // Max 60 seconds (30 * 2s)
+    const MAX_POLLS = 24 // Max 120 seconds (24 * 5s)
 
     const checkImprovedEssay = async () => {
       try {
@@ -122,8 +122,8 @@ export function DetailedGuidance({ essayId, hasImprovedEssay, initialGuidance }:
       }
     }
 
-    // Poll every 2 seconds
-    const interval = setInterval(checkImprovedEssay, 2000)
+    // Poll every 5 seconds (reduced from 2s to limit token refresh requests)
+    const interval = setInterval(checkImprovedEssay, 5000)
 
     // Initial check
     checkImprovedEssay()

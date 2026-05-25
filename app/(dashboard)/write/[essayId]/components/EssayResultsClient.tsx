@@ -81,6 +81,36 @@ const CRITERION_SHORT: Record<string, string> = {
   'Grammatical Accuracy': 'Grammar',
 }
 
+const SEVERITY_BADGE: Record<string, { label: string; className: string }> = {
+  MINOR:    { label: 'Minor',    className: 'bg-slate-100 text-slate-500 border border-slate-200' },
+  MAJOR:    { label: 'Major',    className: 'bg-amber-50 text-amber-700 border border-amber-200' },
+  CRITICAL: { label: 'Critical', className: 'bg-red-100 text-red-700 border border-red-200' },
+}
+
+function parseErrorString(error: string): { severity: string | null; main: string; better: string | null } {
+  const severityMatch = error.match(/^\[(MINOR|MAJOR|CRITICAL)\]\s*/)
+  const severity = severityMatch ? severityMatch[1] : null
+  const withoutSeverity = severityMatch ? error.slice(severityMatch[0].length) : error
+  const betterIndex = withoutSeverity.search(/[;,]?\s*✏\s*Better:/)
+  if (betterIndex === -1) return { severity, main: withoutSeverity, better: null }
+  const main = withoutSeverity.slice(0, betterIndex).trim()
+  const better = withoutSeverity.slice(betterIndex).replace(/^[;,]?\s*✏\s*Better:\s*/, '').trim()
+  return { severity, main, better }
+}
+
+function parseStrengthString(strength: string): { label: string; explanation: string | null } {
+  const dashIdx = strength.indexOf(' — ')
+  if (dashIdx === -1) return { label: strength, explanation: null }
+  return { label: strength.slice(0, dashIdx), explanation: strength.slice(dashIdx + 3) }
+}
+
+function parseCommentSections(comment: string): string[] {
+  return comment
+    .split(/(?=Key strengths:|Main weaknesses:|To reach Band)/)
+    .map(s => s.trim())
+    .filter(Boolean)
+}
+
 function CriterionRow({
   criterion,
   overallScore,
@@ -129,24 +159,37 @@ function CriterionRow({
 
       {isExpanded && (
         <div className="border-t border-ocean-100 px-5 py-4 space-y-4 bg-white">
-          {criterion.comment && (
-            <div className="bg-cyan-50 border border-cyan-200 rounded-md p-3">
-              <p className="text-sm text-ocean-700 leading-relaxed">{criterion.comment}</p>
-            </div>
-          )}
+          {criterion.comment && (() => {
+            const sections = parseCommentSections(criterion.comment)
+            return (
+              <div className="bg-cyan-50 border border-cyan-200 rounded-md p-3 space-y-1.5">
+                {sections.map((section, i) => (
+                  <p key={i} className="text-sm text-ocean-700 leading-relaxed">{section}</p>
+                ))}
+              </div>
+            )
+          })()}
 
           {hasStrengths && (
             <div className="space-y-2">
               <p className="text-xs font-semibold text-green-700 uppercase tracking-wide flex items-center gap-1.5">
                 <CheckCircle2 className="h-3.5 w-3.5" /> Strengths
               </p>
-              <ul className="space-y-1.5">
-                {criterion.strengths!.map((s, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-green-800">
-                    <span className="text-green-500 mt-0.5 flex-shrink-0">✓</span>
-                    <span>{s}</span>
-                  </li>
-                ))}
+              <ul className="space-y-2">
+                {criterion.strengths!.map((s, i) => {
+                  const { label, explanation } = parseStrengthString(s)
+                  return (
+                    <li key={i} className="flex items-start gap-2 text-sm">
+                      <span className="text-green-500 mt-0.5 flex-shrink-0">✓</span>
+                      <span className="text-green-800">
+                        <span className="font-medium">{label}</span>
+                        {explanation && (
+                          <span className="text-green-700 font-normal"> — {explanation}</span>
+                        )}
+                      </span>
+                    </li>
+                  )
+                })}
               </ul>
             </div>
           )}
@@ -156,13 +199,32 @@ function CriterionRow({
               <p className="text-xs font-semibold text-red-700 uppercase tracking-wide flex items-center gap-1.5">
                 <AlertCircle className="h-3.5 w-3.5" /> Areas for Improvement
               </p>
-              <ul className="space-y-1.5">
-                {criterion.errors!.map((e, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-red-800">
-                    <span className="text-red-400 mt-0.5 flex-shrink-0">•</span>
-                    <span>{e}</span>
-                  </li>
-                ))}
+              <ul className="space-y-2.5">
+                {criterion.errors!.map((e, i) => {
+                  const { severity, main, better } = parseErrorString(e)
+                  const badge = severity ? SEVERITY_BADGE[severity] : null
+                  return (
+                    <li key={i} className="flex items-start gap-2 text-sm">
+                      <span className="text-red-400 mt-0.5 flex-shrink-0">•</span>
+                      <span className="flex-1">
+                        <span className="flex flex-wrap items-baseline gap-1.5">
+                          {badge && (
+                            <span className={`inline-block text-xs font-semibold px-1.5 py-0.5 rounded ${badge.className} flex-shrink-0`}>
+                              {badge.label}
+                            </span>
+                          )}
+                          <span className="text-red-800">{main}</span>
+                        </span>
+                        {better && (
+                          <span className="mt-1 flex items-start gap-1 text-emerald-700 bg-emerald-50 border border-emerald-200 rounded px-2 py-1">
+                            <span className="flex-shrink-0 font-medium">✏</span>
+                            <span className="italic">{better}</span>
+                          </span>
+                        )}
+                      </span>
+                    </li>
+                  )
+                })}
               </ul>
             </div>
           )}

@@ -19,7 +19,7 @@ import {
 import { Home, FileText, BookOpen, User, LogOut, Settings, History, Crown, Users, Menu, PenTool, Bell, ChevronDown } from 'lucide-react'
 import { createClient, resetClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   Sheet,
   SheetContent,
@@ -38,7 +38,8 @@ interface HeaderProps {
 export function Header({ user }: HeaderProps) {
   const pathname = usePathname()
   const router = useRouter()
-  const supabase = createClient()
+  // Store in ref to avoid re-renders triggering new client creation
+  const supabaseRef = useRef(createClient())
   const [isOpen, setIsOpen] = useState(false)
   const [unreadCount, setUnreadCount] = useState(0)
 
@@ -50,12 +51,7 @@ export function Header({ user }: HeaderProps) {
 
     const fetchUnreadCount = async () => {
       try {
-        const res = await fetch('/api/notifications?unread_only=true', {
-          cache: 'no-store',
-          headers: {
-            'Cache-Control': 'no-cache',
-          },
-        })
+        const res = await fetch('/api/notifications?unread_only=true')
 
         if (res.status === 401) {
           setUnreadCount(0)
@@ -72,10 +68,13 @@ export function Header({ user }: HeaderProps) {
     }
 
     fetchUnreadCount()
-  }, [user, pathname])
+  // Fetch only when user changes (login/logout), NOT on every navigation.
+  // pathname was here before and caused one API call per route change,
+  // generating hundreds of token refresh requests per session.
+  }, [user])
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
+    await supabaseRef.current.auth.signOut()
     // Reset singleton client to clear cached auth state
     resetClient()
     router.push('/login')
