@@ -180,6 +180,17 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     for (const key of bucketKeys) {
       usersOverTime.push({ date: key, count: bucketCounts.get(key) || 0 })
     }
+
+    const TARGET_POINTS = 6
+    if (usersOverTime.length > TARGET_POINTS) {
+      const sampled: typeof usersOverTime = []
+      for (let i = 0; i < TARGET_POINTS; i++) {
+        const idx = Math.round(i * (usersOverTime.length - 1) / (TARGET_POINTS - 1))
+        sampled.push(usersOverTime[idx])
+      }
+      usersOverTime.length = 0
+      usersOverTime.push(...sampled)
+    }
   }
 
   // Essays over time — last 14 days, per-day count

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Users, FileText, Zap, RefreshCw, BookOpen, UserPlus, Target, PenTool, DollarSign } from 'lucide-react'
+import { Users, FileText, Zap, RefreshCw, BookOpen, UserPlus, TrendingUp, PenTool, DollarSign } from 'lucide-react'
 import { EnhancedUsersTable } from './EnhancedUsersTable'
 import {
   LineChart,
@@ -142,12 +142,6 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
                 <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 backdrop-blur-sm">
                   Updated: {format(lastUpdate, 'MMM dd, yyyy HH:mm:ss')}
                 </span>
-                <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 backdrop-blur-sm">
-                  {formatNumber(stats.totalUsers)} users
-                </span>
-                <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 backdrop-blur-sm">
-                  {formatNumber(stats.totalEssays)} essays
-                </span>
               </div>
             </div>
 
@@ -188,9 +182,8 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
               </div>
               <div className="text-3xl md:text-4xl font-bold leading-none">{formatNumber(stats.totalEssays)}</div>
               <p className="mt-3 text-xs text-slate-200">
-                Avg band{' '}
-                <span className="font-semibold text-white">{stats.avgOverallScore.toFixed(1)}</span> ·{' '}
-                <span className="font-semibold text-white">{formatNumber(stats.essaysFromPrompts)}</span> from prompts
+                <span className="font-semibold text-white">{formatNumber(stats.essaysFromPrompts)}</span> from prompts ·{' '}
+                <span className="font-semibold text-white">{formatNumber(stats.totalEssays - stats.essaysFromPrompts)}</span> external
               </p>
             </div>
 
@@ -208,16 +201,17 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
               </p>
             </div>
 
-            {/* Prompt Coverage */}
+            {/* Avg Band Score */}
             <div className="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4 shadow-sm">
               <div className="flex items-center justify-between gap-3 mb-3">
-                <span className="text-xs uppercase tracking-[0.18em] text-slate-200">Prompt Coverage</span>
+                <span className="text-xs uppercase tracking-[0.18em] text-slate-200">Avg Band Score</span>
                 <div className="rounded-xl bg-violet-400/15 p-2 text-violet-200">
-                  <Target className="h-4 w-4" />
+                  <TrendingUp className="h-4 w-4" />
                 </div>
               </div>
-              <div className="text-3xl md:text-4xl font-bold leading-none">{formatNumber(stats.totalPrompts)}</div>
+              <div className="text-3xl md:text-4xl font-bold leading-none">{stats.avgOverallScore.toFixed(1)}</div>
               <p className="mt-3 text-xs text-slate-200">
+                <span className="font-semibold text-white">{stats.totalPrompts}</span> prompts ·{' '}
                 <span className="font-semibold text-white">{stats.promptsWithOutlines}</span> with outlines
               </p>
             </div>
@@ -306,8 +300,8 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
         </Card>
       </div>
 
-      {/* Activity Charts — full width */}
-      <div className="grid grid-cols-1 gap-6">
+      {/* Activity Charts — side by side on large screens */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Daily Essay Activity */}
         <Card className="overflow-hidden border-slate-200/70 bg-white/90 shadow-sm transition-shadow hover:shadow-xl">
           <CardHeader className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-cyan-50/60">
@@ -315,7 +309,7 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
             <CardDescription>New essays submitted per day (last 14 days)</CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={320}>
+            <ResponsiveContainer width="100%" height={260}>
               <AreaChart data={dailyEssayActivityData}>
                 <defs>
                   <linearGradient id="colorEssays" x1="0" y1="0" x2="0" y2="1">
@@ -348,7 +342,7 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
             <CardDescription>Total registered users ({userGrowthLabel})</CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={320}>
+            <ResponsiveContainer width="100%" height={260}>
               <LineChart data={userGrowthData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
                 <XAxis dataKey="date" stroke="#64748b" style={{ fontSize: '12px' }} axisLine={false} tickLine={false} />
@@ -384,10 +378,6 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
           </CardHeader>
           <CardContent className="space-y-3 pt-4">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-slate-600">Total</span>
-              <span className="text-lg font-bold text-green-800">{formatVND(stats.totalRevenue)}</span>
-            </div>
-            <div className="flex justify-between items-center">
               <span className="text-sm text-slate-600">Pro subs</span>
               <span className="text-base font-semibold text-green-700">
                 {formatVND(stats.proRevenue)}
@@ -401,9 +391,13 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
                 <span className="text-xs font-normal text-slate-400 ml-1">({stats.packPurchases})</span>
               </span>
             </div>
+            <div className="flex justify-between items-center border-t border-slate-100 pt-3 mt-1">
+              <span className="text-sm text-slate-600">Total</span>
+              <span className="text-lg font-bold text-green-800">{formatVND(stats.totalRevenue)}</span>
+            </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-slate-600">Transactions</span>
-              <span className="text-lg font-bold text-slate-700">{stats.totalTransactions}</span>
+              <span className="text-base font-semibold text-slate-700">{stats.totalTransactions}</span>
             </div>
           </CardContent>
         </Card>
@@ -456,12 +450,16 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
               <span className="text-lg font-bold text-cyan-700">{formatNumber(stats.promptsWithOutlines)}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-slate-600">From Prompt</span>
+              <span className="text-sm text-slate-600">Essays via Prompt</span>
               <span className="text-lg font-bold text-teal-800">{formatNumber(stats.essaysFromPrompts)}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-slate-600">External</span>
-              <span className="text-lg font-bold text-slate-600">{formatNumber(stats.essaysFromExternal)}</span>
+              <span className="text-sm text-slate-600">Prompt Usage</span>
+              <span className="text-lg font-bold text-slate-600">
+                {stats.totalEssays > 0
+                  ? `${((stats.essaysFromPrompts / stats.totalEssays) * 100).toFixed(0)}%`
+                  : '—'}
+              </span>
             </div>
           </CardContent>
         </Card>
