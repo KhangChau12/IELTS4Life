@@ -215,31 +215,6 @@ export function Header({ user }: HeaderProps) {
               </Tooltip>
             )}
 
-            {/* Invite - Show for Free tier users only (not Pro/PTNK) */}
-            {user && !isPro && (
-              <Link href="/invite">
-                <Button
-                  variant={isActive('/invite') ? 'secondary' : 'ghost'}
-                  className={isActive('/invite') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}
-                >
-                  <Users className="mr-2 h-4 w-4" />
-                  Invite
-                </Button>
-              </Link>
-            )}
-
-            {/* Admin - Show for admin and dev */}
-            {(user?.role === 'admin' || user?.role === 'dev') && (
-              <Link href="/admin">
-                <Button
-                  variant={isActive('/admin') ? 'secondary' : 'ghost'}
-                  className={isActive('/admin') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}
-                >
-                  <Settings className="mr-2 h-4 w-4" />
-                  Admin
-                </Button>
-              </Link>
-            )}
           </nav>
         </TooltipProvider>
 
@@ -347,32 +322,6 @@ export function Header({ user }: HeaderProps) {
                   </Button>
                 )}
 
-                {/* Invite - Show for Free tier users only */}
-                {user && !isPro && (
-                  <Link href="/invite" onClick={() => setIsOpen(false)}>
-                    <Button
-                      variant={isActive('/invite') ? 'secondary' : 'ghost'}
-                      className={`w-full justify-start ${isActive('/invite') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}`}
-                    >
-                      <Users className="mr-2 h-4 w-4" />
-                      Invite
-                    </Button>
-                  </Link>
-                )}
-
-                {/* Admin - Show for admin and dev */}
-                {(user?.role === 'admin' || user?.role === 'dev') && (
-                  <Link href="/admin" onClick={() => setIsOpen(false)}>
-                    <Button
-                      variant={isActive('/admin') ? 'secondary' : 'ghost'}
-                      className={`w-full justify-start ${isActive('/admin') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}`}
-                    >
-                      <Settings className="mr-2 h-4 w-4" />
-                      Admin
-                    </Button>
-                  </Link>
-                )}
-
                 {/* Divider */}
                 <div className="border-t border-ocean-600 my-2" />
 
@@ -396,6 +345,22 @@ export function Header({ user }: HeaderProps) {
                         </div>
                       </Button>
                     </Link>
+                    {user && !isPro && (
+                      <Link href="/invite" onClick={() => setIsOpen(false)}>
+                        <Button variant="ghost" className="w-full justify-start text-white hover:bg-ocean-600">
+                          <Users className="mr-2 h-4 w-4" />
+                          Invite Friends
+                        </Button>
+                      </Link>
+                    )}
+                    {(user?.role === 'admin' || user?.role === 'dev') && (
+                      <Link href="/admin" onClick={() => setIsOpen(false)}>
+                        <Button variant="ghost" className="w-full justify-start text-white hover:bg-ocean-600">
+                          <Settings className="mr-2 h-4 w-4" />
+                          Admin Panel
+                        </Button>
+                      </Link>
+                    )}
                     <Button
                       variant="ghost"
                       className="w-full justify-start text-red-400 hover:bg-ocean-600"
@@ -463,6 +428,25 @@ export function Header({ user }: HeaderProps) {
                     </div>
                   </Link>
                 </DropdownMenuItem>
+                {(user && !isPro) || (user?.role === 'admin' || user?.role === 'dev') ? (
+                  <DropdownMenuSeparator />
+                ) : null}
+                {user && !isPro && (
+                  <DropdownMenuItem asChild>
+                    <Link href="/invite" className="cursor-pointer">
+                      <Users className="mr-2 h-4 w-4" />
+                      Invite Friends
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+                {(user?.role === 'admin' || user?.role === 'dev') && (
+                  <DropdownMenuItem asChild>
+                    <Link href="/admin" className="cursor-pointer">
+                      <Settings className="mr-2 h-4 w-4" />
+                      Admin Panel
+                    </Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut} className="text-red-600">
                   <LogOut className="mr-2 h-4 w-4" />
