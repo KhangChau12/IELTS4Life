@@ -14,15 +14,19 @@ import { ScoreChart } from './components/ScoreChart'
 import { VocabularyProgress } from './components/VocabularyProgress'
 import { NextActionBanner } from './components/NextActionBanner'
 import { ProgressSummary } from './components/ProgressSummary'
-import { LookBackTabs } from './components/LookBackTabs'
+import { RecentEssaysTable } from './components/RecentEssaysTable'
 
 async function getAllDashboardData(userId: string) {
   const supabase = createServerClient()
 
   // Run ALL queries in parallel
-  const [profileResult, essaysResult, vocabResult, quizResult] = await Promise.all([
-    // Profile - only need full_name
-    supabase.from('profiles').select('full_name').eq('id', userId).single(),
+  const [profileResult, essaysResult, vocabResult] = await Promise.all([
+    // Profile - full_name + pre-aggregated quiz counters (replaces vocabulary_quiz_attempts)
+    supabase
+      .from('profiles')
+      .select('full_name, quiz_total_attempts, quiz_total_correct, quiz_total_questions')
+      .eq('id', userId)
+      .single(),
 
     // Essays - select only needed columns, NO essay_content
     supabase
@@ -35,21 +39,11 @@ async function getAllDashboardData(userId: string) {
 
     // Vocabulary - only need essay_id for counting
     supabase.from('vocabulary').select('essay_id').eq('user_id', userId),
-
-    // Quiz attempts - only need score fields
-    supabase
-      .from('vocabulary_quiz_attempts')
-      .select('score, total_questions, vocab_type')
-      .eq('user_id', userId),
   ])
 
-  const userName =
-    profileResult.data?.full_name ||
-    undefined
-
+  const userName = profileResult.data?.full_name || undefined
   const essays = essaysResult.data || []
   const vocabulary = vocabResult.data || []
-  const quizAttempts = quizResult.data || []
 
   // --- Dashboard Stats ---
   const totalEssays = essays.length
@@ -65,22 +59,11 @@ async function getAllDashboardData(userId: string) {
   const vocabEssayIds = new Set(vocabulary.map((v) => v.essay_id).filter(Boolean))
   const essaysWithoutVocab = essays.filter((e) => !vocabEssayIds.has(e.id)).length
 
-  // --- Quiz Stats ---
-  const totalQuizzes = quizAttempts.length
-  const totalCorrectAnswers = quizAttempts.reduce((sum, q) => sum + (q.score || 0), 0)
-  const totalQuestions = quizAttempts.reduce((sum, q) => sum + (q.total_questions || 0), 0)
-  const avgQuizScore = totalQuestions > 0 ? (totalCorrectAnswers / totalQuestions) * 100 : 0
-
-  const paraphraseQuizzes = quizAttempts.filter((q) => q.vocab_type === 'paraphrase')
-  const topicQuizzes = quizAttempts.filter((q) => q.vocab_type === 'topic')
-
-  const paraphraseCorrect = paraphraseQuizzes.reduce((sum, q) => sum + (q.score || 0), 0)
-  const paraphraseTotal = paraphraseQuizzes.reduce((sum, q) => sum + (q.total_questions || 0), 0)
-  const avgParaphraseScore = paraphraseTotal > 0 ? (paraphraseCorrect / paraphraseTotal) * 100 : 0
-
-  const topicCorrect = topicQuizzes.reduce((sum, q) => sum + (q.score || 0), 0)
-  const topicTotal = topicQuizzes.reduce((sum, q) => sum + (q.total_questions || 0), 0)
-  const avgTopicScore = topicTotal > 0 ? (topicCorrect / topicTotal) * 100 : 0
+  // --- Quiz Stats — read pre-aggregated counters from profiles ---
+  const totalAttempts      = profileResult.data?.quiz_total_attempts  ?? 0
+  const totalCorrectAnswers = profileResult.data?.quiz_total_correct   ?? 0
+  const totalQuestions     = profileResult.data?.quiz_total_questions ?? 0
+  const avgQuizScore       = totalQuestions > 0 ? (totalCorrectAnswers / totalQuestions) * 100 : 0
 
   // --- Score Distribution ---
   const scoreDistribution = {
@@ -131,12 +114,10 @@ async function getAllDashboardData(userId: string) {
     userStats: {
       vocabulary: { total: totalVocabulary, essaysWithoutVocab },
       quiz: {
-        totalAttempts: totalQuizzes,
+        totalAttempts,
         totalCorrect: totalCorrectAnswers,
         totalQuestions,
         avgScore: Math.round(avgQuizScore * 10) / 10,
-        avgParaphraseScore: Math.round(avgParaphraseScore * 10) / 10,
-        avgTopicScore: Math.round(avgTopicScore * 10) / 10,
       },
       scoreDistribution,
       criteriaOverTime,
@@ -201,14 +182,12 @@ export default async function DashboardPage() {
         />
       )}
 
-      {/* Quick Stats Cards - Hidden for now, keeping design simpler */}
-
       {/* Empty State - First Time User */}
       {stats.totalEssays === 0 && (
-        <Card className="border-ocean-200 shadow-lg bg-gradient-to-br from-ocean-50 to-cyan-50">
-          <CardContent className="py-8 md:py-12 px-4 md:px-6">
+        <Card className="border-ocean-200 shadow-lg bg-gradient-to-br from-ocean-50 to-cyan-50 overflow-hidden relative">
+          <FileText className="absolute right-2 bottom-2 h-52 w-52 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
+          <CardContent className="py-8 md:py-12 px-4 md:px-6 relative z-10">
             <div className="text-center">
-              <FileText className="h-16 w-16 md:h-20 md:w-20 mx-auto mb-4 text-ocean-400" />
               <h2 className="text-xl md:text-2xl font-bold text-ocean-800 mb-2">Start Your IELTS Journey!</h2>
               <p className="text-sm md:text-base text-ocean-600 mb-6 max-w-md mx-auto px-4">
                 Submit your first essay to get AI-powered feedback, personalized vocabulary, and track your progress
@@ -227,36 +206,45 @@ export default async function DashboardPage() {
 
       {/* Score Progress Chart */}
       {chartData.length > 0 && (
-        <Card className="border-ocean-200 shadow-lg">
-          <CardHeader>
-            <CardTitle className="text-ocean-800 flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              Score Progress Over Time
-            </CardTitle>
+        <Card className="border-ocean-200 shadow-lg overflow-hidden relative">
+          <TrendingUp className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
+          <CardHeader className="relative z-10">
+            <CardTitle className="text-ocean-800">Score Progress Over Time</CardTitle>
             <CardDescription>
               Track your improvement across all submitted essays
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative z-10">
             <ScoreChart data={chartData} criteriaOverTime={userStats.criteriaOverTime} />
           </CardContent>
         </Card>
       )}
 
-      {/* Vocabulary Learning Progress */}
+      {/* Vocabulary Learning Progress + Past Vocab (combined) */}
       {stats.totalEssays > 0 && (
         <VocabularyProgress
           totalWords={userStats.vocabulary.total}
           essaysWithoutVocab={userStats.vocabulary.essaysWithoutVocab}
           quizScore={userStats.quiz.avgScore}
-          paraphraseScore={userStats.quiz.avgParaphraseScore}
-          topicScore={userStats.quiz.avgTopicScore}
           totalCorrect={userStats.quiz.totalCorrect}
           totalQuestions={userStats.quiz.totalQuestions}
+          totalAttempts={userStats.quiz.totalAttempts}
         />
       )}
 
-      {recentEssays.length > 0 && <LookBackTabs recentEssays={recentEssays as any} />}
+      {/* Recent Essays */}
+      {recentEssays.length > 0 && (
+        <Card className="border-ocean-200 shadow-lg overflow-hidden relative">
+          <FileText className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
+          <CardHeader className="relative z-10">
+            <CardTitle className="text-ocean-800">Recent Essays</CardTitle>
+            <CardDescription>Your latest submissions at a glance</CardDescription>
+          </CardHeader>
+          <CardContent className="relative z-10">
+            <RecentEssaysTable essays={recentEssays as any} />
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }
