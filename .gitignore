@@ -46,5 +46,8 @@ next-env.d.ts
 *.swo
 *~
 
+# Claude Code — contains architecture docs, do not commit
+CLAUDE.md
+
 # OS
 Thumbs.db
