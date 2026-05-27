@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export default function HistoryLoading() {
@@ -10,49 +10,56 @@ export default function HistoryLoading() {
         <Skeleton className="h-5 md:h-6 w-64 md:w-80" />
       </div>
 
-      {/* Essay Cards Skeleton */}
+      {/* Filter Toolbar Skeleton */}
+      <Card className="border-ocean-100 shadow-sm bg-ocean-50/50 mb-4">
+        <CardContent className="p-3 md:p-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <Skeleton className="h-7 w-28 rounded-full" />
+            <Skeleton className="h-8 w-36 rounded-md" />
+            <Skeleton className="h-8 w-36 rounded-md" />
+            <Skeleton className="h-8 w-36 rounded-md" />
+            <div className="sm:ml-auto flex gap-1.5">
+              <Skeleton className="h-8 w-8 rounded-md" />
+              <Skeleton className="h-8 w-14 rounded-md" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Essay Card Skeletons — match new 3-zone layout */}
       <div className="space-y-3 md:space-y-4">
         {[1, 2, 3, 4].map((i) => (
-          <Card key={i} className="border-ocean-100 shadow-lg">
-            <CardHeader className="p-4 md:p-6">
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 md:gap-4">
-                <div className="flex-1">
-                  <Skeleton className="h-5 md:h-6 w-full mb-2" />
-                  <div className="flex flex-wrap items-center gap-2 md:gap-3">
-                    <Skeleton className="h-4 w-24" />
-                    <Skeleton className="h-4 w-20" />
-                  </div>
-                </div>
-                <Skeleton className="h-14 w-14 md:h-16 md:w-16 rounded-full" />
-              </div>
-            </CardHeader>
+          <Card key={i} className="border-ocean-200 shadow-lg overflow-hidden">
+            <div className="p-4 md:p-5">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-4">
 
-            <CardContent className="p-4 md:p-6 pt-0">
-              <div className="space-y-3 md:space-y-4">
-                {/* Criteria Scores Skeleton */}
-                <div className="grid grid-cols-2 gap-2 md:gap-3 md:grid-cols-4">
-                  {[1, 2, 3, 4].map((j) => (
-                    <div key={j} className="rounded-lg bg-slate-50 p-2 md:p-3 text-center">
-                      <Skeleton className="h-3 w-20 mx-auto mb-2" />
-                      <Skeleton className="h-6 w-12 mx-auto" />
-                    </div>
-                  ))}
+                {/* Zone 1: Score badge skeleton */}
+                <div className="flex sm:flex-col items-center gap-3 sm:gap-1.5 sm:w-[76px] flex-shrink-0">
+                  <Skeleton className="h-16 w-16 rounded-2xl" />
+                  <Skeleton className="h-3 w-14" />
                 </div>
 
-                {/* Essay Preview Skeleton */}
-                <div className="rounded-lg bg-slate-50 p-3 md:p-4">
-                  <Skeleton className="h-4 w-full mb-2" />
-                  <Skeleton className="h-4 w-full mb-2" />
+                {/* Zone 2: Content skeleton */}
+                <div className="flex-1 min-w-0 space-y-2.5">
+                  <Skeleton className="h-5 w-full" />
                   <Skeleton className="h-4 w-3/4" />
+                  {/* Meta row */}
+                  <div className="flex gap-3">
+                    <Skeleton className="h-3.5 w-24" />
+                    <Skeleton className="h-3.5 w-16" />
+                  </div>
+                  {/* Mini-bars strip */}
+                  <Skeleton className="h-2 w-52 mt-1" />
                 </div>
 
-                {/* Action Buttons Skeleton */}
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <Skeleton className="h-10 flex-1" />
-                  <Skeleton className="h-10 w-full sm:w-32" />
+                {/* Zone 3: Action buttons skeleton */}
+                <div className="flex sm:flex-col gap-2 flex-shrink-0 sm:w-[120px]">
+                  <Skeleton className="h-9 flex-1 sm:flex-none sm:w-full rounded-md" />
+                  <Skeleton className="h-9 flex-1 sm:flex-none sm:w-full rounded-md" />
                 </div>
+
               </div>
-            </CardContent>
+            </div>
           </Card>
         ))}
       </div>
