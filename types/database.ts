@@ -24,6 +24,9 @@ export interface Database {
           subscription_status: 'free' | 'active' | 'expired'
           subscription_end_date: string | null
           subscription_order_code: string | null
+          quiz_total_attempts: number
+          quiz_total_correct: number
+          quiz_total_questions: number
           created_at: string
           updated_at: string
         }
@@ -41,6 +44,9 @@ export interface Database {
           subscription_status?: 'free' | 'active' | 'expired'
           subscription_end_date?: string | null
           subscription_order_code?: string | null
+          quiz_total_attempts?: number
+          quiz_total_correct?: number
+          quiz_total_questions?: number
           created_at?: string
           updated_at?: string
         }
@@ -58,6 +64,9 @@ export interface Database {
           subscription_status?: 'free' | 'active' | 'expired'
           subscription_end_date?: string | null
           subscription_order_code?: string | null
+          quiz_total_attempts?: number
+          quiz_total_correct?: number
+          quiz_total_questions?: number
           created_at?: string
           updated_at?: string
         }
@@ -100,7 +109,7 @@ export interface Database {
       essays: {
         Row: {
           id: string
-          user_id: string
+          user_id: string | null
           prompt: string
           essay_content: string
           overall_score: number | null
@@ -116,12 +125,21 @@ export interface Database {
           coherence_cohesion_errors: Json | null
           lexical_resource_errors: Json | null
           grammatical_accuracy_errors: Json | null
+          task_response_strengths: string[] | null
+          coherence_cohesion_strengths: string[] | null
+          lexical_resource_strengths: string[] | null
+          grammatical_accuracy_strengths: string[] | null
+          improved_essay: string | null
+          improvement_changes: Json | null
+          detailed_guidance: Json | null
+          is_guest: boolean
+          guest_fingerprint: string | null
           prompt_id: string | null
           created_at: string
         }
         Insert: {
           id?: string
-          user_id: string
+          user_id?: string | null
           prompt: string
           essay_content: string
           prompt_id?: string | null
@@ -138,11 +156,20 @@ export interface Database {
           coherence_cohesion_errors?: Json | null
           lexical_resource_errors?: Json | null
           grammatical_accuracy_errors?: Json | null
+          task_response_strengths?: string[] | null
+          coherence_cohesion_strengths?: string[] | null
+          lexical_resource_strengths?: string[] | null
+          grammatical_accuracy_strengths?: string[] | null
+          improved_essay?: string | null
+          improvement_changes?: Json | null
+          detailed_guidance?: Json | null
+          is_guest?: boolean
+          guest_fingerprint?: string | null
           created_at?: string
         }
         Update: {
           id?: string
-          user_id?: string
+          user_id?: string | null
           prompt?: string
           essay_content?: string
           overall_score?: number | null
@@ -158,6 +185,15 @@ export interface Database {
           coherence_cohesion_errors?: Json | null
           lexical_resource_errors?: Json | null
           grammatical_accuracy_errors?: Json | null
+          task_response_strengths?: string[] | null
+          coherence_cohesion_strengths?: string[] | null
+          lexical_resource_strengths?: string[] | null
+          grammatical_accuracy_strengths?: string[] | null
+          improved_essay?: string | null
+          improvement_changes?: Json | null
+          detailed_guidance?: Json | null
+          is_guest?: boolean
+          guest_fingerprint?: string | null
           prompt_id?: string | null
           created_at?: string
         }
@@ -229,70 +265,6 @@ export interface Database {
           updated_at?: string
         }
       }
-      quiz_results: {
-        Row: {
-          id: string
-          user_id: string
-          essay_id: string
-          quiz_type: 'multiple_choice'
-          score: number
-          total_questions: number
-          correct_answers: Json | null
-          incorrect_answers: Json | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          essay_id: string
-          quiz_type: 'multiple_choice'
-          score: number
-          total_questions: number
-          correct_answers?: Json | null
-          incorrect_answers?: Json | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          essay_id?: string
-          quiz_type?: 'multiple_choice' | 'fill_in'
-          score?: number
-          total_questions?: number
-          correct_answers?: Json | null
-          incorrect_answers?: Json | null
-          created_at?: string
-        }
-      }
-      token_usage: {
-        Row: {
-          id: string
-          user_id: string | null
-          request_type: 'scoring' | 'vocab_paraphrase' | 'vocab_topic' | 'summary'
-          input_tokens: number
-          output_tokens: number
-          model: string
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          user_id?: string | null
-          request_type: 'scoring' | 'vocab_paraphrase' | 'vocab_topic' | 'summary'
-          input_tokens: number
-          output_tokens: number
-          model: string
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string | null
-          request_type?: 'scoring' | 'vocab_paraphrase' | 'vocab_topic' | 'summary'
-          input_tokens?: number
-          output_tokens?: number
-          model?: string
-          created_at?: string
-        }
-      }
       prompt_topics: {
         Row: {
           id: string
@@ -362,64 +334,46 @@ export interface Database {
           generated_at?: string
         }
       }
-      vocabulary_views: {
+      invites: {
         Row: {
           id: string
-          user_id: string
-          essay_id: string
-          vocab_type: 'paraphrase' | 'topic'
-          viewed_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          essay_id: string
-          vocab_type: 'paraphrase' | 'topic'
-          viewed_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          essay_id?: string
-          vocab_type?: 'paraphrase' | 'topic'
-          viewed_at?: string
-        }
-      }
-      vocabulary_quiz_attempts: {
-        Row: {
-          id: string
-          user_id: string
-          essay_id: string
-          vocab_type: 'paraphrase' | 'topic'
-          score: number
-          total_questions: number
-          correct_answers: string[] | null
-          incorrect_answers: string[] | null
-          quiz_type: string | null
+          inviter_id: string
+          invited_id: string
+          bonus_applied: boolean
           created_at: string
         }
         Insert: {
           id?: string
-          user_id: string
-          essay_id: string
-          vocab_type: 'paraphrase' | 'topic'
-          score: number
-          total_questions?: number
-          correct_answers?: string[] | null
-          incorrect_answers?: string[] | null
-          quiz_type?: string | null
+          inviter_id: string
+          invited_id: string
+          bonus_applied?: boolean
           created_at?: string
         }
         Update: {
           id?: string
-          user_id?: string
-          essay_id?: string
-          vocab_type?: 'paraphrase' | 'topic'
-          score?: number
-          total_questions?: number
-          correct_answers?: string[] | null
-          incorrect_answers?: string[] | null
-          quiz_type?: string | null
+          inviter_id?: string
+          invited_id?: string
+          bonus_applied?: boolean
+          created_at?: string
+        }
+      }
+      guest_fingerprints: {
+        Row: {
+          id: string
+          fingerprint: string
+          essay_id: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          fingerprint: string
+          essay_id?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          fingerprint?: string
+          essay_id?: string | null
           created_at?: string
         }
       }

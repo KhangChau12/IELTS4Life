@@ -113,15 +113,6 @@ export async function POST(request: Request) {
         )
       }
 
-      // Log token usage
-      await supabase.from('token_usage').insert({
-        user_id: user.id,
-        request_type: 'vocab_paraphrase',
-        input_tokens: completion.usage?.prompt_tokens || 0,
-        output_tokens: completion.usage?.completion_tokens || 0,
-        model: MODELS.VOCABULARY,
-      })
-
       return NextResponse.json({ success: true, vocabulary: savedVocab })
     } else {
       // For guests, return vocabulary without saving to database

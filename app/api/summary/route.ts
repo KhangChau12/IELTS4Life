@@ -73,15 +73,6 @@ export async function POST() {
       completion.choices[0].message.content || '{}'
     )
 
-    // Log token usage
-    await supabase.from('token_usage').insert({
-      user_id: user.id,
-      request_type: 'summary',
-      input_tokens: completion.usage?.prompt_tokens || 0,
-      output_tokens: completion.usage?.completion_tokens || 0,
-      model: MODELS.ERROR_SUMMARY,
-    })
-
     return NextResponse.json({ success: true, summary })
   } catch (error) {
     console.error('Error generating summary:', error)

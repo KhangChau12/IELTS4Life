@@ -13,10 +13,10 @@ export async function GET(
       error: authError,
     } = await supabase.auth.getUser()
 
-    // Get the essay first
+    // Get the essay — select only columns needed for access check + client display
     const { data: essay, error: essayError } = await supabase
       .from('essays')
-      .select('*')
+      .select('id, user_id, is_guest, prompt, essay_content')
       .eq('id', params.essayId)
       .single()
 
@@ -58,51 +58,6 @@ export async function GET(
         { error: 'Failed to fetch vocabulary' },
         { status: 500 }
       )
-    }
-
-    // Track views if type is specified (only for authenticated users, not guests)
-    if (type && user && !isGuest) {
-      const viewsToInsert = []
-      const paraphraseVocab = vocabulary?.filter(v => v.vocab_type === 'paraphrase') || []
-      const topicVocab = vocabulary?.filter(v => v.vocab_type === 'topic') || []
-
-      if (type === 'paraphrase' && paraphraseVocab.length > 0) {
-        viewsToInsert.push({
-          user_id: user.id,
-          essay_id: params.essayId,
-          vocab_type: 'paraphrase'
-        })
-      } else if (type === 'topic' && topicVocab.length > 0) {
-        viewsToInsert.push({
-          user_id: user.id,
-          essay_id: params.essayId,
-          vocab_type: 'topic'
-        })
-      } else if ((type === 'both' || type === 'mixed')) {
-        if (paraphraseVocab.length > 0) {
-          viewsToInsert.push({
-            user_id: user.id,
-            essay_id: params.essayId,
-            vocab_type: 'paraphrase'
-          })
-        }
-        if (topicVocab.length > 0) {
-          viewsToInsert.push({
-            user_id: user.id,
-            essay_id: params.essayId,
-            vocab_type: 'topic'
-          })
-        }
-      }
-
-      if (viewsToInsert.length > 0) {
-        await supabase
-          .from('vocabulary_views')
-          .upsert(viewsToInsert, {
-            onConflict: 'user_id,essay_id,vocab_type',
-            ignoreDuplicates: true
-          })
-      }
     }
 
     return NextResponse.json({ essay, vocabulary: vocabulary || [] })

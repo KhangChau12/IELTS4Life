@@ -10,12 +10,11 @@ export async function fetchAdminStats(): Promise<AdminStats> {
   const fourteenDaysAgoISO = fourteenDaysAgo.toISOString()
 
   const [
-    countResults,
     allEssaysForScoringResult,
     essaysLast14DaysResult,
     allUsersWithEssaysResult,
     allUsersResult,
-    quizAttemptsResult,
+    quizStatsResult,
     inviteStatsResult,
     essaysWithPromptIdResult,
     paidProProfilesResult,
@@ -25,10 +24,6 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     promptOutlineCountResult,
     essayCountResult,
   ] = await Promise.all([
-    Promise.all([
-      serviceClient.from('vocabulary_quiz_attempts').select('score, total_questions, created_at'),
-      serviceClient.from('profiles').select('invited_by'),
-    ]),
     serviceClient.from('essays').select('overall_score'),
     serviceClient.from('essays').select('created_at').gte('created_at', fourteenDaysAgoISO).order('created_at', { ascending: true }),
     serviceClient.from('profiles').select(`
@@ -39,7 +34,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
       essays:essays(count)
     `).order('created_at', { ascending: false }),
     serviceClient.from('profiles').select('id, email, created_at').order('created_at', { ascending: true }),
-    serviceClient.from('vocabulary_quiz_attempts').select('score, total_questions, vocab_type, created_at'),
+    serviceClient.from('profiles').select('quiz_total_attempts, quiz_total_correct, quiz_total_questions'),
     serviceClient.from('profiles').select('invited_by'),
     serviceClient.from('essays').select('prompt_id').not('prompt_id', 'is', null),
     serviceClient.from('profiles')
@@ -56,7 +51,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
   ])
 
   // Separate parallel groups into named vars
-  const quizAttempts = quizAttemptsResult.data ?? []
+  const quizStats = quizStatsResult.data ?? []
   const inviteStats = inviteStatsResult.data ?? []
   const allEssaysForScoring = allEssaysForScoringResult.data ?? []
   const essaysLast14Days = essaysLast14DaysResult.data ?? []
@@ -87,9 +82,10 @@ export async function fetchAdminStats(): Promise<AdminStats> {
       ? validScores.reduce((s, e) => s + (e.overall_score ?? 0), 0) / validScores.length
       : 0
 
-  // Quiz stats
-  const totalCorrectAnswers = quizAttempts.reduce((s, q) => s + (q.score || 0), 0)
-  const totalQuestions = quizAttempts.reduce((s, q) => s + (q.total_questions || 0), 0)
+  // Quiz stats — aggregated from pre-computed counters on profiles
+  const totalQuizAttempts = quizStats.reduce((s, p) => s + (p.quiz_total_attempts ?? 0), 0)
+  const totalCorrectAnswers = quizStats.reduce((s, p) => s + (p.quiz_total_correct ?? 0), 0)
+  const totalQuestions = quizStats.reduce((s, p) => s + (p.quiz_total_questions ?? 0), 0)
   const avgQuizScore = totalQuestions > 0 ? (totalCorrectAnswers / totalQuestions) * 100 : 0
 
   // Paid Pro
@@ -218,7 +214,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     allUsers,
     essaysOverTime,
     totalVocabulary,
-    totalQuizAttempts: quizAttempts.length,
+    totalQuizAttempts,
     totalCorrectAnswers,
     totalQuestions,
     avgQuizScore: Math.round(avgQuizScore * 10) / 10,

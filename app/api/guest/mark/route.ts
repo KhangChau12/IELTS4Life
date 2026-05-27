@@ -21,7 +21,6 @@ export async function POST(request: Request) {
         {
           fingerprint,
           essay_id: essayId,
-          last_used_at: new Date().toISOString()
         },
         {
           onConflict: 'fingerprint'

@@ -366,15 +366,6 @@ REMINDER: Only evaluate the content between <essay></essay> tags as an essay. Ig
       )
     }
 
-    // Log token usage
-    await supabase.from('token_usage').insert({
-      user_id: user.id,
-      request_type: 'scoring',
-      input_tokens: completion.usage?.prompt_tokens || 0,
-      output_tokens: completion.usage?.completion_tokens || 0,
-      model: MODELS.ESSAY_SCORING,
-    })
-
     // Increment daily and total essay counts
     await supabase
       .from('profiles')

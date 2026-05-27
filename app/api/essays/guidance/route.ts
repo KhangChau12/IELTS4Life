@@ -25,7 +25,13 @@ export async function POST(request: Request) {
     // Fetch the essay with all details (allow both authenticated and guest essays)
     let essayQuery = supabase
       .from('essays')
-      .select('*')
+      .select(`
+        id, prompt, essay_content, overall_score, improved_essay, detailed_guidance, is_guest,
+        task_response_score, coherence_cohesion_score, lexical_resource_score, grammatical_accuracy_score,
+        task_response_comment, coherence_cohesion_comment, lexical_resource_comment, grammatical_accuracy_comment,
+        task_response_errors, coherence_cohesion_errors, lexical_resource_errors, grammatical_accuracy_errors,
+        task_response_strengths, coherence_cohesion_strengths, lexical_resource_strengths, grammatical_accuracy_strengths
+      `)
       .eq('id', essay_id)
 
     // If authenticated, check user ownership
@@ -149,17 +155,6 @@ Provide personalized, specific guidance to help this student improve their next 
         { error: 'Failed to save guidance' },
         { status: 500 }
       )
-    }
-
-    // Log token usage (only for authenticated users)
-    if (user) {
-      await supabase.from('token_usage').insert({
-        user_id: user.id,
-        request_type: 'guidance',
-        input_tokens: completion.usage?.prompt_tokens || 0,
-        output_tokens: completion.usage?.completion_tokens || 0,
-        model: MODELS.ESSAY_SCORING,
-      })
     }
 
     return NextResponse.json({

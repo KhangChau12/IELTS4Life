@@ -92,15 +92,6 @@ export async function POST(
       return NextResponse.json({ error: 'Failed to save outlines' }, { status: 500 })
     }
 
-    // Log token usage
-    await supabase.from('token_usage').insert({
-      user_id: user.id,
-      request_type: 'outline_generation',
-      input_tokens: completion.usage?.prompt_tokens || 0,
-      output_tokens: completion.usage?.completion_tokens || 0,
-      model: MODELS.OUTLINE_GENERATION,
-    })
-
     return NextResponse.json({ outlines })
   } catch (error) {
     return NextResponse.json({ error: 'Failed to generate outlines' }, { status: 500 })

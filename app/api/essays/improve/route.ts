@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     // Fetch the essay (allow both authenticated and guest essays)
     let essayQuery = supabase
       .from('essays')
-      .select('*')
+      .select('id, prompt, essay_content, overall_score, improved_essay, improvement_changes, is_guest')
       .eq('id', essay_id)
 
     // If authenticated, check user ownership
@@ -124,17 +124,6 @@ export async function POST(request: Request) {
       logger.debug('Saved changes to DB: NO - updateData is empty')
     }
     logger.debug('=============================')
-
-    // Log token usage (only for authenticated users)
-    if (user) {
-      await supabase.from('token_usage').insert({
-        user_id: user.id,
-        request_type: 'improvement',
-        input_tokens: completion.usage?.prompt_tokens || 0,
-        output_tokens: completion.usage?.completion_tokens || 0,
-        model: MODELS.ESSAY_IMPROVEMENT,
-      })
-    }
 
     return NextResponse.json({
       success: true,
