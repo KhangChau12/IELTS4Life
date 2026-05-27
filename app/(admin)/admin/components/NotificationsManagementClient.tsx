@@ -102,7 +102,7 @@ export function NotificationsManagementClient() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-cyan-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-ocean-600" />
       </div>
     )
   }
@@ -110,14 +110,15 @@ export function NotificationsManagementClient() {
   return (
     <div className="space-y-6">
       {/* Create Form */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2 text-slate-900">
-            <Send className="h-5 w-5 text-purple-600" />
+      <Card className="border-ocean-200 shadow-lg overflow-hidden relative">
+        <Bell className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
+        <CardHeader className="border-b border-ocean-100 relative z-10">
+          <CardTitle className="text-lg flex items-center gap-2 text-ocean-900">
+            <Send className="h-5 w-5 text-ocean-600" />
             Send New Notification
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 relative z-10">
           <div className="space-y-2">
             <Label htmlFor="notif-title">Title</Label>
             <Input
@@ -182,12 +183,12 @@ export function NotificationsManagementClient() {
           </Card>
         ) : (
           notifications.map(notification => (
-            <Card key={notification.id} className="hover:shadow-md transition-shadow">
+            <Card key={notification.id} className="hover:shadow-lg transition-shadow border-ocean-200">
               <CardContent className="p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-slate-900 text-sm">{notification.title}</p>
-                    <p className="text-sm text-slate-600 mt-1 line-clamp-2">{notification.content}</p>
+                    <p className="font-medium text-ocean-900 text-sm">{notification.title}</p>
+                    <p className="text-sm text-ocean-600 mt-1 line-clamp-2">{notification.content}</p>
                     <div className="flex items-center gap-2 mt-2 flex-wrap">
                       <Badge
                         variant="outline"
@@ -195,7 +196,7 @@ export function NotificationsManagementClient() {
                       >
                         {NOTIFICATION_AUDIENCE_LABELS[notification.target_audience]}
                       </Badge>
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-ocean-400">
                         {format(new Date(notification.created_at), 'MMM dd, yyyy · HH:mm')}
                       </span>
                     </div>

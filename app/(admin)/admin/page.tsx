@@ -49,12 +49,9 @@ export default async function AdminPage() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 px-4 py-6">
-      <Card className="overflow-hidden border-0 bg-gradient-to-br from-slate-950 via-cyan-900 to-slate-900 text-white shadow-2xl">
-        <CardContent className="relative p-6 md:p-8 lg:p-10">
-          <div className="absolute inset-0 opacity-35">
-            <div className="absolute -top-12 right-0 h-48 w-48 rounded-full bg-cyan-400 blur-3xl" />
-            <div className="absolute bottom-0 left-1/4 h-40 w-40 rounded-full bg-violet-500 blur-3xl" />
-          </div>
+      <Card className="overflow-hidden border-ocean-200 shadow-lg bg-gradient-to-br from-ocean-600 to-cyan-600 text-white relative">
+        <LayoutDashboard className="absolute right-2 top-2 h-52 w-52 text-white opacity-10 rotate-[-12deg] pointer-events-none select-none" />
+        <CardContent className="relative z-10 p-6 md:p-8 lg:p-10">
 
           <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl space-y-4">
@@ -76,12 +73,12 @@ export default async function AdminPage() {
                     {isDev ? 'Developer' : 'Administrator'}
                   </Badge>
                 </div>
-                <p className="max-w-xl text-sm md:text-base text-slate-200 leading-relaxed">
+                <p className="max-w-xl text-sm md:text-base text-white/80 leading-relaxed">
                   Welcome, <span className="font-semibold text-white">{displayName}</span>. Manage the IELTS4Life platform from a cleaner, faster command center.
                 </p>
               </div>
 
-              <div className="flex flex-wrap gap-2 text-xs text-slate-100">
+              <div className="flex flex-wrap gap-2 text-xs text-white/70">
                 <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 backdrop-blur-sm">
                   {isDev ? 'Dev access enabled' : 'Admin access'}
                 </span>
