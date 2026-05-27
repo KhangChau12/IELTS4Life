@@ -244,25 +244,27 @@ export default function WritePage() {
         <div className="mb-6 space-y-2">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-ocean-800 mb-1">
+              <h1 className="text-2xl md:text-3xl font-bold text-ocean-900 mb-1">
                 Submit Your Essay
               </h1>
-              <p className="text-sm md:text-base text-slate-500">Enter your IELTS Task 2 prompt and response for AI scoring.</p>
+              <p className="text-sm md:text-base text-ocean-600">Enter your IELTS Task 2 prompt and response for AI scoring.</p>
             </div>
             {!isGuest && <QuotaDisplay />}
           </div>
         </div>
 
         {/* Main Essay Card */}
-        <Card className="border border-slate-200 shadow-sm">
-          <CardHeader className="border-b border-slate-100 p-4 md:p-6">
+        <Card className="border-ocean-200 shadow-lg overflow-hidden relative">
+          {/* Watermark icon */}
+          <PenTool className="absolute right-2 top-2 h-52 w-52 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
+          <CardHeader className="border-b border-ocean-100 p-4 md:p-6 relative z-10">
             <div className="flex items-center gap-2">
               <FileText className="h-5 w-5 text-ocean-600" />
-              <CardTitle className="text-lg text-ocean-800">Essay Submission</CardTitle>
+              <CardTitle className="text-lg text-ocean-900">Essay Submission</CardTitle>
             </div>
-            <CardDescription>Enter your prompt and essay below for AI scoring.</CardDescription>
+            <CardDescription className="text-ocean-600 mt-1">Enter your prompt and essay below for AI scoring.</CardDescription>
           </CardHeader>
-          <CardContent className="pt-6 md:pt-8 p-4 md:p-6">
+          <CardContent className="pt-6 md:pt-8 p-4 md:p-6 relative z-10">
             <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
               {/* Essay Prompt Field */}
               <div className="space-y-3">
@@ -292,7 +294,7 @@ export default function WritePage() {
                   className="min-h-[120px] border-2 border-cyan-200 focus:border-cyan-500 focus:ring-cyan-500 resize-none bg-white rounded-lg text-base"
                   disabled={isSubmitting}
                 />
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-ocean-500">
                   Paste the complete essay question you are responding to.
                 </p>
               </div>
@@ -314,8 +316,8 @@ export default function WritePage() {
                   disabled={isSubmitting}
                 />
                 <div className="flex justify-between items-center">
-                  <p className="text-sm text-slate-600">
-                    Aim for 250-300 words for IELTS Task 2
+                  <p className="text-sm text-ocean-600">
+                    Aim for 250–300 words for IELTS Task 2
                   </p>
                   <div className="flex items-center gap-3">
                     <p className={`text-base font-bold ${hasReachedTarget ? 'text-emerald-600' : 'text-slate-700'}`}>
@@ -329,7 +331,7 @@ export default function WritePage() {
                     )}
                   </div>
                 </div>
-                <p className="text-xs text-slate-500">{autosaveLabel}</p>
+                <p className="text-xs text-ocean-400">{autosaveLabel}</p>
               </div>
 
               {/* Error Display */}
@@ -380,7 +382,7 @@ export default function WritePage() {
               )}
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4 md:pt-6 border-t border-slate-100">
+              <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4 md:pt-6 border-t border-ocean-100">
                 <Button
                   type="button"
                   variant="outline"
@@ -391,14 +393,14 @@ export default function WritePage() {
                     clearDraft()
                   }}
                   disabled={isSubmitting}
-                  className="px-6"
+                  className="px-6 border-ocean-200 text-ocean-700 hover:bg-ocean-50"
                 >
                   Clear
                 </Button>
                 <Button
                   type="submit"
                   disabled={isSubmitting || !prompt.trim() || !essay.trim()}
-                  className="bg-ocean-700 hover:bg-ocean-800 text-white px-8 font-semibold"
+                  className="bg-ocean-600 hover:bg-ocean-700 text-white px-8 font-semibold"
                 >
                   {isSubmitting ? (
                     <>
@@ -419,47 +421,49 @@ export default function WritePage() {
 
         {/* Loading Progress - Show below form */}
         {isSubmitting && (
-          <Card className="border-slate-200 shadow-sm mt-6">
-            <CardContent className="pt-6">
+          <Card className="border-ocean-200 shadow-lg mt-6 overflow-hidden relative bg-gradient-to-br from-ocean-50/50 to-cyan-50/30">
+            {/* Slow-spin watermark */}
+            <Loader2 className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-10 pointer-events-none select-none animate-spin [animation-duration:8s]" />
+            <CardContent className="pt-6 relative z-10">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="relative">
-                      <Loader2 className="h-8 w-8 text-cyan-600 animate-spin" />
+                      <Loader2 className="h-8 w-8 text-ocean-600 animate-spin" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-slate-900">Analyzing Your Essay</h3>
-                      <p className="text-sm text-slate-600">AI is examining your writing...</p>
+                      <h3 className="font-semibold text-ocean-900">Analyzing Your Essay</h3>
+                      <p className="text-sm text-ocean-600">AI is examining your writing...</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-slate-600">
-                    <Clock className="h-4 w-4 text-cyan-600" />
+                  <div className="flex items-center gap-2 text-sm text-ocean-600">
+                    <Clock className="h-4 w-4 text-ocean-500" />
                     <span className="font-mono font-medium">{Math.floor(elapsedTime / 60)}:{(elapsedTime % 60).toString().padStart(2, '0')}</span>
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <Progress value={progress} className="h-2" />
-                  <div className="flex justify-between text-xs text-slate-600">
-                    <span>Processing essay content...</span>
-                    <span className="font-semibold">{Math.round(progress)}%</span>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-ocean-600">Processing essay content...</span>
+                    <span className="font-semibold text-ocean-700">{Math.round(progress)}%</span>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
-                  <div className={`flex items-center gap-2 text-sm ${progress >= 25 ? 'text-emerald-600' : 'text-slate-400'}`}>
+                  <div className={`flex items-center gap-2 text-sm ${progress >= 25 ? 'text-emerald-600' : 'text-ocean-300'}`}>
                     {progress >= 25 ? <CheckCircle className="h-4 w-4" /> : <div className="h-4 w-4 rounded-full border-2 border-current" />}
                     <span>Task Response</span>
                   </div>
-                  <div className={`flex items-center gap-2 text-sm ${progress >= 50 ? 'text-emerald-600' : 'text-slate-400'}`}>
+                  <div className={`flex items-center gap-2 text-sm ${progress >= 50 ? 'text-emerald-600' : 'text-ocean-300'}`}>
                     {progress >= 50 ? <CheckCircle className="h-4 w-4" /> : <div className="h-4 w-4 rounded-full border-2 border-current" />}
                     <span>Coherence</span>
                   </div>
-                  <div className={`flex items-center gap-2 text-sm ${progress >= 75 ? 'text-emerald-600' : 'text-slate-400'}`}>
+                  <div className={`flex items-center gap-2 text-sm ${progress >= 75 ? 'text-emerald-600' : 'text-ocean-300'}`}>
                     {progress >= 75 ? <CheckCircle className="h-4 w-4" /> : <div className="h-4 w-4 rounded-full border-2 border-current" />}
                     <span>Vocabulary</span>
                   </div>
-                  <div className={`flex items-center gap-2 text-sm ${progress >= 95 ? 'text-emerald-600' : 'text-slate-400'}`}>
+                  <div className={`flex items-center gap-2 text-sm ${progress >= 95 ? 'text-emerald-600' : 'text-ocean-300'}`}>
                     {progress >= 95 ? <CheckCircle className="h-4 w-4" /> : <div className="h-4 w-4 rounded-full border-2 border-current" />}
                     <span>Grammar</span>
                   </div>
@@ -469,7 +473,7 @@ export default function WritePage() {
           </Card>
         )}
 
-        <p className="mt-4 text-xs text-slate-400 text-center">
+        <p className="mt-4 text-xs text-ocean-400 text-center">
           Essays are evaluated on Task Response, Coherence &amp; Cohesion, Lexical Resource, and Grammatical Accuracy.
         </p>
 

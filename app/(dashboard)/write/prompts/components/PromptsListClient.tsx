@@ -3,8 +3,10 @@
 import { useState, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
-import { LayoutGrid, Layers, ChevronDown, CheckCircle } from 'lucide-react'
+import { LayoutGrid, Layers, ChevronDown, CheckCircle, BookOpen } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import PromptCard from './PromptCard'
 import PromptFilters from './PromptFilters'
 import ProgressBanner from './ProgressBanner'
@@ -110,6 +112,8 @@ export default function PromptsListClient({ prompts, topics, isAuthenticated }: 
       <div className="mb-6">
         <PromptFilters
           topics={topics}
+          filteredCount={filtered.length}
+          totalCount={prompts.length}
           selectedType={selectedType}
           selectedTopic={selectedTopic}
           searchQuery={searchQuery}
@@ -126,21 +130,25 @@ export default function PromptsListClient({ prompts, topics, isAuthenticated }: 
       </div>
 
       {filtered.length === 0 ? (
-        <div className="text-center py-16 text-gray-400">
-          <p className="text-lg">No prompts found matching your filters.</p>
-        </div>
+        <Card className="border-slate-200 shadow-sm">
+          <CardContent className="py-14 text-center">
+            <BookOpen className="mx-auto mb-4 h-12 w-12 text-slate-300" />
+            <p className="text-slate-600">No prompts match the current filters.</p>
+            <p className="text-xs text-slate-400 mt-1">Try adjusting your search or clearing filters.</p>
+          </CardContent>
+        </Card>
       ) : (
         <>
-          {/* Header with count and view toggle */}
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-sm text-gray-500">
-              {filtered.length} prompt{filtered.length !== 1 ? 's' : ''}
-            </p>
+          {/* View toggle — count already shown in filter pill */}
+          <div className="flex items-center justify-end mb-4">
             <div className="flex items-center gap-1">
               <Button
                 variant="ghost"
                 size="sm"
-                className={viewMode === 'grouped' ? 'bg-ocean-50 text-ocean-700' : 'text-gray-400'}
+                className={cn(
+                  'h-8 w-8 p-0',
+                  viewMode === 'grouped' ? 'bg-ocean-100 text-ocean-700' : 'text-ocean-400 hover:bg-ocean-50'
+                )}
                 onClick={() => setViewMode('grouped')}
                 title="Group by topic"
               >
@@ -149,7 +157,10 @@ export default function PromptsListClient({ prompts, topics, isAuthenticated }: 
               <Button
                 variant="ghost"
                 size="sm"
-                className={viewMode === 'grid' ? 'bg-ocean-50 text-ocean-700' : 'text-gray-400'}
+                className={cn(
+                  'h-8 w-8 p-0',
+                  viewMode === 'grid' ? 'bg-ocean-100 text-ocean-700' : 'text-ocean-400 hover:bg-ocean-50'
+                )}
                 onClick={() => { setViewMode('grid'); setFlatVisibleCount(12) }}
                 title="Flat grid"
               >
@@ -171,11 +182,11 @@ export default function PromptsListClient({ prompts, topics, isAuthenticated }: 
                 const completedInGroup = groupPrompts.filter((p) => p.user_essay).length
 
                 return (
-                  <AccordionItem key={topicName} value={topicName} className="border-b border-gray-200">
+                  <AccordionItem key={topicName} value={topicName} className="border-b border-ocean-100">
                     <AccordionTrigger className="hover:no-underline py-3">
                       <div className="flex items-center gap-2">
                         <span className="font-semibold text-ocean-900">{topicName}</span>
-                        <Badge variant="outline" className="text-xs bg-gray-100 text-gray-600 border-gray-300">
+                        <Badge variant="outline" className="text-xs bg-ocean-100 text-ocean-700 border-ocean-200">
                           {groupPrompts.length} prompt{groupPrompts.length !== 1 ? 's' : ''}
                         </Badge>
                         {isAuthenticated && completedInGroup > 0 && (

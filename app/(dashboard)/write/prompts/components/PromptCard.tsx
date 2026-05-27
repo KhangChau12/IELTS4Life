@@ -1,10 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
-import { CheckCircle, PenTool, Eye } from 'lucide-react'
+import { CheckCircle, PenTool, Eye, ArrowRight } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { QUESTION_TYPES } from '@/types/prompt'
 import type { PromptWithUserEssay } from '@/types/prompt'
 
@@ -29,68 +29,79 @@ export default function PromptCard({ prompt, isAuthenticated }: PromptCardProps)
   const hasEssay = !!prompt.user_essay
   const isNew = (Date.now() - new Date(prompt.created_at).getTime()) < 7 * 24 * 60 * 60 * 1000
 
+  const writeHref = `/write/prompts/${prompt.id}`
+  const resultHref = hasEssay ? `/write/${prompt.user_essay!.id}` : null
+
   return (
-    <Card className={`transition-all border-gray-200 hover:border-ocean-300 hover:shadow-md ${hasEssay ? 'border-l-4 border-l-green-400 bg-green-50/30' : ''}`}>
-      <CardContent className="p-5">
-        <div className="flex flex-wrap gap-2 mb-3">
-          <Badge variant="outline" className={`text-xs font-medium ${typeColor}`}>
-            {typeName}
-          </Badge>
-          {prompt.prompt_topics?.name && (
-            <Badge variant="outline" className="text-xs bg-orange-100 text-orange-800 border-orange-300 font-medium">
-              {prompt.prompt_topics.name}
-            </Badge>
-          )}
-          {isNew && !hasEssay && (
-            <Badge variant="outline" className="text-xs bg-amber-100 text-amber-700 border-amber-200">
-              NEW
-            </Badge>
-          )}
-          {hasEssay && (
-            <Badge className="text-xs bg-green-100 text-green-800 border-green-200 ml-auto">
-              <CheckCircle className="h-3 w-3 mr-1" />
-              Score: {prompt.user_essay!.overall_score ?? 'N/A'}
-            </Badge>
-          )}
-        </div>
+    <Link href={writeHref} className="block group">
+      <Card className={cn(
+        'border-ocean-200 shadow-lg overflow-hidden relative transition-all duration-200',
+        'group-hover:shadow-xl group-hover:-translate-y-0.5 group-hover:border-ocean-300',
+        hasEssay && 'bg-gradient-to-br from-green-50/40 to-white'
+      )}>
+        {/* Watermark icon */}
+        {hasEssay ? (
+          <CheckCircle className="absolute right-2 top-2 h-48 w-48 text-green-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(34,197,94,0.3))]" />
+        ) : (
+          <PenTool className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
+        )}
 
-        <p className="text-sm text-gray-700 line-clamp-4 mb-4 leading-relaxed">
-          {prompt.prompt_text}
-        </p>
+        <CardContent className="p-5 relative z-10 flex flex-col h-full">
+          {/* Badges row */}
+          <div className="flex flex-wrap gap-2 mb-3">
+            <Badge variant="outline" className={`text-xs font-medium ${typeColor}`}>
+              {typeName}
+            </Badge>
+            {prompt.prompt_topics?.name && (
+              <Badge variant="outline" className="text-xs bg-orange-100 text-orange-800 border-orange-300 font-medium">
+                {prompt.prompt_topics.name}
+              </Badge>
+            )}
+            {isNew && !hasEssay && (
+              <Badge variant="outline" className="text-xs bg-amber-100 text-amber-700 border-amber-200">
+                NEW
+              </Badge>
+            )}
+            {hasEssay && (
+              <Badge className="text-xs bg-green-100 text-green-800 border-green-200 ml-auto">
+                <CheckCircle className="h-3 w-3 mr-1" />
+                Score: {prompt.user_essay!.overall_score ?? 'N/A'}
+              </Badge>
+            )}
+          </div>
 
-        <div className="flex gap-2">
-          {hasEssay ? (
-            <>
-              <Button asChild variant="outline" size="sm" className="text-ocean-600 border-ocean-300 hover:bg-ocean-50">
-                <Link href={`/write/${prompt.user_essay!.id}`}>
-                  <Eye className="h-4 w-4 mr-1" />
-                  View Result
-                </Link>
-              </Button>
-              <Button asChild size="sm" className="bg-ocean-600 hover:bg-ocean-700 text-white">
-                <Link href={`/write/prompts/${prompt.id}`}>
-                  <PenTool className="h-4 w-4 mr-1" />
-                  Write Again
-                </Link>
-              </Button>
-            </>
-          ) : isAuthenticated ? (
-            <Button asChild size="sm" className="bg-ocean-600 hover:bg-ocean-700 text-white">
-              <Link href={`/write/prompts/${prompt.id}`}>
-                <PenTool className="h-4 w-4 mr-1" />
-                Start Writing
-              </Link>
-            </Button>
-          ) : (
-            <Button asChild size="sm" className="bg-ocean-600 hover:bg-ocean-700 text-white">
-              <Link href={`/write/prompts/${prompt.id}`}>
-                <PenTool className="h-4 w-4 mr-1" />
-                Try Writing
-              </Link>
-            </Button>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+          {/* Prompt text */}
+          <p className="text-sm text-ocean-800 line-clamp-4 mb-4 leading-relaxed flex-1">
+            {prompt.prompt_text}
+          </p>
+
+          {/* Footer action line */}
+          <div className="flex items-center justify-between pt-3 border-t border-ocean-100">
+            {hasEssay ? (
+              /* Completed: show "View result" on left, "Write again →" on right */
+              <>
+                <span
+                  onClick={(e) => { e.preventDefault(); if (resultHref) window.location.href = resultHref }}
+                  className="inline-flex items-center gap-1 text-xs text-slate-400 group-hover:text-ocean-500 transition-colors duration-200 cursor-pointer"
+                >
+                  <Eye className="h-3.5 w-3.5" />
+                  View result
+                </span>
+                <span className="inline-flex items-center gap-1 text-xs text-slate-400 group-hover:text-ocean-600 group-hover:font-medium transition-all duration-200">
+                  Write again
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+                </span>
+              </>
+            ) : (
+              /* Not written: single "Click to write →" */
+              <span className="inline-flex items-center gap-1 text-xs text-slate-400 group-hover:text-ocean-600 group-hover:font-medium transition-all duration-200 ml-auto">
+                {isAuthenticated ? 'Click to write' : 'Try writing'}
+                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+              </span>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </Link>
   )
 }

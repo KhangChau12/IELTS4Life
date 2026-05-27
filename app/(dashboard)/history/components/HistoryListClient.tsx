@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -68,6 +68,19 @@ function getScoreBg(score: number | null): string {
   if (score >= 6) return 'bg-gradient-to-br from-ocean-500 to-ocean-600'
   if (score >= 5) return 'bg-gradient-to-br from-yellow-500 to-amber-600'
   return 'bg-gradient-to-br from-red-500 to-rose-600'
+}
+
+// Colored drop-shadow + top inner highlight — gives depth without extra markup
+function getScoreStyle(score: number | null): React.CSSProperties {
+  const glow = (r: number, g: number, b: number) => ({
+    boxShadow: `0 4px 14px rgba(${r},${g},${b},0.55), inset 0 1px 0 rgba(255,255,255,0.25)`,
+  })
+  if (score === null) return glow(148, 163, 184)  // slate
+  if (score >= 8) return glow(245, 158, 11)        // amber
+  if (score >= 7) return glow(34,  197, 94)         // green
+  if (score >= 6) return glow(14,  165, 233)        // ocean/sky
+  if (score >= 5) return glow(234, 179, 8)          // yellow
+  return glow(239, 68, 68)                          // red
 }
 
 function getScoreLabel(score: number | null): string {
@@ -248,7 +261,10 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
             <Card key={essay.id} className="border-ocean-100 shadow-sm hover:shadow-md transition-shadow duration-150 bg-white">
               <div className="flex items-center gap-3 px-4 py-3">
                 {/* Score badge — small inline */}
-                <Badge className={cn('text-sm font-bold text-white flex-shrink-0 px-2.5 py-0.5 rounded-lg border-0', getScoreBg(essay.overall_score))}>
+                <Badge
+                  className={cn('text-sm font-bold text-white flex-shrink-0 px-2.5 py-0.5 rounded-lg border-0', getScoreBg(essay.overall_score))}
+                  style={getScoreStyle(essay.overall_score)}
+                >
                   {essay.overall_score?.toFixed(1) ?? '—'}
                 </Badge>
 
@@ -314,10 +330,13 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
 
                   {/* ── Zone 1: Score ── */}
                   <div className="flex sm:flex-col items-center sm:items-center sm:justify-center sm:w-[76px] gap-3 sm:gap-1.5 flex-shrink-0">
-                    <div className={cn(
-                      'h-16 w-16 rounded-2xl flex items-center justify-center font-bold text-white shadow-md flex-shrink-0',
-                      getScoreBg(essay.overall_score)
-                    )}>
+                    <div
+                      className={cn(
+                        'h-16 w-16 rounded-2xl flex items-center justify-center font-bold text-white flex-shrink-0',
+                        getScoreBg(essay.overall_score)
+                      )}
+                      style={getScoreStyle(essay.overall_score)}
+                    >
                       <span className="text-2xl leading-none">
                         {essay.overall_score?.toFixed(1) ?? '?'}
                       </span>
