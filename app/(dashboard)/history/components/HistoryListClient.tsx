@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { BookOpen, Calendar, Eye, FileText, LayoutGrid, List, SlidersHorizontal, Sparkles } from 'lucide-react'
+import { BookMarked, BookOpen, Calendar, Eye, FileText, LayoutGrid, List, SlidersHorizontal, Sparkles } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface EssayRow {
@@ -48,6 +48,12 @@ const sortOptions = [
   { value: 'lowest', label: 'Lowest score' },
 ]
 
+const vocabStatuses = [
+  { value: 'all', label: 'All essays' },
+  { value: 'with-vocab', label: 'Vocab ready' },
+  { value: 'no-vocab', label: 'No vocab yet' },
+]
+
 const formatDate = (dateString: string): string =>
   new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -83,6 +89,7 @@ const miniBarCriteria = [
 export function HistoryListClient({ essays }: HistoryListClientProps) {
   const [scoreFilter, setScoreFilter] = useState('all')
   const [dateFilter, setDateFilter] = useState('all')
+  const [vocabFilter, setVocabFilter] = useState('all')
   const [sortBy, setSortBy] = useState('newest')
   const [compact, setCompact] = useState(false)
 
@@ -106,7 +113,17 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
       return diffInDays <= days
     }
 
-    const filtered = essays.filter(e => matchesScore(e.overall_score) && matchesDate(e.created_at))
+    const matchesVocab = (hasVocab: boolean) => {
+      if (vocabFilter === 'with-vocab') return hasVocab
+      if (vocabFilter === 'no-vocab') return !hasVocab
+      return true
+    }
+
+    const filtered = essays.filter(e =>
+      matchesScore(e.overall_score) &&
+      matchesDate(e.created_at) &&
+      matchesVocab(e.has_vocab)
+    )
 
     return filtered.sort((a, b) => {
       if (sortBy === 'highest') return (b.overall_score ?? -1) - (a.overall_score ?? -1)
@@ -115,13 +132,14 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
       const tB = new Date(b.created_at).getTime()
       return sortBy === 'oldest' ? tA - tB : tB - tA
     })
-  }, [dateFilter, essays, scoreFilter, sortBy])
+  }, [dateFilter, essays, scoreFilter, sortBy, vocabFilter])
 
-  const hasActiveFilters = scoreFilter !== 'all' || dateFilter !== 'all' || sortBy !== 'newest'
+  const hasActiveFilters = scoreFilter !== 'all' || dateFilter !== 'all' || vocabFilter !== 'all' || sortBy !== 'newest'
 
   const clearFilters = () => {
     setScoreFilter('all')
     setDateFilter('all')
+    setVocabFilter('all')
     setSortBy('newest')
   }
 
@@ -159,6 +177,19 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
               <SelectContent>
                 {dateRanges.map(r => (
                   <SelectItem key={r.value} value={r.value} className="text-xs">{r.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Vocab status filter */}
+            <Select value={vocabFilter} onValueChange={setVocabFilter}>
+              <SelectTrigger className="h-8 text-xs border-ocean-200 bg-white w-36">
+                <BookMarked className="h-3 w-3 mr-1 text-ocean-400 flex-shrink-0" />
+                <SelectValue placeholder="Vocab" />
+              </SelectTrigger>
+              <SelectContent>
+                {vocabStatuses.map(s => (
+                  <SelectItem key={s.value} value={s.value} className="text-xs">{s.label}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -250,7 +281,7 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
                         'h-8 w-8 p-0',
                         essay.has_vocab
                           ? 'bg-cyan-600 hover:bg-cyan-700 text-white'
-                          : 'bg-gradient-to-br from-cyan-500 to-ocean-600 hover:from-cyan-600 hover:to-ocean-700 text-white'
+                          : 'bg-violet-600 hover:bg-violet-700 text-white'
                       )}
                       title={essay.has_vocab ? 'Study Vocabulary' : 'Generate Vocabulary'}
                     >
@@ -351,39 +382,29 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
                       </Button>
                     </Link>
 
-                    <div className="flex-1 sm:flex-none flex flex-col gap-1">
-                      <Link href={`/history/${essay.id}/vocabulary`} className="w-full">
-                        <Button
-                          size="sm"
-                          className={cn(
-                            'w-full text-xs h-9',
-                            essay.has_vocab
-                              ? 'bg-cyan-600 hover:bg-cyan-700 text-white'
-                              : 'bg-gradient-to-r from-cyan-500 to-ocean-600 hover:from-cyan-600 hover:to-ocean-700 text-white'
-                          )}
-                        >
-                          {essay.has_vocab ? (
-                            <>
-                              <BookOpen className="h-3.5 w-3.5 mr-1.5" />
-                              Study Vocab
-                            </>
-                          ) : (
-                            <>
-                              <Sparkles className="h-3.5 w-3.5 mr-1.5" />
-                              Generate Vocab
-                            </>
-                          )}
-                        </Button>
-                      </Link>
-
-                      {/* Vocab ready indicator */}
-                      {essay.has_vocab && (
-                        <span className="flex items-center justify-center gap-1 text-[10px] text-cyan-600 font-medium">
-                          <span className="h-1.5 w-1.5 rounded-full bg-cyan-500 inline-block" />
-                          Vocab ready
-                        </span>
-                      )}
-                    </div>
+                    <Link href={`/history/${essay.id}/vocabulary`} className="flex-1 sm:flex-none">
+                      <Button
+                        size="sm"
+                        className={cn(
+                          'w-full text-xs h-9',
+                          essay.has_vocab
+                            ? 'bg-cyan-600 hover:bg-cyan-700 text-white'
+                            : 'bg-violet-600 hover:bg-violet-700 text-white'
+                        )}
+                      >
+                        {essay.has_vocab ? (
+                          <>
+                            <BookOpen className="h-3.5 w-3.5 mr-1.5" />
+                            Study Vocab
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="h-3.5 w-3.5 mr-1.5" />
+                            Generate Vocab
+                          </>
+                        )}
+                      </Button>
+                    </Link>
                   </div>
 
                 </div>
