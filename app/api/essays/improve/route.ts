@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase/server'
 import { createGroqClient, MODELS } from '@/lib/openai/client'
 import { ESSAY_IMPROVEMENT_PROMPT } from '@/lib/openai/prompts'
+import { rateLimiters, checkRateLimit } from '@/lib/rate-limit'
 import { logger } from '@/lib/logger'
 
 export async function POST(request: Request) {
@@ -13,6 +14,17 @@ export async function POST(request: Request) {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser()
+
+    // Rate limiting for authenticated users (guests limited by 1-essay cap)
+    if (user) {
+      const rateLimitResult = await checkRateLimit(user.id, rateLimiters.essays())
+      if (!rateLimitResult.success) {
+        return NextResponse.json(
+          { error: 'Too many requests. Please try again later.' },
+          { status: 429 }
+        )
+      }
+    }
 
     const { essay_id } = await request.json()
 

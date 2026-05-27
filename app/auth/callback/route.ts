@@ -77,13 +77,18 @@ export async function GET(request: NextRequest) {
     if (!existingProfile) {
       logger.auth('🆕 Creating new profile')
 
-      // Create profile
-      const { error: profileError } = await supabase.from('profiles').insert({
-        id: user.id,
-        email: user.email!,
-        full_name: user.user_metadata.full_name || null,
-        role: 'student',
-      })
+      // Use upsert (not insert) to be idempotent with the DB trigger handle_new_user().
+      // The trigger fires on auth.users insert — if it runs before this callback,
+      // a plain INSERT would fail silently on conflict. upsert + ignoreDuplicates handles both cases.
+      const { error: profileError } = await supabase.from('profiles').upsert(
+        {
+          id: user.id,
+          email: user.email!,
+          full_name: user.user_metadata.full_name || null,
+          role: 'student',
+        },
+        { onConflict: 'id', ignoreDuplicates: true }
+      )
 
       if (profileError) {
         logger.error('❌ Profile creation error:', profileError)

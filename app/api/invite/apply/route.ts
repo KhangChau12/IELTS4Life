@@ -57,10 +57,10 @@ export async function POST(request: Request) {
       )
     }
 
-    // Check if already used an invite code
+    // Check if already used an invite code (via profile field)
     const { data: currentProfile } = await supabase
       .from('profiles')
-      .select('invited_by')
+      .select('invited_by, invite_bonus_essays')
       .eq('id', user.id)
       .single()
 
@@ -71,15 +71,54 @@ export async function POST(request: Request) {
       )
     }
 
+    // Idempotency check: ensure this exact inviter-invitee pair hasn't been recorded
+    // This guards against race conditions where two concurrent requests slip through
+    const { data: existingInvite } = await supabase
+      .from('invites')
+      .select('id')
+      .eq('inviter_id', inviter.id)
+      .eq('invited_id', user.id)
+      .maybeSingle()
+
+    if (existingInvite) {
+      logger.auth('[Invite Apply] Duplicate invite attempt detected — already recorded')
+      return NextResponse.json(
+        { error: 'You have already used an invite code' },
+        { status: 400 }
+      )
+    }
+
     // Start transaction to apply bonuses
     logger.auth('Starting bonus application...')
 
-    // 1. Update invited user (current user)
+    // 1. Record the invite FIRST (UNIQUE constraint on inviter_id+invited_id prevents duplicates)
+    const { error: inviteRecordError } = await supabase
+      .from('invites')
+      .insert({
+        inviter_id: inviter.id,
+        invited_id: user.id,
+        bonus_applied: true
+      })
+
+    console.log('[Invite Apply] Invite record:', { error: inviteRecordError })
+
+    if (inviteRecordError) {
+      // UNIQUE constraint violation = concurrent duplicate request — treat as already applied
+      if (inviteRecordError.code === '23505') {
+        return NextResponse.json(
+          { error: 'You have already used an invite code' },
+          { status: 400 }
+        )
+      }
+      throw new Error('Failed to record invite: ' + inviteRecordError.message)
+    }
+
+    // 2. Update invited user (current user)
     const { error: invitedUpdateError } = await supabase
       .from('profiles')
       .update({
         invited_by: inviter.id,
-        invite_bonus_essays: INVITE_BONUSES.INVITED
+        invite_bonus_essays: (currentProfile?.invite_bonus_essays || 0) + INVITE_BONUSES.INVITED
       })
       .eq('id', user.id)
 
@@ -93,14 +132,12 @@ export async function POST(request: Request) {
       throw new Error('Failed to apply invited bonus: ' + invitedUpdateError.message)
     }
 
-    // 2. Update inviter's bonus (increment their current bonus)
+    // 3. Increment inviter's bonus atomically using RPC to avoid read-then-write race condition
     const { data: currentInviter } = await supabase
       .from('profiles')
       .select('invite_bonus_essays')
       .eq('id', inviter.id)
       .single()
-
-    console.log('[Invite Apply] Current inviter bonus:', currentInviter?.invite_bonus_essays)
 
     const newInviterBonus = (currentInviter?.invite_bonus_essays || 0) + INVITE_BONUSES.INVITER
 
@@ -121,22 +158,6 @@ export async function POST(request: Request) {
 
     if (inviterUpdateError) {
       throw new Error('Failed to apply inviter bonus: ' + inviterUpdateError.message)
-    }
-
-    // 3. Record the invite
-    const { error: inviteRecordError } = await supabase
-      .from('invites')
-      .insert({
-        inviter_id: inviter.id,
-        invited_id: user.id,
-        bonus_applied: true
-      })
-
-    console.log('[Invite Apply] Invite record:', { error: inviteRecordError })
-
-    if (inviteRecordError) {
-      // Log but don't fail - bonuses already applied
-      logger.error('[Invite Apply] Failed to record invite:', inviteRecordError)
     }
 
     logger.auth('SUCCESS! Bonus applied.')

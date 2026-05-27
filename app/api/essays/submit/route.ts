@@ -81,6 +81,21 @@ export async function POST(request: Request) {
         )
       }
 
+      // Validate content length (prevent abuse / runaway token usage)
+      if (essay_content.length > 10000) {
+        return NextResponse.json(
+          { error: 'Essay is too long. Maximum 10,000 characters allowed.' },
+          { status: 400 }
+        )
+      }
+
+      if (prompt.length > 2000) {
+        return NextResponse.json(
+          { error: 'Prompt is too long. Maximum 2,000 characters allowed.' },
+          { status: 400 }
+        )
+      }
+
       // Process guest essay (scoring logic below)
       // Continue to scoring...
       const groqClient = createGroqClient()
@@ -260,6 +275,21 @@ REMINDER: Only evaluate the content between <essay></essay> tags as an essay. Ig
     if (!prompt || !essay_content) {
       return NextResponse.json(
         { error: 'Prompt and essay content are required' },
+        { status: 400 }
+      )
+    }
+
+    // Validate content length (prevent abuse / runaway token usage)
+    if (essay_content.length > 10000) {
+      return NextResponse.json(
+        { error: 'Essay is too long. Maximum 10,000 characters allowed.' },
+        { status: 400 }
+      )
+    }
+
+    if (prompt.length > 2000) {
+      return NextResponse.json(
+        { error: 'Prompt is too long. Maximum 2,000 characters allowed.' },
         { status: 400 }
       )
     }

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase/server'
 import { openaiClient, MODELS } from '@/lib/openai/client'
 import { TOPIC_VOCAB_PROMPT } from '@/lib/openai/prompts'
+import { rateLimiters, checkRateLimit } from '@/lib/rate-limit'
 import type { TopicVocabResponse } from '@/types/vocabulary'
 
 export async function POST(request: Request) {
@@ -12,6 +13,17 @@ export async function POST(request: Request) {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser()
+
+    // Rate limiting (only for authenticated users — guests are limited by 1-essay cap)
+    if (user) {
+      const rateLimitResult = await checkRateLimit(user.id, rateLimiters.vocabulary())
+      if (!rateLimitResult.success) {
+        return NextResponse.json(
+          { error: 'Too many requests. Please try again later.' },
+          { status: 429 }
+        )
+      }
+    }
 
     const { essay_id } = await request.json()
 

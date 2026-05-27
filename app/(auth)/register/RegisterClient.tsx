@@ -66,6 +66,12 @@ export default function RegisterClient() {
         return
       }
 
+      // Detect email đã đăng ký nhưng chưa confirm (Supabase trả identities: [] trong trường hợp này)
+      if (authData.user && authData.user.identities && authData.user.identities.length === 0) {
+        setError('Email này đã được đăng ký. Kiểm tra hộp thư để xác nhận tài khoản, hoặc đăng nhập.')
+        return
+      }
+
       // Check if email confirmation is required
       if (authData.user && !authData.session) {
         // Email confirmation required
