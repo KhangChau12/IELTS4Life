@@ -1,30 +1,20 @@
 import Link from 'next/link'
-import { ArrowLeft, FileText, Sparkles } from 'lucide-react'
+import { ArrowLeft, FileText } from 'lucide-react'
 import { PromptsManagementClient } from '../components/PromptsManagementClient'
 
 export default function PromptsPage() {
   return (
     <div className="max-w-7xl mx-auto space-y-6 px-4 py-6">
-      <div className="rounded-3xl border border-ocean-200 bg-gradient-to-br from-white via-ocean-50/50 to-cyan-50/40 shadow-lg p-6 md:p-8">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 rounded-full border border-ocean-200 bg-ocean-50 px-3 py-1 text-xs font-medium text-ocean-700">
-              <Sparkles className="h-3.5 w-3.5" />
-              Prompt Ops Workspace
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-600 shadow-lg">
-                <FileText className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-ocean-900">
-                  Writing Prompts
-                </h1>
-                <p className="text-ocean-600 text-sm md:text-base">
-                  Manage IELTS Task 2 prompts with better speed and clarity
-                </p>
-              </div>
-            </div>
+      <div className="rounded-3xl border border-ocean-200 bg-gradient-to-br from-white via-ocean-50/50 to-cyan-50/40 shadow-lg p-6 md:p-8 relative overflow-hidden">
+        <FileText className="absolute right-4 top-4 h-32 w-32 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
+        <div className="relative z-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-ocean-900">
+              Writing Prompts
+            </h1>
+            <p className="text-ocean-600 text-sm md:text-base">
+              Manage IELTS Task 2 prompts with better speed and clarity
+            </p>
           </div>
 
           <Link

@@ -121,7 +121,6 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
     <div className="space-y-6">
       {/* Hero Overview */}
       <Card className="overflow-hidden border-ocean-200 shadow-lg bg-gradient-to-br from-ocean-600 to-cyan-600 text-white relative">
-        <BarChart3 className="absolute right-2 top-2 h-52 w-52 text-white opacity-10 rotate-[-12deg] pointer-events-none select-none" />
         <CardContent className="relative z-10 p-6 md:p-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl space-y-4">
@@ -151,62 +150,54 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
           {/* 4 KPI cards */}
           <div className="mt-6 grid grid-cols-2 xl:grid-cols-4 gap-3 md:gap-4">
             {/* Total Users */}
-            <div className="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4 shadow-sm">
-              <div className="flex items-center justify-between gap-3 mb-3">
+            <div className="relative rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4 shadow-sm overflow-hidden">
+              <Users className="absolute right-2 top-2 h-20 w-20 text-white opacity-10 rotate-[-12deg] pointer-events-none select-none" />
+              <div className="relative z-10">
                 <span className="text-xs uppercase tracking-[0.18em] text-white/70">Total Users</span>
-                <div className="rounded-xl bg-cyan-400/15 p-2 text-cyan-200">
-                  <Users className="h-4 w-4" />
-                </div>
+                <div className="text-3xl md:text-4xl font-bold leading-none mt-3">{formatNumber(stats.totalUsers)}</div>
+                <p className="mt-3 text-xs text-white/70">
+                  <span className="font-semibold text-white">{stats.paidProUsers}</span> paid Pro ·{' '}
+                  <span className="font-semibold text-white">{stats.ptnkUsers}</span> PTNK
+                </p>
               </div>
-              <div className="text-3xl md:text-4xl font-bold leading-none">{formatNumber(stats.totalUsers)}</div>
-              <p className="mt-3 text-xs text-white/70">
-                <span className="font-semibold text-white">{stats.paidProUsers}</span> paid Pro ·{' '}
-                <span className="font-semibold text-white">{stats.ptnkUsers}</span> PTNK
-              </p>
             </div>
 
             {/* Total Essays */}
-            <div className="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4 shadow-sm">
-              <div className="flex items-center justify-between gap-3 mb-3">
+            <div className="relative rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4 shadow-sm overflow-hidden">
+              <FileText className="absolute right-2 top-2 h-20 w-20 text-white opacity-10 rotate-[-12deg] pointer-events-none select-none" />
+              <div className="relative z-10">
                 <span className="text-xs uppercase tracking-[0.18em] text-white/70">Total Essays</span>
-                <div className="rounded-xl bg-teal-400/15 p-2 text-teal-200">
-                  <FileText className="h-4 w-4" />
-                </div>
+                <div className="text-3xl md:text-4xl font-bold leading-none mt-3">{formatNumber(stats.totalEssays)}</div>
+                <p className="mt-3 text-xs text-white/70">
+                  <span className="font-semibold text-white">{formatNumber(stats.essaysFromPrompts)}</span> from prompts ·{' '}
+                  <span className="font-semibold text-white">{formatNumber(stats.totalEssays - stats.essaysFromPrompts)}</span> external
+                </p>
               </div>
-              <div className="text-3xl md:text-4xl font-bold leading-none">{formatNumber(stats.totalEssays)}</div>
-              <p className="mt-3 text-xs text-white/70">
-                <span className="font-semibold text-white">{formatNumber(stats.essaysFromPrompts)}</span> from prompts ·{' '}
-                <span className="font-semibold text-white">{formatNumber(stats.totalEssays - stats.essaysFromPrompts)}</span> external
-              </p>
             </div>
 
             {/* Revenue */}
-            <div className="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4 shadow-sm">
-              <div className="flex items-center justify-between gap-3 mb-3">
+            <div className="relative rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4 shadow-sm overflow-hidden">
+              <DollarSign className="absolute right-2 top-2 h-20 w-20 text-white opacity-10 rotate-[-12deg] pointer-events-none select-none" />
+              <div className="relative z-10">
                 <span className="text-xs uppercase tracking-[0.18em] text-white/70">Revenue</span>
-                <div className="rounded-xl bg-green-400/15 p-2 text-green-200">
-                  <DollarSign className="h-4 w-4" />
-                </div>
+                <div className="text-3xl md:text-4xl font-bold leading-none mt-3">{formatVND(stats.totalRevenue)}</div>
+                <p className="mt-3 text-xs text-white/70">
+                  <span className="font-semibold text-white">{stats.totalTransactions}</span> completed transactions
+                </p>
               </div>
-              <div className="text-3xl md:text-4xl font-bold leading-none">{formatVND(stats.totalRevenue)}</div>
-              <p className="mt-3 text-xs text-white/70">
-                <span className="font-semibold text-white">{stats.totalTransactions}</span> completed transactions
-              </p>
             </div>
 
             {/* Avg Essays per User */}
-            <div className="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4 shadow-sm">
-              <div className="flex items-center justify-between gap-3 mb-3">
+            <div className="relative rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4 shadow-sm overflow-hidden">
+              <PenTool className="absolute right-2 top-2 h-20 w-20 text-white opacity-10 rotate-[-12deg] pointer-events-none select-none" />
+              <div className="relative z-10">
                 <span className="text-xs uppercase tracking-[0.18em] text-white/70">Avg Essays / User</span>
-                <div className="rounded-xl bg-violet-400/15 p-2 text-violet-200">
-                  <PenTool className="h-4 w-4" />
-                </div>
+                <div className="text-3xl md:text-4xl font-bold leading-none mt-3">{stats.avgEssaysPerUser.toFixed(1)}</div>
+                <p className="mt-3 text-xs text-white/70">
+                  <span className="font-semibold text-white">{stats.totalPrompts}</span> prompts ·{' '}
+                  <span className="font-semibold text-white">{stats.promptsWithOutlines}</span> with outlines
+                </p>
               </div>
-              <div className="text-3xl md:text-4xl font-bold leading-none">{stats.avgEssaysPerUser.toFixed(1)}</div>
-              <p className="mt-3 text-xs text-white/70">
-                <span className="font-semibold text-white">{stats.totalPrompts}</span> prompts ·{' '}
-                <span className="font-semibold text-white">{stats.promptsWithOutlines}</span> with outlines
-              </p>
             </div>
           </div>
         </CardContent>
