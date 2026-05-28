@@ -202,6 +202,20 @@ export async function fetchAdminStats(): Promise<AdminStats> {
   const essaysFromPrompts = essaysWithPromptId.length
   const essaysFromExternal = totalEssays - essaysFromPrompts
 
+  // Written essay distribution — bucket users by how many essays they've written
+  const writtenEssayDistribution = {
+    '0':     allUsers.filter(u => u.essay_count === 0).length,
+    '1-3':   allUsers.filter(u => u.essay_count >= 1 && u.essay_count <= 3).length,
+    '4-6':   allUsers.filter(u => u.essay_count >= 4 && u.essay_count <= 6).length,
+    '7-9':   allUsers.filter(u => u.essay_count >= 7 && u.essay_count <= 9).length,
+    '10-12': allUsers.filter(u => u.essay_count >= 10 && u.essay_count <= 12).length,
+    '12+':   allUsers.filter(u => u.essay_count > 12).length,
+  }
+
+  const avgEssaysPerUser = totalUsers > 0
+    ? Math.round((totalEssays / totalUsers) * 10) / 10
+    : 0
+
   return {
     totalUsers,
     ptnkUsers,
@@ -211,6 +225,8 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     totalEssays,
     scoreDistribution,
     avgOverallScore: Math.round(avgOverallScore * 10) / 10,
+    avgEssaysPerUser,
+    writtenEssayDistribution,
     allUsers,
     essaysOverTime,
     totalVocabulary,

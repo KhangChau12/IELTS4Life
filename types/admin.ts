@@ -7,6 +7,15 @@ export interface AdminStats {
   totalEssays: number
   scoreDistribution: { [key: string]: number }
   avgOverallScore: number
+  avgEssaysPerUser: number
+  writtenEssayDistribution: {
+    '0': number
+    '1-3': number
+    '4-6': number
+    '7-9': number
+    '10-12': number
+    '12+': number
+  }
   allUsers: Array<{
     id: string
     email: string

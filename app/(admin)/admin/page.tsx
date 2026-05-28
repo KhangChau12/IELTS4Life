@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { BarChart3, FileText, Bell, Lock, LayoutDashboard, Sparkles, ShieldCheck, ChevronRight } from 'lucide-react'
+import { BarChart3, FileText, Bell, Lock, LayoutDashboard, ShieldCheck, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { getAdminUser } from '@/lib/admin/auth'
 import { redirect } from 'next/navigation'
@@ -21,8 +21,13 @@ export default async function AdminPage() {
       description: 'View platform analytics and user data',
       detail: 'Charts · User analytics · Essay data',
       icon: BarChart3,
-      accent: 'from-cyan-500 to-blue-600',
-      hoverText: 'group-hover:text-cyan-700',
+      cardBg: 'bg-white/90 border-ocean-100',
+      iconColor: 'text-cyan-600',
+      titleColor: 'text-ocean-900',
+      descColor: 'text-ocean-500',
+      detailColor: 'text-ocean-400',
+      dividerColor: 'border-ocean-100',
+      activeBadge: 'border-cyan-200 bg-cyan-50 text-cyan-700',
       locked: false,
     },
     {
@@ -31,8 +36,13 @@ export default async function AdminPage() {
       description: 'Manage IELTS writing prompts and topics',
       detail: 'Create · Edit · Organize topics',
       icon: FileText,
-      accent: 'from-teal-500 to-cyan-600',
-      hoverText: 'group-hover:text-teal-700',
+      cardBg: 'bg-white/90 border-teal-100',
+      iconColor: 'text-teal-600',
+      titleColor: 'text-ocean-900',
+      descColor: 'text-ocean-500',
+      detailColor: 'text-ocean-400',
+      dividerColor: 'border-teal-100',
+      activeBadge: 'border-teal-200 bg-teal-50 text-teal-700',
       locked: false,
     },
     {
@@ -41,8 +51,13 @@ export default async function AdminPage() {
       description: 'Send announcements to users',
       detail: isDev ? 'Dev access' : 'Dev only feature',
       icon: Bell,
-      accent: 'from-purple-500 to-violet-600',
-      hoverText: 'group-hover:text-purple-700',
+      cardBg: 'bg-white/90 border-purple-100',
+      iconColor: 'text-purple-600',
+      titleColor: 'text-ocean-900',
+      descColor: 'text-ocean-500',
+      detailColor: 'text-ocean-400',
+      dividerColor: 'border-purple-100',
+      activeBadge: 'border-purple-200 bg-purple-50 text-purple-700',
       locked: !isDev,
     },
   ]
@@ -55,39 +70,18 @@ export default async function AdminPage() {
 
           <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl space-y-4">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs font-medium backdrop-blur-sm">
-                <Sparkles className="h-3.5 w-3.5 text-cyan-300" />
-                Admin workspace
-              </div>
-
               <div className="space-y-3">
                 <div className="flex flex-wrap items-center gap-3">
                   <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
                     Admin Dashboard
                   </h1>
-                  <Badge className={`rounded-full px-3 py-1 text-white ${
-                    isDev
-                      ? 'bg-gradient-to-r from-violet-500 to-fuchsia-600'
-                      : 'bg-gradient-to-r from-cyan-500 to-teal-600'
-                  }`}>
+                  <Badge className="rounded-full px-3 py-1 text-white/90 border border-white/30 bg-white/15 font-medium shadow-none">
                     {isDev ? 'Developer' : 'Administrator'}
                   </Badge>
                 </div>
                 <p className="max-w-xl text-sm md:text-base text-white/80 leading-relaxed">
                   Welcome, <span className="font-semibold text-white">{displayName}</span>. Manage the IELTS4Life platform from a cleaner, faster command center.
                 </p>
-              </div>
-
-              <div className="flex flex-wrap gap-2 text-xs text-white/70">
-                <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 backdrop-blur-sm">
-                  {isDev ? 'Dev access enabled' : 'Admin access'}
-                </span>
-                <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 backdrop-blur-sm">
-                  {displayName}
-                </span>
-                <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 backdrop-blur-sm">
-                  Platform controls
-                </span>
               </div>
             </div>
 
@@ -104,42 +98,39 @@ export default async function AdminPage() {
             {shortcutCards.map((card) => {
               const Icon = card.icon
               const inner = (
-                <div className={`relative flex flex-col h-full overflow-hidden rounded-2xl border border-white/10 bg-white/10 p-5 shadow-sm backdrop-blur-sm transition-all duration-200 ${
+                <div className={`relative flex flex-col h-full overflow-hidden rounded-2xl border p-5 shadow-md transition-all duration-200 ${card.cardBg} ${
                   card.locked
-                    ? 'cursor-not-allowed opacity-60'
-                    : 'group-hover:-translate-y-1 group-hover:bg-white/15 group-hover:shadow-xl'
+                    ? 'cursor-not-allowed opacity-50'
+                    : 'group-hover:-translate-y-1 group-hover:shadow-xl'
                 }`}>
-                  {/* Accent glow on hover */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${card.accent} opacity-0 transition-opacity duration-200 ${!card.locked && 'group-hover:opacity-10'}`} />
+                  {/* Watermark icon */}
+                  <Icon className={`absolute right-2 top-2 h-32 w-32 opacity-[0.07] rotate-[-12deg] pointer-events-none select-none ${card.iconColor}`} />
 
-                  {/* Top row: icon + chevron */}
-                  <div className="relative flex items-start justify-between mb-4">
-                    <div className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${card.accent} shadow-lg ring-4 ring-white/10`}>
-                      <Icon className="h-7 w-7 text-white" />
-                    </div>
+                  {/* Chevron */}
+                  <div className="relative flex items-start justify-end mb-4">
                     {!card.locked && (
-                      <ChevronRight className="h-4 w-4 text-slate-400 transition-transform group-hover:translate-x-1 group-hover:text-white mt-1" />
+                      <ChevronRight className={`h-4 w-4 opacity-30 transition-transform group-hover:translate-x-1 group-hover:opacity-80 mt-1 ${card.iconColor}`} />
                     )}
                   </div>
 
                   {/* Title + description — grows to fill space */}
                   <div className="relative flex-1 space-y-1.5 mb-4">
-                    <h2 className="text-lg font-semibold text-white leading-snug">
+                    <h2 className={`text-lg font-semibold leading-snug ${card.titleColor}`}>
                       {card.title}
                     </h2>
-                    <p className="text-sm text-slate-300 leading-relaxed">{card.description}</p>
+                    <p className={`text-sm leading-relaxed ${card.descColor}`}>{card.description}</p>
                   </div>
 
                   {/* Divider */}
-                  <div className="relative border-t border-white/10 pt-3 flex items-center justify-between gap-3">
-                    <span className="text-xs text-slate-400">{card.detail}</span>
+                  <div className={`relative border-t pt-3 flex items-center justify-between gap-3 ${card.dividerColor}`}>
+                    <span className={`text-xs ${card.detailColor}`}>{card.detail}</span>
                     {card.locked ? (
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/20 px-2.5 py-1 text-[11px] text-slate-300">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-[11px] text-slate-400">
                         <Lock className="h-3 w-3" />
                         Locked
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-300/20 bg-cyan-400/10 px-2.5 py-1 text-[11px] text-cyan-200">
+                      <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] ${card.activeBadge}`}>
                         <ShieldCheck className="h-3 w-3" />
                         Active
                       </span>

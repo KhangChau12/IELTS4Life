@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Users, FileText, Zap, RefreshCw, BookOpen, UserPlus, TrendingUp, PenTool, DollarSign, BarChart3 } from 'lucide-react'
+import { Users, FileText, RefreshCw, BookOpen, UserPlus, TrendingUp, PenTool, DollarSign, BarChart3 } from 'lucide-react'
 import { EnhancedUsersTable } from './EnhancedUsersTable'
 import {
   LineChart,
@@ -72,13 +72,14 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
     green: '#16a34a',
   }
 
-  // Score distribution: show bands 5–9 separately
-  const scoreDistributionData = [
-    { band: 'Band 5', count: stats.scoreDistribution['5'] || 0 },
-    { band: 'Band 6', count: stats.scoreDistribution['6'] || 0 },
-    { band: 'Band 7', count: stats.scoreDistribution['7'] || 0 },
-    { band: 'Band 8', count: stats.scoreDistribution['8'] || 0 },
-    { band: 'Band 9', count: stats.scoreDistribution['9'] || 0 },
+  // Written essay distribution — users bucketed by essay count
+  const writtenEssayDistributionData = [
+    { range: '0',     users: stats.writtenEssayDistribution['0'] },
+    { range: '1–3',   users: stats.writtenEssayDistribution['1-3'] },
+    { range: '4–6',   users: stats.writtenEssayDistribution['4-6'] },
+    { range: '7–9',   users: stats.writtenEssayDistribution['7-9'] },
+    { range: '10–12', users: stats.writtenEssayDistribution['10-12'] },
+    { range: '>12',   users: stats.writtenEssayDistribution['12+'] },
   ]
 
   // User distribution: Free | PTNK (non-paid) | Paid Pro — mutually exclusive
@@ -124,10 +125,6 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
         <CardContent className="relative z-10 p-6 md:p-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl space-y-4">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium backdrop-blur-sm">
-                <Zap className="h-3.5 w-3.5 text-white" />
-                Admin / Dev Dashboard
-              </div>
               <div className="space-y-3">
                 <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Dashboard Overview</h1>
                 <p className="text-sm md:text-base text-white/80 leading-relaxed max-w-xl">
@@ -197,15 +194,15 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
               </p>
             </div>
 
-            {/* Avg Band Score */}
+            {/* Avg Essays per User */}
             <div className="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-sm p-4 shadow-sm">
               <div className="flex items-center justify-between gap-3 mb-3">
-                <span className="text-xs uppercase tracking-[0.18em] text-white/70">Avg Band Score</span>
+                <span className="text-xs uppercase tracking-[0.18em] text-white/70">Avg Essays / User</span>
                 <div className="rounded-xl bg-violet-400/15 p-2 text-violet-200">
-                  <TrendingUp className="h-4 w-4" />
+                  <PenTool className="h-4 w-4" />
                 </div>
               </div>
-              <div className="text-3xl md:text-4xl font-bold leading-none">{stats.avgOverallScore.toFixed(1)}</div>
+              <div className="text-3xl md:text-4xl font-bold leading-none">{stats.avgEssaysPerUser.toFixed(1)}</div>
               <p className="mt-3 text-xs text-white/70">
                 <span className="font-semibold text-white">{stats.totalPrompts}</span> prompts ·{' '}
                 <span className="font-semibold text-white">{stats.promptsWithOutlines}</span> with outlines
@@ -263,19 +260,19 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
           </CardContent>
         </Card>
 
-        {/* Score Distribution Bar */}
+        {/* Written Essay Distribution */}
         <Card className="overflow-hidden border-ocean-200 shadow-lg transition-shadow hover:shadow-xl relative">
           <BarChart3 className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
           <CardHeader className="border-b border-ocean-100 bg-gradient-to-r from-ocean-50 to-teal-50/60 relative z-10">
-            <CardTitle className="text-lg text-ocean-900">Score Distribution</CardTitle>
-            <CardDescription className="text-ocean-600">Essays by IELTS band</CardDescription>
+            <CardTitle className="text-lg text-ocean-900">Written Essay Distribution</CardTitle>
+            <CardDescription className="text-ocean-600">Users by number of essays written</CardDescription>
           </CardHeader>
           <CardContent className="relative z-10">
             <ResponsiveContainer width="100%" height={280}>
-              <BarChart data={scoreDistributionData}>
+              <BarChart data={writtenEssayDistributionData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
                 <XAxis
-                  dataKey="band"
+                  dataKey="range"
                   stroke="#64748b"
                   style={{ fontSize: '12px' }}
                   axisLine={false}
@@ -290,8 +287,9 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
                 <Tooltip
                   contentStyle={{ backgroundColor: 'white', border: '1px solid #e2e8f0', borderRadius: '8px' }}
                   cursor={{ fill: '#f1f5f9' }}
+                  formatter={(value: number) => [formatNumber(value), 'Users']}
                 />
-                <Bar dataKey="count" fill={COLORS.primary} radius={[8, 8, 0, 0]} name="Essays" />
+                <Bar dataKey="users" fill={COLORS.primary} radius={[8, 8, 0, 0]} name="Users" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
