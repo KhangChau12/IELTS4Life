@@ -10,7 +10,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Loader2, Mail, Lock, User, Gift, Waves, CheckCircle, CheckCircle2 } from 'lucide-react'
+import { Loader2, Mail, Lock, User, Gift, CheckCircle, CheckCircle2 } from 'lucide-react'
 import GoogleAuthButton from '@/components/auth/GoogleAuthButton'
 
 const registerSchema = z.object({
@@ -189,11 +189,11 @@ export default function RegisterClient() {
         {/* Content */}
         <div className="relative z-10 max-w-lg">
           {/* Logo */}
-          <div className="flex items-center gap-3 mb-16">
-            <div className="w-12 h-12 bg-white/80 backdrop-blur-sm rounded-xl flex items-center justify-center border border-cyan-200 shadow-lg">
-              <Waves className="w-7 h-7 text-cyan-600" />
-            </div>
-            <span className="text-2xl font-bold text-slate-900">IELTS4Life</span>
+          <div className="mb-16">
+            <span className="text-3xl font-[family-name:var(--font-shrikhand)]">
+              <span className="text-cyan-500">IELTS</span>
+              <span className="text-slate-800">4Life</span>
+            </span>
           </div>
 
           {/* Main heading */}
@@ -234,10 +234,10 @@ export default function RegisterClient() {
       <div className="w-full lg:w-1/2 flex items-start justify-center px-4 md:px-8 py-8 md:py-20 bg-gray-50">
         <div className="w-full max-w-md">
           <div className="lg:hidden text-center mb-6 md:mb-8">
-            <div className="inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-ocean-600 rounded-xl mb-3 md:mb-4">
-              <Waves className="w-6 h-6 md:w-7 md:h-7 text-white" />
-            </div>
-            <h1 className="text-xl md:text-2xl font-bold text-ocean-800">IELTS4Life</h1>
+            <span className="text-2xl md:text-3xl font-[family-name:var(--font-shrikhand)]">
+              <span className="text-cyan-500">IELTS</span>
+              <span className="text-ocean-800">4Life</span>
+            </span>
           </div>
 
           <div className="bg-white rounded-2xl shadow-xl p-5 md:p-8">
