@@ -14,13 +14,14 @@ interface User {
   created_at: string
   role: string
   essay_count: number
+  quiz_total_attempts: number
 }
 
 interface EnhancedUsersTableProps {
   users: User[]
 }
 
-type SortField = 'email' | 'created_at' | 'essay_count'
+type SortField = 'email' | 'created_at' | 'essay_count' | 'quiz_total_attempts'
 type SortOrder = 'asc' | 'desc'
 
 export function EnhancedUsersTable({ users }: EnhancedUsersTableProps) {
@@ -134,9 +135,15 @@ export function EnhancedUsersTable({ users }: EnhancedUsersTableProps) {
                     <span className="text-ocean-600">
                       {format(new Date(user.created_at), 'MMM dd, yyyy')}
                     </span>
-                    <span className="font-semibold text-cyan-700">
-                      {user.essay_count} essays
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-cyan-700">
+                        {user.essay_count} essays
+                      </span>
+                      <span className="text-ocean-500">·</span>
+                      <span className="font-semibold text-violet-600">
+                        {user.quiz_total_attempts} quizzes
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -165,6 +172,15 @@ export function EnhancedUsersTable({ users }: EnhancedUsersTableProps) {
                         className="flex items-center gap-2 text-ocean-700 font-semibold text-sm hover:text-ocean-900 transition-colors"
                       >
                         Essays
+                        <ArrowUpDown className="h-3 w-3" />
+                      </button>
+                    </th>
+                    <th className="text-left py-3 px-4">
+                      <button
+                        onClick={() => handleSort('quiz_total_attempts')}
+                        className="flex items-center gap-2 text-ocean-700 font-semibold text-sm hover:text-ocean-900 transition-colors"
+                      >
+                        Quizzes
                         <ArrowUpDown className="h-3 w-3" />
                       </button>
                     </th>
@@ -201,6 +217,11 @@ export function EnhancedUsersTable({ users }: EnhancedUsersTableProps) {
                       <td className="py-3 px-4">
                         <span className="inline-flex items-center gap-1 text-sm font-semibold text-cyan-700">
                           {user.essay_count}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <span className="inline-flex items-center gap-1 text-sm font-semibold text-violet-600">
+                          {user.quiz_total_attempts}
                         </span>
                       </td>
                       <td className="py-3 px-4 text-ocean-600 text-sm">

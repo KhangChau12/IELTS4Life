@@ -31,6 +31,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
       email,
       created_at,
       role,
+      quiz_total_attempts,
       essays:essays(count)
     `).order('created_at', { ascending: false }),
     serviceClient.from('profiles').select('id, email, created_at').order('created_at', { ascending: true }),
@@ -119,6 +120,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     created_at: u.created_at,
     role: u.role,
     essay_count: Array.isArray(u.essays) ? (u.essays[0]?.count ?? 0) : 0,
+    quiz_total_attempts: u.quiz_total_attempts ?? 0,
   }))
 
   // User growth — smart bucketing (day/week/month)

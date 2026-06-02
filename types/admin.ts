@@ -22,6 +22,7 @@ export interface AdminStats {
     created_at: string
     role: string
     essay_count: number
+    quiz_total_attempts: number
   }>
   essaysOverTime: Array<{ date: string; count: number }>
   totalVocabulary: number
