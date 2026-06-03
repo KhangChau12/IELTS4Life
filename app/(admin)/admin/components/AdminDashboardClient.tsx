@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Users, FileText, RefreshCw, BookOpen, UserPlus, TrendingUp, PenTool, DollarSign, BarChart3 } from 'lucide-react'
 import { EnhancedUsersTable } from './EnhancedUsersTable'
+import { UserDashboardSheet } from './UserDashboardSheet'
 import {
   LineChart,
   Line,
@@ -42,6 +43,7 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
   const [stats, setStats] = useState<AdminStats>(initialStats)
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date())
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const [selectedUser, setSelectedUser] = useState<AdminStats['allUsers'][number] | null>(null)
 
   const formatNumber = (num: number): string => num.toLocaleString('en-US')
 
@@ -483,7 +485,16 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
       </div>
 
       {/* Users Table */}
-      <EnhancedUsersTable users={stats.allUsers} />
+      <EnhancedUsersTable
+        users={stats.allUsers}
+        onUserClick={(user) => setSelectedUser(user)}
+      />
+
+      {/* User Dashboard Sheet */}
+      <UserDashboardSheet
+        user={selectedUser}
+        onClose={() => setSelectedUser(null)}
+      />
     </div>
   )
 }

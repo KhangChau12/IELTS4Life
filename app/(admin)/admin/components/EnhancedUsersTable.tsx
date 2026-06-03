@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Users, Search, ChevronLeft, ChevronRight, ArrowUpDown } from 'lucide-react'
+import { Users, Search, ChevronLeft, ChevronRight, ArrowUpDown, Eye } from 'lucide-react'
 import { format } from 'date-fns'
 
 interface User {
@@ -19,12 +19,13 @@ interface User {
 
 interface EnhancedUsersTableProps {
   users: User[]
+  onUserClick: (user: User) => void
 }
 
 type SortField = 'email' | 'created_at' | 'essay_count' | 'quiz_total_attempts'
 type SortOrder = 'asc' | 'desc'
 
-export function EnhancedUsersTable({ users }: EnhancedUsersTableProps) {
+export function EnhancedUsersTable({ users, onUserClick }: EnhancedUsersTableProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [sortField, setSortField] = useState<SortField>('created_at')
@@ -115,7 +116,11 @@ export function EnhancedUsersTable({ users }: EnhancedUsersTableProps) {
             {/* Mobile Card View */}
             <div className="md:hidden space-y-3">
               {paginatedUsers.map((user) => (
-                <div key={user.id} className="border border-ocean-200 rounded-lg p-3 bg-white">
+                <div
+                  key={user.id}
+                  onClick={() => onUserClick(user)}
+                  className="border border-ocean-200 rounded-lg p-3 bg-white hover:bg-ocean-50 hover:border-ocean-400 transition-colors cursor-pointer"
+                >
                   <div className="flex items-start justify-between mb-2">
                     <p className="text-sm text-ocean-800 font-medium break-all flex-1 pr-2">
                       {user.email}
@@ -143,6 +148,7 @@ export function EnhancedUsersTable({ users }: EnhancedUsersTableProps) {
                       <span className="font-semibold text-violet-600">
                         {user.quiz_total_attempts} quizzes
                       </span>
+                      <Eye className="h-3.5 w-3.5 text-ocean-400 ml-1" />
                     </div>
                   </div>
                 </div>
@@ -193,13 +199,17 @@ export function EnhancedUsersTable({ users }: EnhancedUsersTableProps) {
                         <ArrowUpDown className="h-3 w-3" />
                       </button>
                     </th>
+                    <th className="py-3 px-4 text-ocean-700 font-semibold text-sm text-center">
+                      View
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {paginatedUsers.map((user) => (
                     <tr
                       key={user.id}
-                      className="border-b border-ocean-100 hover:bg-ocean-50 transition-colors"
+                      onClick={() => onUserClick(user)}
+                      className="border-b border-ocean-100 hover:bg-ocean-50 transition-colors cursor-pointer group"
                     >
                       <td className="py-3 px-4 text-ocean-800 text-sm">{user.email}</td>
                       <td className="py-3 px-4">
@@ -226,6 +236,9 @@ export function EnhancedUsersTable({ users }: EnhancedUsersTableProps) {
                       </td>
                       <td className="py-3 px-4 text-ocean-600 text-sm">
                         {format(new Date(user.created_at), 'MMM dd, yyyy HH:mm')}
+                      </td>
+                      <td className="py-3 px-4 text-center">
+                        <Eye className="h-4 w-4 text-ocean-300 group-hover:text-ocean-600 transition-colors mx-auto" />
                       </td>
                     </tr>
                   ))}
