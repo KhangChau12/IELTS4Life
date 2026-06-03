@@ -3,12 +3,10 @@
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Users, FileText, RefreshCw, BookOpen, UserPlus, TrendingUp, PenTool, DollarSign, BarChart3 } from 'lucide-react'
+import { Users, FileText, RefreshCw, BookOpen, UserPlus, PenTool, DollarSign, BarChart3, MessageSquare } from 'lucide-react'
 import { EnhancedUsersTable } from './EnhancedUsersTable'
 import { UserDashboardSheet } from './UserDashboardSheet'
 import {
-  LineChart,
-  Line,
   BarChart,
   Bar,
   PieChart,
@@ -98,26 +96,12 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
   }))
 
   // User growth over time
-  const userGrowthSpanDays = stats.usersOverTime.length > 1
-    ? Math.ceil(
-        (new Date(stats.usersOverTime[stats.usersOverTime.length - 1].date).getTime() -
-          new Date(stats.usersOverTime[0].date).getTime()) /
-          (1000 * 60 * 60 * 24)
-      )
-    : 0
-  const userGrowthBucket = userGrowthSpanDays <= 60 ? 'day' : userGrowthSpanDays <= 365 ? 'week' : 'month'
-  const userGrowthDateFormat = userGrowthBucket === 'month' ? 'MMM yyyy' : 'MMM dd'
-  const userGrowthLabel =
-    userGrowthBucket === 'day'
-      ? `Last ${stats.usersOverTime.length} days`
-      : userGrowthBucket === 'week'
-      ? `${stats.usersOverTime.length} weeks`
-      : `${stats.usersOverTime.length} months`
-
-  const userGrowthData = stats.usersOverTime.map(item => ({
-    date: format(new Date(item.date + 'T00:00:00'), userGrowthDateFormat),
-    users: item.count,
-  }))
+  const satisfactionData = [
+    { label: 'Terrible',     value: stats.satisfactionDistribution.terrible,    color: '#fca5a5' },
+    { label: 'Not for me',   value: stats.satisfactionDistribution.notForMe,    color: '#fdba74' },
+    { label: 'Need improve', value: stats.satisfactionDistribution.needImprove, color: '#86efac' },
+    { label: 'All good',     value: stats.satisfactionDistribution.allGood,     color: '#93c5fd' },
+  ]
 
   return (
     <div className="space-y-6">
@@ -282,7 +266,12 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
                   cursor={{ fill: '#f1f5f9' }}
                   formatter={(value: number) => [formatNumber(value), 'Users']}
                 />
-                <Bar dataKey="users" fill={COLORS.primary} radius={[8, 8, 0, 0]} name="Users" />
+                <Bar dataKey="users" radius={[8, 8, 0, 0]} name="Users">
+                  {writtenEssayDistributionData.map((_, index) => {
+                    const barColors = ['#bfdbfe', '#93c5fd', '#60a5fa', '#3b82f6', '#2563eb', '#1d4ed8']
+                    return <Cell key={`cell-${index}`} fill={barColors[index]} />
+                  })}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -325,34 +314,38 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
           </CardContent>
         </Card>
 
-        {/* User Growth */}
+        {/* User Feedback — Rating Distribution */}
         <Card className="overflow-hidden border-ocean-200 shadow-lg transition-shadow hover:shadow-xl relative">
-          <TrendingUp className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
+          <MessageSquare className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
           <CardHeader className="border-b border-ocean-100 bg-gradient-to-r from-ocean-50 to-violet-50/60 relative z-10">
-            <CardTitle className="text-lg text-ocean-900">User Growth</CardTitle>
-            <CardDescription className="text-ocean-600">Total registered users ({userGrowthLabel})</CardDescription>
+            <CardTitle className="text-lg text-ocean-900">User Feedback</CardTitle>
+            <CardDescription className="text-ocean-600">
+              Satisfaction ratings — {formatNumber(stats.satisfactionDistribution.totalRated)} user{stats.satisfactionDistribution.totalRated !== 1 ? 's' : ''} rated
+            </CardDescription>
           </CardHeader>
           <CardContent className="relative z-10">
-            <ResponsiveContainer width="100%" height={260}>
-              <LineChart data={userGrowthData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                <XAxis dataKey="date" stroke="#64748b" style={{ fontSize: '12px' }} axisLine={false} tickLine={false} />
-                <YAxis stroke="#64748b" style={{ fontSize: '12px' }} axisLine={false} tickLine={false} />
-                <Tooltip
-                  contentStyle={{ backgroundColor: 'white', border: '1px solid #e2e8f0', borderRadius: '8px' }}
-                  formatter={(value: number) => formatNumber(value)}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="users"
-                  stroke={COLORS.accent}
-                  strokeWidth={3}
-                  dot={{ fill: COLORS.accent, r: 4 }}
-                  activeDot={{ r: 6 }}
-                  name="Total Users"
-                />
-              </LineChart>
-            </ResponsiveContainer>
+            {stats.satisfactionDistribution.totalRated === 0 ? (
+              <div className="flex items-center justify-center h-[260px] text-ocean-400 text-sm">
+                No ratings yet
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height={260}>
+                <BarChart data={satisfactionData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                  <XAxis dataKey="label" stroke="#64748b" style={{ fontSize: '12px' }} axisLine={false} tickLine={false} />
+                  <YAxis stroke="#64748b" style={{ fontSize: '12px' }} axisLine={false} tickLine={false} allowDecimals={false} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: 'white', border: '1px solid #e2e8f0', borderRadius: '8px' }}
+                    formatter={(value: number) => [formatNumber(value), 'Users']}
+                  />
+                  <Bar dataKey="value" radius={[8, 8, 0, 0]} name="Users">
+                    {satisfactionData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </CardContent>
         </Card>
       </div>

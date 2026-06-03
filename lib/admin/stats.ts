@@ -23,6 +23,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     promptCountResult,
     promptOutlineCountResult,
     essayCountResult,
+    satisfactionResult,
   ] = await Promise.all([
     serviceClient.from('essays').select('overall_score'),
     serviceClient.from('essays').select('created_at').gte('created_at', fourteenDaysAgoISO).order('created_at', { ascending: true }),
@@ -49,6 +50,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     serviceClient.from('writing_prompts').select('*', { count: 'exact', head: true }),
     serviceClient.from('writing_prompt_outlines').select('*', { count: 'exact', head: true }),
     serviceClient.from('essays').select('*', { count: 'exact', head: true }),
+    serviceClient.from('profiles').select('satisfaction_rating, satisfaction_rated_at'),
   ])
 
   // Separate parallel groups into named vars
@@ -66,6 +68,15 @@ export async function fetchAdminStats(): Promise<AdminStats> {
   const totalPrompts = promptCountResult.count ?? 0
   const promptsWithOutlines = promptOutlineCountResult.count ?? 0
   const totalEssays = essayCountResult.count ?? 0
+
+  const satisfactionProfiles = satisfactionResult.data ?? []
+  const satisfactionDistribution = {
+    terrible:    satisfactionProfiles.filter(p => p.satisfaction_rating === 1).length,
+    notForMe:    satisfactionProfiles.filter(p => p.satisfaction_rating === 2).length,
+    needImprove: satisfactionProfiles.filter(p => p.satisfaction_rating === 3).length,
+    allGood:     satisfactionProfiles.filter(p => p.satisfaction_rating === 4).length,
+    totalRated:  satisfactionProfiles.filter(p => p.satisfaction_rated_at !== null).length,
+  }
 
   // Score distribution — separate bands, no merging
   const scoreDistribution: { [key: string]: number } = {}
@@ -244,6 +255,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     promptsWithOutlines,
     essaysFromPrompts,
     essaysFromExternal,
+    satisfactionDistribution,
     totalRevenue,
     proRevenue,
     packRevenue,

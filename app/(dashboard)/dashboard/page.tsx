@@ -15,6 +15,7 @@ import { VocabularyProgress } from './components/VocabularyProgress'
 import { NextActionBanner } from './components/NextActionBanner'
 import { ProgressSummary } from './components/ProgressSummary'
 import { RecentEssaysTable } from './components/RecentEssaysTable'
+import { DashboardPollWrapper } from './components/DashboardPollWrapper'
 
 async function getAllDashboardData(userId: string) {
   const supabase = createServerClient()
@@ -24,7 +25,7 @@ async function getAllDashboardData(userId: string) {
     // Profile - full_name + pre-aggregated quiz counters (replaces vocabulary_quiz_attempts)
     supabase
       .from('profiles')
-      .select('full_name, quiz_total_attempts, quiz_total_correct, quiz_total_questions')
+      .select('full_name, quiz_total_attempts, quiz_total_correct, quiz_total_questions, satisfaction_rated_at')
       .eq('id', userId)
       .single(),
 
@@ -42,6 +43,7 @@ async function getAllDashboardData(userId: string) {
   ])
 
   const userName = profileResult.data?.full_name || undefined
+  const hasRated = !!profileResult.data?.satisfaction_rated_at
   const essays = essaysResult.data || []
   const vocabulary = vocabResult.data || []
 
@@ -109,6 +111,7 @@ async function getAllDashboardData(userId: string) {
 
   return {
     userName,
+    hasRated,
     essays,
     stats: { totalEssays, averageScore, latestScore },
     userStats: {
@@ -137,7 +140,7 @@ export default async function DashboardPage() {
     redirect('/login')
   }
 
-  const { userName, essays, stats, userStats } = await getAllDashboardData(user.id)
+  const { userName, hasRated, essays, stats, userStats } = await getAllDashboardData(user.id)
   const displayName = userName || user.email?.split('@')[0] || 'Student'
 
   // Prepare data for charts
@@ -153,6 +156,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-7 md:space-y-9 px-4 py-6">
+      <DashboardPollWrapper shouldShow={stats.totalEssays >= 1 && !hasRated} />
       {/* Welcome Section */}
       <div className="mb-8 md:mb-10">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-ocean-800 mb-2">

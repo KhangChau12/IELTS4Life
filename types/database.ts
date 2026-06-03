@@ -27,6 +27,8 @@ export interface Database {
           quiz_total_attempts: number
           quiz_total_correct: number
           quiz_total_questions: number
+          satisfaction_rating: number | null
+          satisfaction_rated_at: string | null
           created_at: string
           updated_at: string
         }
@@ -47,6 +49,8 @@ export interface Database {
           quiz_total_attempts?: number
           quiz_total_correct?: number
           quiz_total_questions?: number
+          satisfaction_rating?: number | null
+          satisfaction_rated_at?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -67,6 +71,8 @@ export interface Database {
           quiz_total_attempts?: number
           quiz_total_correct?: number
           quiz_total_questions?: number
+          satisfaction_rating?: number | null
+          satisfaction_rated_at?: string | null
           created_at?: string
           updated_at?: string
         }

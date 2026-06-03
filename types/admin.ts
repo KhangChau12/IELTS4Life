@@ -38,6 +38,13 @@ export interface AdminStats {
   promptsWithOutlines: number
   essaysFromPrompts: number
   essaysFromExternal: number
+  satisfactionDistribution: {
+    terrible: number
+    notForMe: number
+    needImprove: number
+    allGood: number
+    totalRated: number
+  }
   totalRevenue: number
   proRevenue: number
   packRevenue: number
