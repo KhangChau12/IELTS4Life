@@ -1,6 +1,8 @@
 'use client'
 
-import { MessageCircle, Sparkles, Zap, Shield, Award } from 'lucide-react'
+import { useState } from 'react'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 import {
   Accordion,
   AccordionContent,
@@ -11,199 +13,214 @@ import {
 interface FAQItem {
   question: string
   answer: string
+  tag: 'general' | 'features' | 'privacy' | 'ielts'
 }
 
-interface FAQCategory {
-  title: string
-  icon: React.ElementType
-  gradient: string
-  borderColor: string
-  faqs: FAQItem[]
-}
+const TAGS = [
+  { value: 'all', label: 'All' },
+  { value: 'general', label: 'Getting Started' },
+  { value: 'features', label: 'Features' },
+  { value: 'privacy', label: 'Privacy & Quotas' },
+  { value: 'ielts', label: 'IELTS Specific' },
+] as const
 
-const faqCategories: FAQCategory[] = [
+const faqs: FAQItem[] = [
+  // --- Getting Started ---
   {
-    title: 'General & Getting Started',
-    icon: Sparkles,
-    gradient: 'from-cyan-500 to-blue-600',
-    borderColor: 'border-cyan-200',
-    faqs: [
-      {
-        question: 'What is IELTS4Life and how does it work?',
-        answer: 'IELTS4Life is an AI-powered IELTS Writing assistant that helps you improve your writing skills. Simply submit your essay, and our AI examiner analyzes it using official IELTS band descriptors to provide detailed feedback on all 4 assessment criteria: Task Achievement, Coherence and Cohesion, Lexical Resource, and Grammatical Range and Accuracy.'
-      },
-      {
-        question: 'Is IELTS4Life really free to use?',
-        answer: 'Yes! You can start using IELTS4Life completely free without any credit card. New users get 4 free essay submissions to try out all features. No hidden fees, no automatic charges.'
-      },
-      {
-        question: 'Do I need to create an account to use the IELTS essay scorer?',
-        answer: 'No account is required to try the essay scorer! You can submit your first essay as a guest and see the results immediately. However, creating a free account allows you to track your progress over time, save your essays, and access vocabulary builder and progress analytics.'
-      },
-      {
-        question: 'How accurate is the AI-powered IELTS scoring?',
-        answer: 'Our AI is trained on official IELTS band descriptors and thousands of scored essays. It provides band scores that closely align with human IELTS examiners. While it\'s an excellent practice tool, we recommend getting human feedback from certified IELTS examiners before your actual exam.'
-      },
-      {
-        question: 'Can this tool help me improve my IELTS Writing band score?',
-        answer: 'Absolutely! Regular practice with detailed feedback is proven to improve writing skills. Our tool identifies specific errors, suggests improvements, and tracks your progress over time. Many users report band score improvements of 0.5 to 1.5 bands after consistent practice.'
-      }
-    ]
+    tag: 'general',
+    question: 'What is IELTS4Life and how does it work?',
+    answer:
+      'IELTS4Life is an AI-powered IELTS Writing Task 2 coach. Paste your essay, and the AI scores it across all 4 official criteria — Task Response, Coherence & Cohesion, Lexical Resource, and Grammatical Range & Accuracy — then gives you specific errors, strengths, and a Band 8–9 rewrite to learn from.',
   },
   {
-    title: 'Features & Usage',
-    icon: Zap,
-    gradient: 'from-blue-500 to-violet-600',
-    borderColor: 'border-blue-200',
-    faqs: [
-      {
-        question: 'What kind of feedback do I get on my IELTS essays?',
-        answer: 'You receive comprehensive feedback including: (1) Band scores for all 4 IELTS criteria, (2) Overall band score, (3) Specific error identification with explanations, (4) Strengths and weaknesses analysis, (5) Actionable improvement suggestions, and (6) Vocabulary enhancement recommendations.'
-      },
-      {
-        question: 'Does the tool work for both Task 1 and Task 2?',
-        answer: 'Currently, IELTS4Life is optimized for IELTS Writing Task 2 (essay writing). We are working on adding Task 1 support for both Academic (graphs, charts, diagrams) and General Training (letters) in the near future.'
-      },
-      {
-        question: 'How long does it take to get my essay scored?',
-        answer: 'Our AI provides instant feedback! Most essays are analyzed and scored within 5 seconds. You\'ll receive your detailed band scores, error analysis, and improvement suggestions immediately after submission.'
-      },
-      {
-        question: 'Can I track my progress over time?',
-        answer: 'Yes! Registered users get access to a comprehensive progress dashboard showing band score trends over time, improvement areas, vocabulary growth, and writing patterns. You can visualize your improvement journey with interactive charts and graphs.'
-      },
-      {
-        question: 'What is the vocabulary builder feature?',
-        answer: 'Our vocabulary builder generates C1-C2 level paraphrases for your sentences and provides topic-specific vocabulary suggestions. You can save words to flashcards and practice with interactive quizzes to expand your academic vocabulary for IELTS.'
-      }
-    ]
+    tag: 'general',
+    question: 'Is IELTS4Life really free to use?',
+    answer:
+      'Yes. No credit card needed. You get 4 free essay submissions the moment you register — enough to see real progress before deciding whether to upgrade. Guest users (no account) get 1 free attempt.',
   },
   {
-    title: 'Privacy & Technical',
-    icon: Shield,
-    gradient: 'from-emerald-500 to-cyan-600',
-    borderColor: 'border-emerald-200',
-    faqs: [
-      {
-        question: 'How many free essays can I submit?',
-        answer: 'New users receive 4 free essay submissions when they create an account. Guest users (without account) can submit 1 essay to try it out. After using your free quota, you can upgrade to a premium plan for unlimited submissions and advanced features.'
-      },
-      {
-        question: 'Can I get more free essays after using my quota?',
-        answer: 'Yes! We understand that financial constraints shouldn\'t limit your learning. You can earn 2 additional free essays by inviting a friend to join IELTS4Life using your referral code. When your friend signs up with your code, both of you receive 2 bonus essays. You can continue inviting more friends to keep earning free essays and help others improve their IELTS writing!'
-      },
-      {
-        question: 'Is my essay data private and secure?',
-        answer: 'Yes, we take privacy seriously. Your essays are encrypted and stored securely. We never share your writing with third parties. You can delete your essays anytime from your dashboard. All data processing complies with GDPR and data protection regulations.'
-      },
-      {
-        question: 'Can I use this on mobile devices?',
-        answer: 'Absolutely! IELTS4Life is fully responsive and works seamlessly on all devices - smartphones, tablets, and desktop computers. You can practice your IELTS writing anywhere, anytime.'
-      }
-    ]
+    tag: 'general',
+    question: 'Do I need to create an account?',
+    answer:
+      'No — paste your essay and get scored immediately as a guest. An account unlocks your essay history, progress charts, vocabulary tools, flashcards, and quizzes.',
   },
   {
-    title: 'IELTS Specific',
-    icon: Award,
-    gradient: 'from-sky-500 to-cyan-600',
-    borderColor: 'border-sky-200',
-    faqs: [
-      {
-        question: 'Does this follow official IELTS band descriptors?',
-        answer: 'Yes! Our AI scoring system is built on official IELTS band descriptors published by Cambridge and IDP. We assess essays using the same 4 criteria that human IELTS examiners use: Task Achievement, Coherence and Cohesion, Lexical Resource, and Grammatical Range and Accuracy.'
-      },
-      {
-        question: 'Will this help me prepare for Academic or General Training IELTS?',
-        answer: 'IELTS4Life currently focuses on Task 2 essay writing, which is similar for both Academic and General Training modules. The scoring criteria and essay structure are the same for both, so our feedback applies to both test types.'
-      },
-      {
-        question: 'Can I use this to practice for my IELTS exam?',
-        answer: 'Definitely! IELTS4Life is designed specifically for IELTS exam preparation. Practice with real IELTS essay prompts, get examiner-level feedback, and track your improvement. We recommend practicing regularly (2-3 essays per week) for best results.'
-      },
-      {
-        question: 'How is IELTS4Life different from other IELTS preparation tools?',
-        answer: 'IELTS4Life offers instant AI feedback (no waiting for tutors), detailed criterion-by-criterion scoring, vocabulary enhancement tools, progress tracking, and interactive learning features - all in one platform. Plus, you can start completely free without any payment information.'
-      }
-    ]
-  }
+    tag: 'general',
+    question: 'How accurate is the AI scoring?',
+    answer:
+      'Our AI is trained on official IELTS band descriptors and thousands of scored essays, consistently producing scores that align closely with human examiners. For your actual exam, we always recommend a final check with a certified IELTS examiner — but for daily practice and self-correction, the AI is highly effective.',
+  },
+  {
+    tag: 'general',
+    question: 'Can this actually raise my IELTS band score?',
+    answer:
+      'Consistent practice with targeted feedback is the most direct path to improvement. Our tool pinpoints exactly which errors drag your score down — by criterion — so you fix the right things. Many users report 0.5 to 1.5 band improvements after regular practice.',
+  },
+
+  // --- Features ---
+  {
+    tag: 'features',
+    question: 'What exactly does the feedback include?',
+    answer:
+      'Every submission returns: (1) band scores for all 4 criteria + overall band, (2) a list of specific errors with severity labels (Minor / Major / Critical) and rewrite suggestions, (3) strengths with quoted evidence from your essay, (4) examiner-style comments per criterion, (5) a full Band 8–9 rewrite of your essay with a change log explaining each improvement, and (6) personalized guidance on what to fix first.',
+  },
+  {
+    tag: 'features',
+    question: 'How fast do I get my results?',
+    answer:
+      'Scoring is instant — results appear within seconds of submitting. The Band 8–9 rewrite and detailed guidance generate in the background while you read your score, so everything is ready by the time you click through.',
+  },
+  {
+    tag: 'features',
+    question: 'What is the vocabulary builder?',
+    answer:
+      'After scoring, the AI identifies low-level words in your essay and suggests C1–C2 replacements with definitions. It also generates topic-specific academic vocabulary relevant to your prompt. Every word can be saved to smart flashcards (spaced repetition) and tested with multiple-choice quizzes — so you actually retain what you learn.',
+  },
+  {
+    tag: 'features',
+    question: 'What are the writing prompts?',
+    answer:
+      'The prompt library has real IELTS Task 2 questions across 7 question types (Agree/Disagree, Advantages & Disadvantages, Problem & Solution, Discussion, and more) organized by topic. Each prompt includes two AI-generated essay outlines to help you plan, plus a built-in countdown timer. Drafts auto-save so you never lose your work.',
+  },
+  {
+    tag: 'features',
+    question: 'How do the flashcards and quizzes work?',
+    answer:
+      'Flashcards use spaced repetition (SM-2 algorithm) — the same method used by Anki. Cards you struggle with appear more frequently; ones you know well are spaced out. Quizzes are multiple-choice and pull from your saved vocabulary. Your accuracy and attempt history are tracked on your dashboard.',
+  },
+  {
+    tag: 'features',
+    question: 'Can I track my improvement over time?',
+    answer:
+      'Yes. The dashboard shows your band score trend across all essays, per-criterion breakdowns, vocabulary growth, quiz accuracy, and your full essay history. You can filter by date range, score, and more.',
+  },
+
+  // --- Plans & Quotas ---
+  {
+    tag: 'privacy',
+    question: 'What is the difference between Free and Pro?',
+    answer:
+      'Free users get 4 total essay submissions (3 per day). Pro users get 5 essays per day with no total cap — plus all the same features. Pro is 100,000 VND/month (≈ $4 USD). PTNK students with an @ptnk.edu.vn email get Pro access for free.',
+  },
+  {
+    tag: 'privacy',
+    question: 'What is the Essay Pack?',
+    answer:
+      'If you just need more essays without a monthly subscription, the Essay Pack adds 15 essays to your account for 50,000 VND — a one-time purchase. Great for exam season when you want to practice intensively for a short period.',
+  },
+  {
+    tag: 'privacy',
+    question: 'Can I get more essays without paying?',
+    answer:
+      'Yes — invite a friend with your referral code. When they sign up, both of you get 2 bonus essays. There is no limit to how many friends you can invite.',
+  },
+  {
+    tag: 'privacy',
+    question: 'Is my essay data private?',
+    answer:
+      'Your essays are stored securely and never shared with third parties. You can delete any essay from your dashboard at any time.',
+  },
+  {
+    tag: 'privacy',
+    question: 'Can I use IELTS4Life on my phone?',
+    answer:
+      'Yes — the site is fully responsive and works well on smartphones and tablets. No app download needed.',
+  },
+
+  // --- IELTS Specific ---
+  {
+    tag: 'ielts',
+    question: 'Does the scoring follow official IELTS band descriptors?',
+    answer:
+      'Yes. The AI scores against the same 4 public band descriptors used by Cambridge and IDP examiners — Task Response, Coherence & Cohesion, Lexical Resource, and Grammatical Range & Accuracy. Scores are rounded to the nearest 0.5 band, exactly as in the real exam.',
+  },
+  {
+    tag: 'ielts',
+    question: 'Does it work for both Academic and General Training IELTS?',
+    answer:
+      'Yes. Task 2 is identical across both modules — the prompt style, scoring criteria, and expected essay structure are the same. Our feedback applies equally to both.',
+  },
+  {
+    tag: 'ielts',
+    question: 'Is this better than using Grammarly or ChatGPT for IELTS?',
+    answer:
+      'Grammarly only checks grammar and style — it has no concept of IELTS band scores or examiner criteria. ChatGPT can give general feedback but is not calibrated to official band descriptors and gives inconsistent results. IELTS4Life is purpose-built: every score, error label, and suggestion maps directly to how IELTS examiners evaluate writing.',
+  },
+  {
+    tag: 'ielts',
+    question: 'Should I still practice with a human tutor?',
+    answer:
+      'Both are valuable. IELTS4Life gives you unlimited, instant, consistent feedback every time you practice — something no tutor can match for daily drill. A human tutor adds nuance, motivation, and exam strategy. The ideal setup is to use IELTS4Life for regular practice and a tutor for periodic deeper reviews before your exam.',
+  },
 ]
 
 export function FAQSection() {
-  return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 to-cyan-50/50 py-12 md:py-24">
-      {/* Background decoration */}
-      <div className="absolute top-20 right-20 h-64 w-64 rounded-full bg-gradient-to-br from-cyan-200/30 to-blue-200/30 blur-3xl" />
-      <div className="absolute bottom-20 left-20 h-64 w-64 rounded-full bg-gradient-to-br from-sky-200/30 to-cyan-200/30 blur-3xl" />
+  const [activeTag, setActiveTag] = useState<string>('all')
 
+  const filtered = activeTag === 'all' ? faqs : faqs.filter((f) => f.tag === activeTag)
+
+  return (
+    <section className="relative overflow-hidden bg-white py-12 md:py-24">
       <div className="container relative z-10 mx-auto px-4">
         {/* Header */}
-        <div className="mb-6 sm:mb-10 md:mb-16 text-center space-y-3 md:space-y-4">
-
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-slate-900">
+        <div className="mb-8 md:mb-12 text-center space-y-3">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900">
             Frequently Asked Questions
           </h2>
-          <p className="mx-auto max-w-2xl text-sm md:text-base lg:text-lg text-slate-600 px-4">
+          <p className="mx-auto max-w-xl text-sm md:text-base text-slate-500">
             Everything you need to know about IELTS4Life
           </p>
         </div>
 
-        {/* FAQ Categories */}
-        <div className="mx-auto max-w-4xl space-y-8">
-          {faqCategories.map((category, categoryIndex) => {
-            const Icon = category.icon
-            return (
-              <div key={categoryIndex} className="space-y-4">
-                {/* Category Header */}
-                <div className="flex items-center gap-3">
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${category.gradient} shadow-lg`}>
-                    <Icon className="h-5 w-5 text-white" />
-                  </div>
-                  <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900">
-                    {category.title}
-                  </h3>
-                </div>
-
-                {/* FAQ Items */}
-                <div className={`rounded-2xl bg-white border-2 ${category.borderColor} shadow-lg overflow-hidden`}>
-                  <Accordion type="single" collapsible className="w-full">
-                    {category.faqs.map((faq, faqIndex) => (
-                      <AccordionItem
-                        key={faqIndex}
-                        value={`item-${categoryIndex}-${faqIndex}`}
-                        className="border-b border-slate-100 last:border-0"
-                      >
-                        <AccordionTrigger className="px-4 md:px-6 py-4 text-left hover:bg-slate-50/50 transition-colors [&[data-state=open]]:bg-gradient-to-r [&[data-state=open]]:from-cyan-50/50 [&[data-state=open]]:to-blue-50/50 hover:no-underline">
-                          <span className="text-base md:text-lg font-semibold text-slate-900 pr-4">
-                            {faq.question}
-                          </span>
-                        </AccordionTrigger>
-                        <AccordionContent className="px-4 md:px-6 pb-4 pt-2">
-                          <p className="text-sm md:text-base text-slate-600 leading-relaxed">
-                            {faq.answer}
-                          </p>
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
-                  </Accordion>
-                </div>
-              </div>
-            )
-          })}
+        {/* Tag filter */}
+        <div className="mb-8 flex flex-wrap justify-center gap-2">
+          {TAGS.map((tag) => (
+            <button
+              key={tag.value}
+              onClick={() => setActiveTag(tag.value)}
+              className={`rounded-full px-4 py-1.5 text-sm font-medium transition-all ${
+                activeTag === tag.value
+                  ? 'bg-slate-900 text-white shadow-sm'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              {tag.label}
+            </button>
+          ))}
         </div>
 
-        {/* Still have questions CTA */}
-        <div className="mt-12 md:mt-16 text-center">
-          <div className="inline-flex flex-col items-center gap-3 rounded-2xl bg-white p-6 md:p-8 shadow-xl border border-cyan-100">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-blue-600">
-              <MessageCircle className="h-6 w-6 text-white" />
-            </div>
-            <h3 className="text-xl md:text-2xl font-bold text-slate-900">
-              Still have questions?
-            </h3>
-            <p className="text-sm md:text-base text-slate-600 max-w-md">
-              Can't find the answer you're looking for? Feel free to contact our support team.
-            </p>
-          </div>
+        {/* FAQ Accordion */}
+        <div className="mx-auto max-w-3xl">
+          <Accordion type="single" collapsible className="w-full space-y-2">
+            {filtered.map((faq, i) => (
+              <AccordionItem
+                key={`${faq.tag}-${i}`}
+                value={`${faq.tag}-${i}`}
+                className="rounded-xl border border-slate-200 bg-white px-2 shadow-sm data-[state=open]:border-slate-300 data-[state=open]:shadow-md transition-all"
+              >
+                <AccordionTrigger className="px-4 py-4 text-left text-base font-semibold text-slate-900 hover:no-underline [&[data-state=open]]:text-cyan-700">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="px-4 pb-4 pt-0 text-sm text-slate-600 leading-relaxed">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+
+        {/* Bottom CTA */}
+        <div className="mt-14 md:mt-16 text-center">
+          <p className="text-sm text-slate-500 mb-4">
+            Still have questions? Start with a free essay and see for yourself.
+          </p>
+          <Link
+            href="/register"
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-500/25 hover:from-blue-700 hover:to-cyan-700 hover:scale-[1.02] transition-all"
+          >
+            Get Started Free
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </div>
     </section>

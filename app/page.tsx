@@ -70,74 +70,82 @@ export default async function HomePage() {
         name: 'What is IELTS4Life and how does it work?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'IELTS4Life is an AI-powered IELTS Writing assistant that helps you improve your writing skills. Simply submit your essay, and our AI examiner analyzes it using official IELTS band descriptors to provide detailed feedback on all 4 assessment criteria: Task Achievement, Coherence and Cohesion, Lexical Resource, and Grammatical Range and Accuracy.'
-        }
+          text: 'IELTS4Life is an AI-powered IELTS Writing Task 2 coach. Paste your essay and the AI scores it across all 4 official criteria — Task Response, Coherence & Cohesion, Lexical Resource, and Grammatical Range & Accuracy — then gives you specific errors, strengths, and a Band 8–9 rewrite to learn from.',
+        },
       },
       {
         '@type': 'Question',
         name: 'Is IELTS4Life really free to use?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes! You can start using IELTS4Life completely free without any credit card. New users get 4 free essay submissions to try out all features. No hidden fees, no automatic charges.'
-        }
+          text: 'Yes. No credit card needed. You get 4 free essay submissions the moment you register. Guest users (no account) get 1 free attempt.',
+        },
       },
       {
         '@type': 'Question',
         name: 'How accurate is the AI-powered IELTS scoring?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Our AI is trained on official IELTS band descriptors and thousands of scored essays. It provides band scores that closely align with human IELTS examiners. While it\'s an excellent practice tool, we recommend getting human feedback from certified IELTS examiners before your actual exam.'
-        }
+          text: 'Our AI is trained on official IELTS band descriptors and thousands of scored essays, consistently producing scores that align closely with human examiners. For your actual exam, we recommend a final check with a certified IELTS examiner — but for daily practice and self-correction, the AI is highly effective.',
+        },
       },
       {
         '@type': 'Question',
-        name: 'What kind of feedback do I get on my IELTS essays?',
+        name: 'What feedback do I get on my IELTS essay?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'You receive comprehensive feedback including: (1) Band scores for all 4 IELTS criteria, (2) Overall band score, (3) Specific error identification with explanations, (4) Strengths and weaknesses analysis, (5) Actionable improvement suggestions, and (6) Vocabulary enhancement recommendations.'
-        }
+          text: 'Every submission returns: band scores for all 4 criteria plus overall band, specific errors with severity labels and rewrite suggestions, strengths with quoted evidence, examiner-style comments per criterion, a full Band 8–9 rewrite with a change log, and personalized guidance on what to fix first.',
+        },
       },
       {
         '@type': 'Question',
         name: 'How long does it take to get my essay scored?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Our AI provides instant feedback! Most essays are analyzed and scored within 5 seconds. You\'ll receive your detailed band scores, error analysis, and improvement suggestions immediately after submission.'
-        }
+          text: 'Scoring is instant — results appear within seconds of submitting.',
+        },
       },
       {
         '@type': 'Question',
-        name: 'Can I track my progress over time?',
+        name: 'Does the scoring follow official IELTS band descriptors?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes! Registered users get access to a comprehensive progress dashboard showing band score trends over time, improvement areas, vocabulary growth, and writing patterns. You can visualize your improvement journey with interactive charts and graphs.'
-        }
+          text: 'Yes. The AI scores against the same 4 public band descriptors used by Cambridge and IDP examiners. Scores are rounded to the nearest 0.5 band, exactly as in the real exam.',
+        },
       },
       {
         '@type': 'Question',
-        name: 'Does this follow official IELTS band descriptors?',
+        name: 'Does IELTS4Life work for both Academic and General Training IELTS?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes! Our AI scoring system is built on official IELTS band descriptors published by Cambridge and IDP. We assess essays using the same 4 criteria that human IELTS examiners use: Task Achievement, Coherence and Cohesion, Lexical Resource, and Grammatical Range and Accuracy.'
-        }
+          text: 'Yes. Task 2 is identical across both modules — the prompt style, scoring criteria, and expected essay structure are the same. Our feedback applies equally to both.',
+        },
       },
       {
         '@type': 'Question',
-        name: 'Can I get more free essays after using my quota?',
+        name: 'Can I earn more free essays without paying?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes! We understand that financial constraints shouldn\'t limit your learning. You can earn 2 additional free essays by inviting a friend to join IELTS4Life using your referral code. When your friend signs up with your code, both of you receive 2 bonus essays. You can continue inviting more friends to keep earning free essays and help others improve their IELTS writing!'
-        }
+          text: 'Yes — invite a friend with your referral code. When they sign up, both of you get 2 bonus essays. There is no limit to how many friends you can invite.',
+        },
       },
       {
         '@type': 'Question',
         name: 'Is my essay data private and secure?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes, we take privacy seriously. Your essays are encrypted and stored securely. We never share your writing with third parties. You can delete your essays anytime from your dashboard. All data processing complies with GDPR and data protection regulations.'
-        }
-      }
-    ]
+          text: 'Your essays are stored securely and never shared with third parties. You can delete any essay from your dashboard at any time.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Is IELTS4Life better than Grammarly or ChatGPT for IELTS preparation?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Grammarly only checks grammar — it has no concept of IELTS band scores or examiner criteria. ChatGPT gives general feedback but is not calibrated to official band descriptors. IELTS4Life is purpose-built: every score, error label, and suggestion maps directly to how IELTS examiners evaluate writing.',
+        },
+      },
+    ],
   }
 
   return (
