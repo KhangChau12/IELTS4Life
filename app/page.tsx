@@ -340,10 +340,6 @@ export default async function HomePage() {
       <section className="bg-white py-12 md:py-24">
         <div className="container mx-auto px-4">
           <div className="mb-6 sm:mb-10 md:mb-16 text-center space-y-3 md:space-y-4">
-            <div className="inline-flex items-center gap-2 rounded-full bg-cyan-50 px-4 py-2 text-sm font-semibold text-cyan-700">
-              <Target className="h-4 w-4" />
-              Everything You Need
-            </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-slate-900">
               Comprehensive IELTS Tools
             </h2>
@@ -438,10 +434,7 @@ export default async function HomePage() {
               {/* Left Column: Text */}
               <div className="space-y-6 md:space-y-8">
                 <div className="space-y-4">
-                  <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
-                    <Library className="h-4 w-4" />
-                    Writing Prompts Library
-                  </div>
+
                   <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 leading-tight">
                     Practice with Real{' '}
                     <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">IELTS Prompts</span>
@@ -555,10 +548,7 @@ export default async function HomePage() {
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 to-cyan-50/50 py-12 md:py-24">
         <div className="container relative z-10 mx-auto px-4">
           <div className="mb-6 sm:mb-10 md:mb-16 text-center space-y-3 md:space-y-4">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-cyan-700 shadow-lg">
-              <Zap className="h-4 w-4" />
-              Simple Process
-            </div>
+
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-slate-900">
               How It Works
             </h2>
@@ -643,11 +633,7 @@ export default async function HomePage() {
 
         <div className="container relative z-10 mx-auto px-4 text-center">
           <div className="mx-auto max-w-3xl space-y-5 md:space-y-8">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/20 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm font-medium text-white border border-white/30">
-              <Sparkles className="h-4 w-4" />
-              Start Your Journey Today
-            </div>
+
 
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black leading-tight text-white">
               Ready to Achieve Your

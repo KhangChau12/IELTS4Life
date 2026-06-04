@@ -138,10 +138,7 @@ export function FAQSection() {
       <div className="container relative z-10 mx-auto px-4">
         {/* Header */}
         <div className="mb-6 sm:mb-10 md:mb-16 text-center space-y-3 md:space-y-4">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-cyan-700 shadow-lg">
-            <MessageCircle className="h-4 w-4" />
-            Got Questions?
-          </div>
+
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-slate-900">
             Frequently Asked Questions
           </h2>
