@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import Image from 'next/image'
-import { FileText, TrendingUp, BookOpen, Target, Sparkles, CheckCircle, Zap, ArrowRight, Library, Lightbulb, Timer } from 'lucide-react'
+import { FileText, TrendingUp, BookOpen, Target, Sparkles, CheckCircle, Zap, ArrowRight, Library, Lightbulb, Timer, Wand2, GitCompare, BadgeCheck } from 'lucide-react'
 import { createServerClient } from '@/lib/supabase/server'
 import { FAQSection } from '@/components/home/FAQSection'
 
@@ -348,7 +348,7 @@ export default async function HomePage() {
       <section className="bg-white py-12 md:py-24">
         <div className="container mx-auto px-4">
           <div className="mb-6 sm:mb-10 md:mb-16 text-center space-y-3 md:space-y-4">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-slate-900">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900">
               Comprehensive IELTS Tools
             </h2>
             <p className="mx-auto max-w-2xl text-sm md:text-base lg:text-lg text-slate-600 px-4">
@@ -483,15 +483,6 @@ export default async function HomePage() {
                   </div>
                 </div>
 
-                <div className="pt-2">
-                  <Link href="/write/prompts">
-                    <button className="group inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold px-7 py-3.5 rounded-xl shadow-lg shadow-blue-500/25 hover:scale-[1.02] hover:shadow-blue-500/40 transition-all duration-300">
-                      <Library className="h-5 w-5" />
-                      Browse Prompts
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </button>
-                  </Link>
-                </div>
               </div>
 
               {/* Right Column: Mock Prompt Card */}
@@ -552,97 +543,181 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 to-cyan-50/50 py-12 md:py-24">
-        <div className="container relative z-10 mx-auto px-4">
-          <div className="mb-6 sm:mb-10 md:mb-16 text-center space-y-3 md:space-y-4">
+      {/* Band 8–9 Rewrite Section */}
+      <section className="bg-gradient-to-br from-slate-50 to-violet-50/30 py-12 md:py-24">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-7xl">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16 items-center">
 
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-slate-900">
-              How It Works
-            </h2>
-            <p className="mx-auto max-w-2xl text-sm md:text-base lg:text-lg text-slate-600 px-4">
-              Three simple steps to improve your IELTS writing
-            </p>
-          </div>
+              {/* Left Column: Before / After Mock */}
+              <div className="relative">
+                {/* Glow backdrop */}
+                <div className="absolute inset-0 -z-10 bg-gradient-to-br from-violet-100/60 via-purple-50/40 to-cyan-50/60 rounded-3xl blur-2xl scale-110" />
 
-          <div className="mx-auto max-w-6xl">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-              {/* Step 1 */}
-              <div className="group relative flex flex-col rounded-2xl md:rounded-3xl bg-white p-4 sm:p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 hover:border-cyan-200 hover:-translate-y-1 border-t-4 border-t-cyan-500 overflow-hidden">
-                <p className="text-xs font-bold uppercase tracking-widest text-cyan-500 mb-3">Step 1</p>
-                <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-500 text-2xl font-black text-white shadow-lg shadow-cyan-500/50 mb-5 group-hover:scale-110 transition-transform duration-300">
-                  1
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Submit Your Essay</h3>
-                <p className="text-sm md:text-base leading-relaxed text-slate-600 flex-1">
-                  Choose a prompt from our library or enter your own. Paste your writing and let our AI examiner analyze it using official IELTS band descriptors.
-                </p>
-                <div className="absolute bottom-4 right-4 opacity-[0.07]">
-                  <FileText className="h-20 w-20 text-cyan-600" />
+                <div className="relative space-y-3">
+                  {/* BEFORE card */}
+                  <div className="rounded-2xl border-2 border-red-200/80 bg-gradient-to-br from-red-50/60 to-white shadow-lg overflow-hidden">
+                    <div className="flex items-center gap-2 px-4 py-2.5 bg-red-50 border-b border-red-100">
+                      <div className="h-2.5 w-2.5 rounded-full bg-red-400" />
+                      <span className="text-xs font-semibold text-red-600 uppercase tracking-wider">Your Essay — Band 6.0</span>
+                      <span className="ml-auto text-xs text-red-400">Before</span>
+                    </div>
+                    <div className="px-4 py-3 space-y-1.5">
+                      <p className="text-sm text-slate-700 leading-relaxed">
+                        <span className="bg-red-100 text-red-800 line-through decoration-red-400 rounded px-0.5">Nowadays</span>
+                        {' '}many people think that{' '}
+                        <span className="bg-red-100 text-red-800 line-through decoration-red-400 rounded px-0.5">using</span>
+                        {' '}longer prison sentences is{' '}
+                        <span className="bg-red-100 text-red-800 line-through decoration-red-400 rounded px-0.5">good</span>
+                        {' '}for reducing crime.{' '}
+                        <span className="bg-red-100 text-red-800 line-through decoration-red-400 rounded px-0.5">But</span>
+                        {' '}others believe there are better ways to{' '}
+                        <span className="bg-red-100 text-red-800 line-through decoration-red-400 rounded px-0.5">deal with</span>
+                        {' '}this problem. In my opinion, I think both sides have valid points.
+                      </p>
+                      <p className="text-sm text-slate-700 leading-relaxed">
+                        The first reason why longer sentences can help is that{' '}
+                        <span className="bg-red-100 text-red-800 line-through decoration-red-400 rounded px-0.5">it stops criminals from doing crimes again</span>
+                        . When people are in prison{' '}
+                        <span className="bg-red-100 text-red-800 line-through decoration-red-400 rounded px-0.5">for a long time</span>
+                        , they cannot commit any crimes.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Arrow connector */}
+                  <div className="flex items-center justify-center py-1">
+                    <div className="flex flex-col items-center gap-1">
+                      <div className="flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-500 to-purple-600 px-4 py-1.5 shadow-lg shadow-violet-500/30">
+                        <Wand2 className="h-3.5 w-3.5 text-white" />
+                        <span className="text-xs font-bold text-white">AI Rewrite</span>
+                      </div>
+                      <div className="h-4 w-0.5 bg-gradient-to-b from-purple-400 to-cyan-400" />
+                    </div>
+                  </div>
+
+                  {/* AFTER card */}
+                  <div className="rounded-2xl border-2 border-emerald-200/80 bg-gradient-to-br from-emerald-50/60 to-white shadow-lg overflow-hidden">
+                    <div className="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 border-b border-emerald-100">
+                      <div className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                      <span className="text-xs font-semibold text-emerald-700 uppercase tracking-wider">AI Rewrite — Band 8.5</span>
+                      <span className="ml-auto text-xs text-emerald-500">After</span>
+                    </div>
+                    <div className="px-4 py-3 space-y-1.5">
+                      <p className="text-sm text-slate-700 leading-relaxed">
+                        <span className="bg-emerald-100 text-emerald-800 font-medium rounded px-0.5">In contemporary society</span>
+                        {' '}there is ongoing debate regarding whether{' '}
+                        <span className="bg-emerald-100 text-emerald-800 font-medium rounded px-0.5">imposing</span>
+                        {' '}lengthier custodial sentences constitutes the most{' '}
+                        <span className="bg-emerald-100 text-emerald-800 font-medium rounded px-0.5">efficacious</span>
+                        {' '}approach to curbing criminal activity.{' '}
+                        <span className="bg-emerald-100 text-emerald-800 font-medium rounded px-0.5">While proponents of this view argue for its deterrent effect,</span>
+                        {' '}others contend that rehabilitative measures yield superior outcomes.
+                      </p>
+                      <p className="text-sm text-slate-700 leading-relaxed">
+                        One compelling argument in favour of extended incarceration is its role in{' '}
+                        <span className="bg-emerald-100 text-emerald-800 font-medium rounded px-0.5">incapacitating repeat offenders</span>
+                        . By{' '}
+                        <span className="bg-emerald-100 text-emerald-800 font-medium rounded px-0.5">temporarily removing individuals from society</span>
+                        , the likelihood of reoffending is directly curtailed during the period of imprisonment.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Change log strip */}
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Change Log</p>
+                    <div className="space-y-1.5">
+                      {[
+                        { original: 'Nowadays', improved: 'In contemporary society', reason: 'More formal academic register' },
+                        { original: 'it stops criminals', improved: 'incapacitating repeat offenders', reason: 'Precise academic phrasing' },
+                        { original: 'But', improved: 'While proponents of this view…', reason: 'Cohesive discourse marker' },
+                      ].map((change, i) => (
+                        <div key={i} className="flex items-start gap-2 text-xs">
+                          <BadgeCheck className="h-3.5 w-3.5 text-emerald-500 mt-0.5 flex-shrink-0" />
+                          <span>
+                            <span className="line-through text-red-500">{change.original}</span>
+                            <span className="text-slate-400 mx-1">→</span>
+                            <span className="font-medium text-emerald-700">{change.improved}</span>
+                            <span className="text-slate-400 ml-1">— {change.reason}</span>
+                          </span>
+                        </div>
+                      ))}
+                      <p className="text-xs text-slate-400 pt-1">+ 20 more changes in full rewrite</p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Step 2 */}
-              <div className="group relative flex flex-col rounded-2xl md:rounded-3xl bg-white p-4 sm:p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 hover:border-blue-200 hover:-translate-y-1 border-t-4 border-t-blue-500 overflow-hidden">
-                <p className="text-xs font-bold uppercase tracking-widest text-blue-500 mb-3">Step 2</p>
-                <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-violet-500 text-2xl font-black text-white shadow-lg shadow-blue-500/50 mb-5 group-hover:scale-110 transition-transform duration-300">
-                  2
+              {/* Right Column: Text */}
+              <div className="space-y-6 md:space-y-8">
+                <div className="space-y-4">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 leading-tight">
+                    See Exactly How to{' '}
+                    <span className="bg-gradient-to-r from-violet-600 to-purple-500 bg-clip-text text-transparent">Write Better</span>
+                  </h2>
+                  <p className="text-sm md:text-base lg:text-lg text-slate-600 leading-relaxed max-w-lg">
+                    Every essay gets a full Band 8–9 rewrite — not just a score. See how an examiner-level writer would transform your exact sentences, then study the change log to understand every decision.
+                  </p>
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Get Instant Feedback</h3>
-                <p className="text-sm md:text-base leading-relaxed text-slate-600 flex-1">
-                  Receive detailed scores for all 4 criteria, specific error identification, strength highlights, and expert comments on every area.
-                </p>
-                <div className="absolute bottom-4 right-4 opacity-[0.07]">
-                  <Target className="h-20 w-20 text-blue-600" />
+
+                {/* 3 Feature Bullets */}
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-violet-500/30">
+                      <GitCompare className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-slate-900 mb-0.5">Side-by-side comparison</p>
+                      <p className="text-sm text-slate-600">Your original sentence next to the improved version — every substitution highlighted so you can spot the pattern</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg shadow-blue-500/30">
+                      <BadgeCheck className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-slate-900 mb-0.5">15–30 annotated changes</p>
+                      <p className="text-sm text-slate-600">Each change comes with a one-line explanation: why the original was weak and what the rewrite achieves at Band 8–9 level</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/30">
+                      <TrendingUp className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-slate-900 mb-0.5">Learn, don&apos;t just read</p>
+                      <p className="text-sm text-slate-600">Vocabulary from the rewrite feeds directly into your flashcard deck — study the exact words used in a Band 8–9 context</p>
+                    </div>
+                  </div>
                 </div>
+
               </div>
 
-              {/* Step 3 */}
-              <div className="group relative flex flex-col rounded-2xl md:rounded-3xl bg-white p-4 sm:p-6 md:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 hover:border-emerald-200 hover:-translate-y-1 border-t-4 border-t-emerald-500 overflow-hidden">
-                <p className="text-xs font-bold uppercase tracking-widest text-emerald-500 mb-3">Step 3</p>
-                <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-500 text-2xl font-black text-white shadow-lg shadow-emerald-500/50 mb-5 group-hover:scale-110 transition-transform duration-300">
-                  3
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Learn & Improve</h3>
-                <p className="text-sm md:text-base leading-relaxed text-slate-600 flex-1">
-                  Track your progress over time, build vocabulary with AI suggestions, and use smart flashcards and quizzes to reinforce what you've learned.
-                </p>
-                <div className="absolute bottom-4 right-4 opacity-[0.07]">
-                  <TrendingUp className="h-20 w-20 text-emerald-600" />
-                </div>
-              </div>
             </div>
           </div>
         </div>
-
-        {/* Background decoration */}
-        <div className="absolute top-20 right-20 h-64 w-64 rounded-full bg-gradient-to-br from-cyan-200/30 to-blue-200/30 blur-3xl" />
-        <div className="absolute bottom-20 left-20 h-64 w-64 rounded-full bg-gradient-to-br from-sky-200/30 to-cyan-200/30 blur-3xl" />
       </section>
 
-      {/* CTA Section - Enhanced with more visual elements */}
+      {/* FAQ Section */}
+      <FAQSection />
+
+      {/* CTA Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-cyan-500 via-blue-500 to-cyan-600 py-12 md:py-24">
         {/* Background decorations */}
         <div className="absolute inset-0 overflow-hidden">
-          {/* Large gradient orbs */}
           <div className="absolute -left-20 top-20 h-96 w-96 rounded-full bg-white/10 blur-3xl animate-pulse" />
           <div className="absolute -right-20 bottom-20 h-96 w-96 rounded-full bg-cyan-300/10 blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[32rem] w-[32rem] rounded-full bg-white/5 blur-3xl" />
-
-          {/* Floating shapes */}
           <div className="absolute top-1/4 left-1/4 h-4 w-4 rounded-full bg-white/30 animate-float" />
           <div className="absolute top-1/3 right-1/3 h-3 w-3 rounded-full bg-cyan-200/40 animate-float" style={{ animationDelay: '0.5s' }} />
           <div className="absolute bottom-1/3 left-1/2 h-5 w-5 rounded-full bg-white/20 animate-float" style={{ animationDelay: '1.5s' }} />
           <div className="absolute top-2/3 right-1/4 h-3 w-3 rounded-full bg-cyan-300/30 animate-float" style={{ animationDelay: '2s' }} />
-
-          {/* Grid pattern overlay */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,#000_60%,transparent_100%)]" />
         </div>
 
         <div className="container relative z-10 mx-auto px-4 text-center">
           <div className="mx-auto max-w-3xl space-y-5 md:space-y-8">
-
-
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black leading-tight text-white">
               Ready to Achieve Your
               <br />
@@ -663,8 +738,6 @@ export default async function HomePage() {
                 </Button>
               </Link>
             </div>
-
-            {/* Trust indicators */}
             <div className="flex flex-wrap items-center justify-center gap-3 md:gap-6 pt-2 md:pt-4 text-white/90">
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-4 md:h-5 w-4 md:w-5 text-cyan-200" />
@@ -682,9 +755,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* FAQ Section */}
-      <FAQSection />
     </div>
   )
 }

@@ -1,8 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
 import {
   Accordion,
   AccordionContent,
@@ -17,7 +15,6 @@ interface FAQItem {
 }
 
 const TAGS = [
-  { value: 'all', label: 'All' },
   { value: 'general', label: 'Getting Started' },
   { value: 'features', label: 'Features' },
   { value: 'privacy', label: 'Privacy & Quotas' },
@@ -155,9 +152,9 @@ const faqs: FAQItem[] = [
 ]
 
 export function FAQSection() {
-  const [activeTag, setActiveTag] = useState<string>('all')
+  const [activeTag, setActiveTag] = useState<string>('general')
 
-  const filtered = activeTag === 'all' ? faqs : faqs.filter((f) => f.tag === activeTag)
+  const filtered = faqs.filter((f) => f.tag === activeTag)
 
   return (
     <section className="relative overflow-hidden bg-white py-12 md:py-24">
@@ -209,19 +206,6 @@ export function FAQSection() {
           </Accordion>
         </div>
 
-        {/* Bottom CTA */}
-        <div className="mt-14 md:mt-16 text-center">
-          <p className="text-sm text-slate-500 mb-4">
-            Still have questions? Start with a free essay and see for yourself.
-          </p>
-          <Link
-            href="/register"
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-500/25 hover:from-blue-700 hover:to-cyan-700 hover:scale-[1.02] transition-all"
-          >
-            Get Started Free
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
       </div>
     </section>
   )
