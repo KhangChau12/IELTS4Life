@@ -78,7 +78,7 @@ export default async function HomePage() {
         name: 'Is IELTS4Life really free to use?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes! You can start using IELTS4Life completely free without any credit card. New users get 6 free essay submissions to try out all features. No hidden fees, no automatic charges.'
+          text: 'Yes! You can start using IELTS4Life completely free without any credit card. New users get 4 free essay submissions to try out all features. No hidden fees, no automatic charges.'
         }
       },
       {
@@ -126,7 +126,7 @@ export default async function HomePage() {
         name: 'Can I get more free essays after using my quota?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes! We understand that financial constraints shouldn\'t limit your learning. You can earn 6 additional free essays by inviting a friend to join IELTS4Life using your referral code. When your friend signs up with your code, both of you receive 6 bonus essays. You can continue inviting more friends to keep earning free essays and help others improve their IELTS writing!'
+          text: 'Yes! We understand that financial constraints shouldn\'t limit your learning. You can earn 2 additional free essays by inviting a friend to join IELTS4Life using your referral code. When your friend signs up with your code, both of you receive 2 bonus essays. You can continue inviting more friends to keep earning free essays and help others improve their IELTS writing!'
         }
       },
       {
@@ -357,70 +357,46 @@ export default async function HomePage() {
             {/* Left: Feature Cards (35%) */}
             <div className="grid gap-4 sm:gap-6">
               {/* Feature 1 */}
-              <Card className="group border-0 bg-gradient-to-br from-white to-cyan-50/30 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-                <CardHeader className="space-y-3 p-4 md:p-6">
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <div className="flex h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/50 group-hover:scale-110 transition-transform duration-300">
-                      <FileText className="h-6 w-6 text-white" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-lg font-bold text-slate-900 mb-2">AI Essay Scoring</CardTitle>
-                      <CardDescription className="text-sm text-slate-600 leading-relaxed">
-                        Get detailed band scores for all 4 IELTS criteria with authentic examiner-level assessment
-                      </CardDescription>
-                    </div>
-                  </div>
+              <Card className="group border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-br from-white to-cyan-50/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                <FileText className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
+                <CardHeader className="relative z-10 p-4 md:p-6">
+                  <CardTitle className="text-lg font-bold text-slate-900 mb-2">AI Essay Scoring</CardTitle>
+                  <CardDescription className="text-sm text-slate-600 leading-relaxed">
+                    Get detailed band scores for all 4 IELTS criteria with authentic examiner-level assessment
+                  </CardDescription>
                 </CardHeader>
               </Card>
 
               {/* Feature 2 */}
-              <Card className="group border-0 bg-gradient-to-br from-white to-blue-50/30 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-                <CardHeader className="space-y-3 p-4 md:p-6">
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <div className="flex h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg shadow-blue-500/50 group-hover:scale-110 transition-transform duration-300">
-                      <Target className="h-6 w-6 text-white" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-lg font-bold text-slate-900 mb-2">Detailed Feedback</CardTitle>
-                      <CardDescription className="text-sm text-slate-600 leading-relaxed">
-                        Receive specific error identification and actionable comments for improvement
-                      </CardDescription>
-                    </div>
-                  </div>
+              <Card className="group border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-br from-white to-blue-50/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                <Target className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
+                <CardHeader className="relative z-10 p-4 md:p-6">
+                  <CardTitle className="text-lg font-bold text-slate-900 mb-2">Detailed Feedback</CardTitle>
+                  <CardDescription className="text-sm text-slate-600 leading-relaxed">
+                    Receive specific error identification and actionable comments for improvement
+                  </CardDescription>
                 </CardHeader>
               </Card>
 
               {/* Feature 3 */}
-              <Card className="group border-0 bg-gradient-to-br from-white to-cyan-50/30 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-                <CardHeader className="space-y-3 p-4 md:p-6">
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <div className="flex h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-teal-500 shadow-lg shadow-cyan-500/50 group-hover:scale-110 transition-transform duration-300">
-                      <BookOpen className="h-6 w-6 text-white" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-lg font-bold text-slate-900 mb-2">Vocabulary Builder</CardTitle>
-                      <CardDescription className="text-sm text-slate-600 leading-relaxed">
-                        Generate C1-C2 paraphrases and topic-specific vocabulary suggestions
-                      </CardDescription>
-                    </div>
-                  </div>
+              <Card className="group border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-br from-white to-cyan-50/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                <BookOpen className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
+                <CardHeader className="relative z-10 p-4 md:p-6">
+                  <CardTitle className="text-lg font-bold text-slate-900 mb-2">Vocabulary Builder</CardTitle>
+                  <CardDescription className="text-sm text-slate-600 leading-relaxed">
+                    Generate C1-C2 paraphrases and topic-specific vocabulary suggestions
+                  </CardDescription>
                 </CardHeader>
               </Card>
 
               {/* Feature 4 */}
-              <Card className="group border-0 bg-gradient-to-br from-white to-sky-50/30 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-                <CardHeader className="space-y-3 p-4 md:p-6">
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <div className="flex h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-cyan-500 shadow-lg shadow-sky-500/50 group-hover:scale-110 transition-transform duration-300">
-                      <TrendingUp className="h-6 w-6 text-white" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-lg font-bold text-slate-900 mb-2">Progress Tracking</CardTitle>
-                      <CardDescription className="text-sm text-slate-600 leading-relaxed">
-                        Visualize improvement with charts and AI-powered insights on writing patterns
-                      </CardDescription>
-                    </div>
-                  </div>
+              <Card className="group border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-br from-white to-sky-50/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                <TrendingUp className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
+                <CardHeader className="relative z-10 p-4 md:p-6">
+                  <CardTitle className="text-lg font-bold text-slate-900 mb-2">Progress Tracking</CardTitle>
+                  <CardDescription className="text-sm text-slate-600 leading-relaxed">
+                    Visualize improvement with charts and AI-powered insights on writing patterns
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </div>
@@ -428,12 +404,7 @@ export default async function HomePage() {
             {/* Right: Video Demo (65%) */}
             <div className="lg:sticky lg:top-8">
               <div className="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-2xl p-4 md:p-6 border-2 border-cyan-200">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600">
-                    <Sparkles className="h-4 w-4 text-white" />
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-900">See It In Action</h3>
-                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-4">See It In Action</h3>
 
                 {/* Video Embed */}
                 <div className="relative aspect-video rounded-xl overflow-hidden shadow-2xl bg-slate-900">
@@ -711,7 +682,7 @@ export default async function HomePage() {
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-4 md:h-5 w-4 md:w-5 text-cyan-200" />
-                <span className="text-xs md:text-sm font-medium">6 free essays</span>
+                <span className="text-xs md:text-sm font-medium">4 free essays</span>
               </div>
             </div>
           </div>

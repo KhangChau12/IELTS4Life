@@ -153,7 +153,7 @@ export async function GET(request: NextRequest) {
               } else {
                 logger.auth('✅ Invited user got +${INVITE_BONUSES.INVITED} essays')
 
-                // Update inviter (inviter gets +6 essays) using SECURITY DEFINER function
+                // Update inviter (inviter gets +2 essays) using SECURITY DEFINER function
                 const { error: inviterUpdateError } = await supabase.rpc('increment_inviter_bonus', {
                   inviter_user_id: inviter.id,
                   bonus_amount: INVITE_BONUSES.INVITER
@@ -250,7 +250,7 @@ export async function GET(request: NextRequest) {
               } else {
                 logger.auth('✅ Invited user got +${INVITE_BONUSES.INVITED} essays')
 
-                // Update inviter (gets +6 essays) using SECURITY DEFINER function
+                // Update inviter (gets +2 essays) using SECURITY DEFINER function
                 const { error: inviterUpdateError } = await supabase.rpc('increment_inviter_bonus', {
                   inviter_user_id: inviter.id,
                   bonus_amount: INVITE_BONUSES.INVITER

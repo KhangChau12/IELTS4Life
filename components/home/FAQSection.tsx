@@ -34,7 +34,7 @@ const faqCategories: FAQCategory[] = [
       },
       {
         question: 'Is IELTS4Life really free to use?',
-        answer: 'Yes! You can start using IELTS4Life completely free without any credit card. New users get 6 free essay submissions to try out all features. No hidden fees, no automatic charges.'
+        answer: 'Yes! You can start using IELTS4Life completely free without any credit card. New users get 4 free essay submissions to try out all features. No hidden fees, no automatic charges.'
       },
       {
         question: 'Do I need to create an account to use the IELTS essay scorer?',
@@ -86,11 +86,11 @@ const faqCategories: FAQCategory[] = [
     faqs: [
       {
         question: 'How many free essays can I submit?',
-        answer: 'New users receive 6 free essay submissions when they create an account. Guest users (without account) can submit 1 essay to try it out. After using your free quota, you can upgrade to a premium plan for unlimited submissions and advanced features.'
+        answer: 'New users receive 4 free essay submissions when they create an account. Guest users (without account) can submit 1 essay to try it out. After using your free quota, you can upgrade to a premium plan for unlimited submissions and advanced features.'
       },
       {
         question: 'Can I get more free essays after using my quota?',
-        answer: 'Yes! We understand that financial constraints shouldn\'t limit your learning. You can earn 6 additional free essays by inviting a friend to join IELTS4Life using your referral code. When your friend signs up with your code, both of you receive 6 bonus essays. You can continue inviting more friends to keep earning free essays and help others improve their IELTS writing!'
+        answer: 'Yes! We understand that financial constraints shouldn\'t limit your learning. You can earn 2 additional free essays by inviting a friend to join IELTS4Life using your referral code. When your friend signs up with your code, both of you receive 2 bonus essays. You can continue inviting more friends to keep earning free essays and help others improve their IELTS writing!'
       },
       {
         question: 'Is my essay data private and secure?',

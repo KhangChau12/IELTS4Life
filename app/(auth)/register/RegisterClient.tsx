@@ -212,7 +212,7 @@ export default function RegisterClient() {
               <div className="flex-shrink-0">
                 <CheckCircle2 className="w-6 h-6 text-cyan-600" />
               </div>
-              <p className="text-lg text-slate-700">Get 6 free essays to start your practice</p>
+              <p className="text-lg text-slate-700">Get 4 free essays to start your practice</p>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex-shrink-0">
