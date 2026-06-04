@@ -4,6 +4,7 @@ import './globals.css'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { createServerClient } from '@/lib/supabase/server'
+import { Analytics } from '@vercel/analytics/next'
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -146,6 +147,7 @@ export default async function RootLayout({
           <main className="flex-1">{children}</main>
           <Footer />
         </div>
+        <Analytics />
       </body>
     </html>
   )

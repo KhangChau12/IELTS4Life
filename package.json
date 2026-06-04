@@ -27,6 +27,7 @@
     "@types/diff": "^7.0.2",
     "@upstash/ratelimit": "^2.0.6",
     "@upstash/redis": "^1.35.6",
+    "@vercel/analytics": "^2.0.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "date-fns": "^3.6.0",
