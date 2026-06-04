@@ -550,7 +550,7 @@ export default async function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16 items-center">
 
               {/* Left Column: Before / After Mock */}
-              <div className="relative">
+              <div className="relative lg:order-first order-last">
                 {/* Glow backdrop */}
                 <div className="absolute inset-0 -z-10 bg-gradient-to-br from-violet-100/60 via-purple-50/40 to-cyan-50/60 rounded-3xl blur-2xl scale-110" />
 
@@ -650,7 +650,7 @@ export default async function HomePage() {
               </div>
 
               {/* Right Column: Text */}
-              <div className="space-y-6 md:space-y-8">
+              <div className="space-y-6 md:space-y-8 order-first lg:order-last">
                 <div className="space-y-4">
                   <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 leading-tight">
                     See Exactly How to{' '}
