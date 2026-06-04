@@ -41,22 +41,19 @@ export function SatisfactionPollModal({ open, onComplete }: SatisfactionPollModa
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isDone, setIsDone] = useState(false)
 
-  async function handleSelect(value: number) {
+  function handleSelect(value: number) {
     if (isSubmitting || isDone) return
     setSelected(value)
     setIsSubmitting(true)
-
-    try {
-      await fetch('/api/user/satisfaction', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ rating: value }),
-      })
-    } catch {
-      // best-effort — don't block the user
-    }
-
     setIsDone(true)
+
+    // fire-and-forget — don't block UI on network
+    fetch('/api/user/satisfaction', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rating: value }),
+    }).catch(() => {})
+
     setTimeout(() => onComplete(), 1400)
   }
 
