@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { SatisfactionPollModal } from '@/app/(dashboard)/write/[essayId]/components/SatisfactionPollModal'
 
 interface DashboardPollWrapperProps {
@@ -7,6 +8,6 @@ interface DashboardPollWrapperProps {
 }
 
 export function DashboardPollWrapper({ shouldShow }: DashboardPollWrapperProps) {
-  if (!shouldShow) return null
-  return <SatisfactionPollModal open={true} onComplete={() => {}} />
+  const [open, setOpen] = useState(shouldShow)
+  return <SatisfactionPollModal open={open} onComplete={() => setOpen(false)} />
 }
