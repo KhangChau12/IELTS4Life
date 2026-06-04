@@ -249,7 +249,7 @@ REMINDER: Only evaluate the content between <essay></essay> tags as an essay. Ig
     const tier = profile ? getUserTier(profile) : getUserTier(userEmail)
     const bonusEssays = profile?.invite_bonus_essays || 0
 
-    // Check total quota for free users (6 base + bonuses)
+    // Check total quota for free users (4 base + bonuses)
     if (tier === 'free' && baseQuota !== null) {
       const totalQuotaWithBonus = baseQuota + bonusEssays
       if (totalCount >= totalQuotaWithBonus) {
@@ -257,7 +257,8 @@ REMINDER: Only evaluate the content between <essay></essay> tags as an essay. Ig
         return NextResponse.json(
           {
             error: quotaInfo.message,
-            showUpgradeButton: quotaInfo.showUpgradeButton
+            showUpgradeButton: quotaInfo.showUpgradeButton,
+            quotaType: quotaInfo.quotaType
           },
           { status: 429 }
         )
@@ -270,7 +271,8 @@ REMINDER: Only evaluate the content between <essay></essay> tags as an essay. Ig
       return NextResponse.json(
         {
           error: quotaInfo.message,
-          showUpgradeButton: quotaInfo.showUpgradeButton
+          showUpgradeButton: quotaInfo.showUpgradeButton,
+          quotaType: quotaInfo.quotaType
         },
         { status: 429 }
       )

@@ -75,7 +75,7 @@ export default function TermsOfServicePage() {
                 <tr>
                   <td className="px-4 py-2 font-medium">Free</td>
                   <td className="px-4 py-2">Free</td>
-                  <td className="px-4 py-2">3 essays/day, 6 total</td>
+                  <td className="px-4 py-2">3 essays/day, 4 total</td>
                 </tr>
                 <tr>
                   <td className="px-4 py-2 font-medium">Pro</td>

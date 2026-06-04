@@ -267,7 +267,7 @@ export default async function SubscriptionPage() {
               <div className="flex items-start gap-3">
                 <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
                 <span className="text-sm text-ocean-700">
-                  <span className="font-semibold">6 essays base</span>
+                  <span className="font-semibold">4 essays base</span>
                   <span className="text-xs text-ocean-500 ml-1">(earn more by inviting friends!)</span>
                 </span>
               </div>

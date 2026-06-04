@@ -70,11 +70,11 @@ export function InviteCard({ inviteCode }: InviteCardProps) {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-ocean-400 mt-0.5">•</span>
-                <span>They get 3 bonus essays instantly</span>
+                <span>They get 2 bonus essays instantly</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-ocean-400 mt-0.5">•</span>
-                <span>You earn 6 bonus essays per signup</span>
+                <span>You earn 2 bonus essays per signup</span>
               </li>
             </ul>
           </div>
@@ -83,7 +83,7 @@ export function InviteCard({ inviteCode }: InviteCardProps) {
           <div className="p-3 bg-gradient-to-r from-ocean-50 to-cyan-50 border border-ocean-200 rounded-lg">
             <p className="text-xs text-ocean-800 font-medium mb-1">Share message:</p>
             <p className="text-xs text-ocean-600 italic">
-              "Try IELTS4Life for AI essay scoring! Use my code {inviteCode} for 3 free bonus essays"
+              "Try IELTS4Life for AI essay scoring! Use my code {inviteCode} for 2 free bonus essays"
             </p>
           </div>
         </div>

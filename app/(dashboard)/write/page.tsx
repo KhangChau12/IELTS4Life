@@ -7,13 +7,13 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Progress } from '@/components/ui/progress'
-import { Loader2, CheckCircle, Clock, Crown, FileText, PenTool, Sparkles } from 'lucide-react'
-import Link from 'next/link'
+import { Loader2, CheckCircle, Clock, FileText, PenTool, Sparkles } from 'lucide-react'
 import { QuotaDisplay } from '@/components/QuotaDisplay'
 import { createClient } from '@/lib/supabase/client'
 import { checkGuestUsage, markGuestUsed } from '@/lib/guest-tracking'
 import { getDeviceFingerprint } from '@/lib/fingerprint'
 import { GuestLimitModal } from '@/components/guest/GuestLimitModal'
+import { QuotaExhaustedModal } from '@/components/guest/QuotaExhaustedModal'
 import { GuestBanner } from '@/components/guest/GuestBanner'
 
 const SAMPLE_PROMPT =
@@ -27,7 +27,8 @@ export default function WritePage() {
   const [error, setError] = useState('')
   const [progress, setProgress] = useState(0)
   const [elapsedTime, setElapsedTime] = useState(0)
-  const [showUpgradeButton, setShowUpgradeButton] = useState(false)
+  const [quotaExhaustedType, setQuotaExhaustedType] = useState<'daily' | 'total' | null>(null)
+  const [lastEssayId, setLastEssayId] = useState<string | undefined>()
   const [isGuest, setIsGuest] = useState(false)
   const [showGuestLimit, setShowGuestLimit] = useState(false)
   const [existingEssayId, setExistingEssayId] = useState<string>()
@@ -203,7 +204,14 @@ export default function WritePage() {
           return
         }
 
-        setShowUpgradeButton(data.showUpgradeButton || false)
+        // Check if it's a quota exhaustion error — show modal instead of inline error
+        if (data.quotaType === 'daily' || data.quotaType === 'total') {
+          setQuotaExhaustedType(data.quotaType)
+          setIsSubmitting(false)
+          setProgress(0)
+          return
+        }
+
         throw new Error(data.error || 'Failed to submit essay')
       }
 
@@ -213,6 +221,7 @@ export default function WritePage() {
           await markGuestUsed(data.essay.id)
         }
 
+        setLastEssayId(data.essay.id)
         clearDraft()
         setProgress(100)
         setTimeout(() => {
@@ -334,9 +343,9 @@ export default function WritePage() {
                 <p className="text-xs text-ocean-400">{autosaveLabel}</p>
               </div>
 
-              {/* Error Display */}
+              {/* Error Display — only for non-quota errors (invalid essay, network, etc.) */}
               {error && (
-                <div className={`p-5 border-2 rounded-xl space-y-4 ${
+                <div className={`p-5 border-2 rounded-xl ${
                   error.includes('valid IELTS')
                     ? 'bg-amber-50 border-amber-200'
                     : 'bg-red-50 border-red-200'
@@ -367,17 +376,6 @@ export default function WritePage() {
                       )}
                     </div>
                   </div>
-                  {showUpgradeButton && (
-                    <Link href="/subscription">
-                      <Button
-                        type="button"
-                        className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white w-full"
-                      >
-                        <Crown className="mr-2 h-4 w-4" />
-                        Learn More About Pro
-                      </Button>
-                    </Link>
-                  )}
                 </div>
               )}
 
@@ -482,6 +480,14 @@ export default function WritePage() {
           open={showGuestLimit}
           onOpenChange={setShowGuestLimit}
           existingEssayId={existingEssayId}
+        />
+
+        {/* Quota Exhausted Modal */}
+        <QuotaExhaustedModal
+          open={quotaExhaustedType !== null}
+          onOpenChange={(open) => { if (!open) setQuotaExhaustedType(null) }}
+          type={quotaExhaustedType ?? 'daily'}
+          lastEssayId={lastEssayId}
         />
       </div>
     </div>

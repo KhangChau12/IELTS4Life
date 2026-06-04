@@ -13,7 +13,7 @@ export function getDailyQuota(email: string): number {
 
 export function getTotalQuota(email: string): number | null {
   if (email.endsWith('@ptnk.edu.vn')) return null
-  return 6
+  return 4
 }
 
 /**
@@ -51,24 +51,27 @@ export function getTierColor(tier: UserTier): string {
 export function getQuotaExhaustedMessage(tier: UserTier, isDaily: boolean): {
   message: string
   showUpgradeButton: boolean
+  quotaType: 'pro_daily' | 'daily' | 'total'
 } {
   if (tier === 'pro') {
-    // Pro user hit daily limit
     return {
       message: "You've written 5 essays today - that's impressive dedication! Take some time to review your new vocabulary and strengthen what you've learned. Come back tomorrow refreshed and ready to continue improving!",
-      showUpgradeButton: false
+      showUpgradeButton: false,
+      quotaType: 'pro_daily'
     }
   }
 
   if (isDaily) {
     return {
       message: "You've reached your daily limit of 3 essays. Come back tomorrow to continue!",
-      showUpgradeButton: true
+      showUpgradeButton: true,
+      quotaType: 'daily'
     }
   }
 
   return {
-    message: "You've used all your free essays! To continue, invite friends to earn +6 essays per successful signup (they get +3 bonus too).",
-    showUpgradeButton: true
+    message: "You've used all your free essays! Invite friends to earn +2 bonus essays each, or upgrade to Pro for unlimited access.",
+    showUpgradeButton: true,
+    quotaType: 'total'
   }
 }

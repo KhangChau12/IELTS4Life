@@ -9,7 +9,7 @@ import { InviteStats } from '@/components/invite/InviteStats'
 export const metadata: Metadata = {
   title: 'Invite Friends & Earn Free Essays | IELTS4Life',
   description:
-    'Share your invite code. Both you and your friend earn 6 bonus IELTS essays when they join.',
+    'Share your invite code. Both you and your friend earn 2 bonus IELTS essays when they join.',
   robots: { index: false, follow: false },
 }
 
@@ -104,7 +104,7 @@ export default async function InvitePage() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-semibold text-green-600">+6 essays</p>
+                    <p className="text-sm font-semibold text-green-600">+2 essays</p>
                     <p className="text-xs text-ocean-600">earned</p>
                   </div>
                 </div>

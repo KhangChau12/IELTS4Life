@@ -55,8 +55,8 @@ export function calculateTotalQuota(baseQuota: number, bonusEssays: number): num
  * Invite bonus amounts
  */
 export const INVITE_BONUSES = {
-  INVITER: 6,  // Person who shares the code gets 6 essays
-  INVITED: 3,  // Person who uses the code gets 3 essays
+  INVITER: 2,  // Person who shares the code gets 2 essays
+  INVITED: 2,  // Person who uses the code gets 2 essays
 } as const
 
 /**

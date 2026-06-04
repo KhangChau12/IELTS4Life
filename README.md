@@ -22,11 +22,11 @@ AI-powered IELTS Writing Task 2 coach. Submit essays, get instant band scores, b
 | Tier | Essays/day | Total | Cost |
 |------|-----------|-------|------|
 | Guest | 1 (device-limited) | 1 | Free |
-| Free | 3 | 6 + referral bonus | Free |
+| Free | 3 | 4 + referral bonus | Free |
 | PTNK | 5 | Unlimited | Free (@ptnk.edu.vn) |
 | Pro | 5 | Unlimited | 100,000 VND/month |
 
-Pro access via subscription (SePay/MB Bank VietQR) or PTNK school email. Essay Packs (+15 essays) also available.
+Pro access via subscription (SePay/MB Bank VietQR) or PTNK school email. Essay Packs (+15 essays) also available. Referral bonus: both referrer and referee earn +2 essays per successful signup.
 
 ## Tech Stack
 
