@@ -1,0 +1,69 @@
+IELTS4Life - Video Tutorial Script
+===================================
+Total Duration: ~3 minutes 30 seconds
+
+---
+
+[SECTION 1: HOOK - 10 seconds]
+
+"Studying for IELTS Writing but not sure where you're going wrong? IELTS4Life gives you detailed AI feedback in seconds - completely free, no sign-up required."
+
+---
+
+[SECTION 2: SUBMITTING AN ESSAY - 40 seconds]
+
+"Head to the Write page, paste your IELTS Task 2 prompt into the first field, then write or paste your essay below. If you don't have a prompt yet, browse our library of hundreds of real IELTS prompts - filtered by topic and question type.
+
+The word counter tracks your progress in real time. Your draft is also auto-saved locally, so nothing gets lost if you close the tab.
+
+When you're ready, hit 'Score My Essay'. Our AI will analyze your writing across all four official IELTS scoring criteria."
+
+---
+
+[SECTION 3: YOUR SCORE BREAKDOWN - 50 seconds]
+
+"Results appear with your overall band score and a radar chart showing all four criteria at a glance: Task Response, Coherence and Cohesion, Lexical Resource, and Grammatical Accuracy.
+
+Switch to the Criteria tab for a deep dive into each one. Every criterion shows a detailed examiner-style comment, a list of your strengths with direct quotes from your essay, and a list of errors - each tagged as Minor, Major, or Critical, with the exact sentence highlighted and a concrete suggestion on how to fix it.
+
+The Improvement tab shows a full Band 8-9 rewrite of your essay. Every change is highlighted with a clear explanation of why it was made. Below that, Detailed Guidance gives you personalized, step-by-step instructions targeting the specific weaknesses in your essay."
+
+---
+
+[SECTION 4: VOCABULARY BUILDER - 35 seconds]
+
+"The Vocab tab builds your word bank automatically - just open it and the AI gets to work.
+
+Paraphrase Vocabulary identifies around 8 basic words in your essay and suggests advanced C1-C2 replacements to strengthen your Lexical Resource score.
+
+Topic Vocabulary generates 8 high-level academic terms relevant to your essay's topic - so you're prepared the next time a similar prompt comes up.
+
+From either list, you can practice with 3D flip flashcards or test yourself with multiple-choice quizzes. Your quiz results are tracked over time so you can see your vocabulary retention improving."
+
+---
+
+[SECTION 5: DASHBOARD & HISTORY - 25 seconds]
+
+"The Dashboard gives you a full picture of your progress: total essays submitted, average band score, and a detailed score chart that tracks all four criteria across every attempt.
+
+The History page archives every essay you've submitted, with filters by score range, date, and vocabulary status. Click any past essay to review its feedback or pick up where you left off with its vocabulary.
+
+You can also invite friends - both of you get extra free essay submissions when they join."
+
+---
+
+[SECTION 6: PLANS - 15 seconds]
+
+"Free accounts get 3 scored essays per day. If you're a student at PTNK, your @ptnk.edu.vn account gets unlimited essays at no cost.
+
+Need more? The Pro plan at 100,000 VND per month removes all daily limits. Or grab an Essay Pack for 50,000 VND to add 15 more submissions anytime."
+
+---
+
+[CLOSING: CALL TO ACTION - 10 seconds]
+
+"Visit ielts4life.com and submit your first essay today - no account needed, no credit card required. Find out exactly what's holding your score back."
+
+---
+
+END OF SCRIPT

@@ -15,6 +15,7 @@ import { getDeviceFingerprint } from '@/lib/fingerprint'
 import { GuestLimitModal } from '@/components/guest/GuestLimitModal'
 import { QuotaExhaustedModal } from '@/components/guest/QuotaExhaustedModal'
 import { GuestBanner } from '@/components/guest/GuestBanner'
+import { SatisfactionPollModal } from '@/app/(dashboard)/write/[essayId]/components/SatisfactionPollModal'
 
 const SAMPLE_PROMPT =
   'Some people believe that schools should focus on academic subjects such as mathematics and science, while others think practical skills like cooking and financial management are more important. Discuss both views and give your opinion.'
@@ -36,6 +37,7 @@ export default function WritePage() {
   const [draftKey, setDraftKey] = useState<string | null>(null)
   const [hasHydratedDraft, setHasHydratedDraft] = useState(false)
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null)
+  const [showPoll, setShowPoll] = useState(false)
 
   // Check if user is guest and if they've used their trial
   useEffect(() => {
@@ -45,6 +47,16 @@ export default function WritePage() {
 
       if (user) {
         setDraftKey(`write-draft:user:${user.id}`)
+
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('total_essays_count, satisfaction_rated_at')
+          .eq('id', user.id)
+          .single()
+
+        if (profile && (profile.total_essays_count ?? 0) >= 1 && !profile.satisfaction_rated_at) {
+          setShowPoll(true)
+        }
         return
       }
 
@@ -474,6 +486,9 @@ export default function WritePage() {
         <p className="mt-4 text-xs text-ocean-400 text-center">
           Essays are evaluated on Task Response, Coherence &amp; Cohesion, Lexical Resource, and Grammatical Accuracy.
         </p>
+
+        {/* Satisfaction Poll */}
+        <SatisfactionPollModal open={showPoll} onComplete={() => setShowPoll(false)} />
 
         {/* Guest Limit Modal */}
         <GuestLimitModal

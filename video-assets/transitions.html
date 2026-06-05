@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IELTS4Life — Section Transitions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Shrikhand&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ocean-50:  #f0f9ff;
+      --ocean-100: #e0f2fe;
+      --ocean-200: #bae6fd;
+      --ocean-300: #7dd3fc;
+      --ocean-400: #38bdf8;
+      --ocean-500: #0ea5e9;
+      --ocean-600: #0284c7;
+      --ocean-700: #0369a1;
+      --ocean-800: #075985;
+      --ocean-900: #0c4a6e;
+      --cyan-200:  #a5f3fc;
+      --cyan-300:  #67e8f9;
+      --cyan-400:  #22d3ee;
+      --cyan-500:  #06b6d4;
+      --cyan-600:  #0891b2;
+      --slate-50:  #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-400: #94a3b8;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-900: #0f172a;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #000;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    /* ── Slide container ──────────────────────────────────────── */
+    .slide {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      overflow: hidden;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* ── Light background — matches homepage hero ─────────────── */
+    .slide-bg {
+      background: linear-gradient(135deg, var(--ocean-50) 0%, #ecfeff 40%, #f0f9ff 70%, #e0f7fe 100%);
+    }
+
+    /* ── Subtle grid — matches homepage grid overlay ─────────── */
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, #e0f2fe 1px, transparent 1px),
+        linear-gradient(to bottom, #e0f2fe 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 70%, transparent 110%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 70%, transparent 110%);
+      pointer-events: none;
+    }
+
+    /* ── Glow blobs — pastel like homepage ───────────────────── */
+    .glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+    .glow-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(34,211,238,0.22) 0%, transparent 70%);
+      top: -180px; right: -150px;
+    }
+    .glow-2 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(56,189,248,0.18) 0%, transparent 70%);
+      bottom: -150px; left: -120px;
+    }
+
+    /* ── Floating dots — matches homepage animated dots ──────── */
+    .dot-float {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: float-anim 4s ease-in-out infinite;
+    }
+    .dot-float:nth-child(1) { width:14px; height:14px; background:rgba(34,211,238,0.35); top:15%; left:20%; animation-delay:0s; }
+    .dot-float:nth-child(2) { width:10px; height:10px; background:rgba(56,189,248,0.35); top:30%; right:22%; animation-delay:0.5s; }
+    .dot-float:nth-child(3) { width:18px; height:18px; background:rgba(14,165,233,0.28); bottom:25%; left:30%; animation-delay:1.5s; }
+    .dot-float:nth-child(4) { width:10px; height:10px; background:rgba(6,182,212,0.3); bottom:35%; right:18%; animation-delay:2s; }
+
+    @keyframes float-anim {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-12px); }
+    }
+
+    /* ── Top accent line ──────────────────────────────────────── */
+    .accent-line {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--cyan-400), var(--ocean-500), transparent);
+    }
+
+    /* ── Watermark icon ───────────────────────────────────────── */
+    .watermark {
+      position: absolute;
+      right: -40px;
+      bottom: -40px;
+      width: 320px;
+      height: 320px;
+      color: var(--ocean-300);
+      opacity: 0.2;
+      transform: rotate(-12deg);
+      filter: drop-shadow(0 0 16px rgba(14,165,233,0.3));
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .watermark-tl {
+      right: auto;
+      bottom: auto;
+      left: -40px;
+      top: -40px;
+    }
+
+    /* ── Section number ───────────────────────────────────────── */
+    .section-number {
+      font-size: clamp(52px, 7vw, 88px);
+      font-weight: 900;
+      line-height: 1;
+      background: linear-gradient(135deg, rgba(14,165,233,0.22), rgba(6,182,212,0.14));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: absolute;
+      left: 48px;
+      top: 40px;
+      user-select: none;
+      letter-spacing: -0.04em;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    /* ── Main content ─────────────────────────────────────────── */
+    .slide-content {
+      position: relative;
+      z-index: 10;
+      text-align: left;
+      width: 560px;
+      max-width: calc(100vw - 120px);
+      flex-shrink: 0;
+    }
+
+    /* Section label — cyan uppercase like homepage */
+    .slide-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--cyan-600);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .slide-label::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--ocean-500), var(--cyan-400));
+      border-radius: 2px;
+    }
+
+    /* Title — dark slate, gradient span like homepage */
+    .slide-title {
+      font-size: clamp(36px, 5.5vw, 64px);
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--slate-900);
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+
+    .slide-title span {
+      background: linear-gradient(135deg, var(--ocean-500), var(--cyan-500));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Description */
+    .slide-desc {
+      font-size: clamp(15px, 1.8vw, 18px);
+      color: var(--slate-600);
+      line-height: 1.65;
+      max-width: 500px;
+      font-weight: 400;
+    }
+
+    /* Divider */
+    .divider {
+      width: 48px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--ocean-500), var(--cyan-400));
+      border-radius: 3px;
+      margin: 24px 0;
+    }
+
+    /* ── Feature bullets (for intro/outro) ───────────────────── */
+    .feature-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: white;
+      border: 1px solid var(--ocean-200);
+      border-radius: 8px;
+      padding: 5px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-700);
+      box-shadow: 0 1px 4px rgba(14,165,233,0.08);
+    }
+
+    .feature-chip svg {
+      stroke: var(--ocean-500);
+    }
+
+    .chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 28px;
+    }
+
+    /* ── Centered slides ──────────────────────────────────────── */
+    .slide-centered .slide-content {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .slide-centered .slide-label::before { display: none; }
+    .slide-centered .slide-label { justify-content: center; }
+    .slide-centered .slide-desc { text-align: center; }
+    .slide-centered .chips-row { justify-content: center; }
+
+    /* ── Logo title ───────────────────────────────────────────── */
+    .logo-text {
+      font-family: 'Shrikhand', -apple-system, sans-serif;
+      font-size: clamp(48px, 7vw, 84px);
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      color: var(--slate-900);
+      margin-bottom: 12px;
+      line-height: 1.05;
+    }
+
+    .logo-text span {
+      background: linear-gradient(135deg, var(--ocean-500), var(--cyan-500));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── CTA button (outro) ───────────────────────────────────── */
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 28px;
+      padding: 14px 32px;
+      background: linear-gradient(135deg, var(--ocean-600), var(--cyan-500));
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      box-shadow: 0 8px 24px rgba(14,165,233,0.3);
+      cursor: default;
+    }
+
+    /* ── Nav controls ─────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      z-index: 100;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--ocean-200);
+      border-radius: 999px;
+      padding: 8px 18px;
+      box-shadow: 0 4px 16px rgba(14,165,233,0.12);
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: none;
+      color: var(--ocean-600);
+      border-radius: 8px;
+      padding: 4px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-btn:hover {
+      background: var(--ocean-100);
+      color: var(--ocean-800);
+    }
+
+    .nav-dots {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .nav-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--ocean-200);
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .nav-dot.active {
+      background: var(--ocean-500);
+      box-shadow: 0 0 6px rgba(14,165,233,0.5);
+      width: 20px;
+      border-radius: 4px;
+    }
+
+    /* ── Slide-in animation ───────────────────────────────────── */
+    @keyframes slide-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide.active .slide-content > * {
+      animation: slide-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .slide.active .slide-content > *:nth-child(1) { animation-delay: 0.05s; }
+    .slide.active .slide-content > *:nth-child(2) { animation-delay: 0.14s; }
+    .slide.active .slide-content > *:nth-child(3) { animation-delay: 0.22s; }
+    .slide.active .slide-content > *:nth-child(4) { animation-delay: 0.30s; }
+    .slide.active .slide-content > *:nth-child(5) { animation-delay: 0.38s; }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SLIDE 0 — Opening / Brand
+  ═══════════════════════════════════════════════════════════════ -->
+  <div class="slide slide-bg slide-centered active" id="slide-0">
+    <div class="accent-line"></div>
+    <div class="grid-bg"></div>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+
+    <!-- Watermark: graduation cap -->
+    <svg class="watermark watermark-tl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+      <path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/>
+      <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+    </svg>
+
+    <div class="slide-content">
+      <div class="logo-text">
+        <span>IELTS</span>4Life
+      </div>
+      <p class="slide-desc" style="font-size:clamp(16px,2vw,21px); margin-top:4px; color:#334155;">
+        AI-powered IELTS Writing coach
+      </p>
+      <div class="divider"></div>
+      <p class="slide-desc">
+        Let's walk through everything the platform can do for you.
+      </p>
+      <div class="chips-row">
+        <span class="feature-chip">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          No sign-up required
+        </span>
+        <span class="feature-chip">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Instant results
+        </span>
+        <span class="feature-chip">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Free to start
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SLIDE 1 — Submitting an Essay
+  ═══════════════════════════════════════════════════════════════ -->
+  <div class="slide slide-bg" id="slide-1">
+    <div class="accent-line"></div>
+    <div class="grid-bg"></div>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+
+    <!-- Watermark: edit/pen -->
+    <svg class="watermark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+    </svg>
+
+    <div class="section-number">01</div>
+
+    <div class="slide-content">
+      <div class="slide-label">Section 1</div>
+      <h1 class="slide-title">Submitting<br>an <span>Essay</span></h1>
+      <div class="divider"></div>
+      <p class="slide-desc">Write or paste your essay, pick a prompt from the library, and get scored in seconds.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SLIDE 2 — Score Breakdown
+  ═══════════════════════════════════════════════════════════════ -->
+  <div class="slide slide-bg" id="slide-2">
+    <div class="accent-line"></div>
+    <div class="grid-bg"></div>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+
+    <!-- Watermark: bar chart -->
+    <svg class="watermark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+      <line x1="18" y1="20" x2="18" y2="10"/>
+      <line x1="12" y1="20" x2="12" y2="4"/>
+      <line x1="6"  y1="20" x2="6"  y2="14"/>
+      <line x1="2"  y1="20" x2="22" y2="20"/>
+    </svg>
+
+    <div class="section-number">02</div>
+
+    <div class="slide-content">
+      <div class="slide-label">Section 2</div>
+      <h1 class="slide-title">Your Score<br><span>Breakdown</span></h1>
+      <div class="divider"></div>
+      <p class="slide-desc">Radar chart, per-criterion errors with severity tags, strengths, and a full examiner-style comment for each of the four IELTS criteria.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SLIDE 3 — Essay Improvement
+  ═══════════════════════════════════════════════════════════════ -->
+  <div class="slide slide-bg" id="slide-3">
+    <div class="accent-line"></div>
+    <div class="grid-bg"></div>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+
+    <!-- Watermark: sparkles -->
+    <svg class="watermark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+      <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"/>
+      <path d="M5 17l.75 2.25L8 20l-2.25.75L5 23l-.75-2.25L2 20l2.25-.75L5 17z"/>
+      <path d="M19 3l.75 2.25L22 6l-2.25.75L19 9l-.75-2.25L16 6l2.25-.75L19 3z"/>
+    </svg>
+
+    <div class="section-number">03</div>
+
+    <div class="slide-content">
+      <div class="slide-label">Section 3</div>
+      <h1 class="slide-title">Essay<br><span>Improvement</span></h1>
+      <div class="divider"></div>
+      <p class="slide-desc">See a Band 8–9 rewrite of your essay with every change highlighted and explained, plus personalized guidance targeting your specific weaknesses.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SLIDE 4 — Vocabulary Builder
+  ═══════════════════════════════════════════════════════════════ -->
+  <div class="slide slide-bg" id="slide-4">
+    <div class="accent-line"></div>
+    <div class="grid-bg"></div>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+
+    <!-- Watermark: book open -->
+    <svg class="watermark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+    </svg>
+
+    <div class="section-number">04</div>
+
+    <div class="slide-content">
+      <div class="slide-label">Section 4</div>
+      <h1 class="slide-title">Vocabulary<br><span>Builder</span></h1>
+      <div class="divider"></div>
+      <p class="slide-desc">C1–C2 paraphrase suggestions from your own essay, plus topic vocabulary — then practice with flashcards and quizzes.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SLIDE 5 — Dashboard & History
+  ═══════════════════════════════════════════════════════════════ -->
+  <div class="slide slide-bg" id="slide-5">
+    <div class="accent-line"></div>
+    <div class="grid-bg"></div>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+
+    <!-- Watermark: trending up -->
+    <svg class="watermark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+      <polyline points="17 6 23 6 23 12"/>
+    </svg>
+
+    <div class="section-number">05</div>
+
+    <div class="slide-content">
+      <div class="slide-label">Section 5</div>
+      <h1 class="slide-title">Dashboard<br>&amp; <span>History</span></h1>
+      <div class="divider"></div>
+      <p class="slide-desc">Track your score progress across all four criteria, browse your full essay archive, and earn bonus submissions by inviting friends.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SLIDE 6 — Plans
+  ═══════════════════════════════════════════════════════════════ -->
+  <div class="slide slide-bg" id="slide-6">
+    <div class="accent-line"></div>
+    <div class="grid-bg"></div>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+
+    <!-- Watermark: crown/star -->
+    <svg class="watermark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+    </svg>
+
+    <div class="section-number">06</div>
+
+    <div class="slide-content">
+      <div class="slide-label">Section 6</div>
+      <h1 class="slide-title">Free, Pro<br>&amp; <span>Essay Packs</span></h1>
+      <div class="divider"></div>
+      <p class="slide-desc">Start free, upgrade to Pro for unlimited daily essays, or top up anytime with an Essay Pack — PTNK students get full access at no cost.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SLIDE 7 — Closing / CTA
+  ═══════════════════════════════════════════════════════════════ -->
+  <div class="slide slide-bg slide-centered" id="slide-7">
+    <div class="accent-line"></div>
+    <div class="grid-bg"></div>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+    <div class="dot-float"></div>
+
+    <svg class="watermark watermark-tl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+      <path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/>
+      <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+    </svg>
+
+    <div class="slide-content">
+      <div class="logo-text" style="font-size:clamp(32px,5vw,62px);">
+        Ready to improve<br>your <span>band score?</span>
+      </div>
+      <div class="divider" style="margin:24px auto;"></div>
+      <p class="slide-desc">
+        Visit <strong style="color:#0284c7;">ielts4life.com</strong> — no sign-up needed, no credit card required.
+      </p>
+      <div class="cta-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Try It Free Now
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       Nav controls
+  ═══════════════════════════════════════════════════════════════ -->
+  <nav class="nav">
+    <button class="nav-btn" id="btn-prev">← Prev</button>
+    <div class="nav-dots" id="nav-dots"></div>
+    <button class="nav-btn" id="btn-next">Next →</button>
+  </nav>
+
+  <script>
+    const TOTAL = 8
+    let current = 0
+
+    const dotsEl = document.getElementById('nav-dots')
+    for (let i = 0; i < TOTAL; i++) {
+      const d = document.createElement('div')
+      d.className = 'nav-dot' + (i === 0 ? ' active' : '')
+      d.addEventListener('click', () => goTo(i))
+      dotsEl.appendChild(d)
+    }
+
+    function goTo(n) {
+      document.getElementById('slide-' + current).classList.remove('active')
+      dotsEl.children[current].classList.remove('active')
+      current = (n + TOTAL) % TOTAL
+      document.getElementById('slide-' + current).classList.add('active')
+      dotsEl.children[current].classList.add('active')
+    }
+
+    document.getElementById('btn-prev').addEventListener('click', () => goTo(current - 1))
+    document.getElementById('btn-next').addEventListener('click', () => goTo(current + 1))
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1)
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(current - 1)
+    })
+  </script>
+</body>
+</html>
