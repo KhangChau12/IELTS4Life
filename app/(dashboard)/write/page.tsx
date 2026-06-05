@@ -48,13 +48,14 @@ export default function WritePage() {
       if (user) {
         setDraftKey(`write-draft:user:${user.id}`)
 
-        const { data: profile } = await supabase
+        const pollCheck = await supabase
           .from('profiles')
           .select('total_essays_count, satisfaction_rated_at')
           .eq('id', user.id)
           .single()
 
-        if (profile && (profile.total_essays_count ?? 0) >= 1 && !profile.satisfaction_rated_at) {
+        const p = pollCheck.data as { total_essays_count: number; satisfaction_rated_at: string | null } | null
+        if (p && (p.total_essays_count ?? 0) >= 1 && !p.satisfaction_rated_at) {
           setShowPoll(true)
         }
         return
