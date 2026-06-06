@@ -83,7 +83,7 @@ export function Header({ user }: HeaderProps) {
   const isPro = user?.email.endsWith('@ptnk.edu.vn') || false
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-ocean-100 bg-sky-50/90 backdrop-blur-md shadow-sm">
+    <header className="sticky top-0 z-50 w-full border-b border-ocean-200 bg-sky-100/70 backdrop-blur-xl shadow-sm">
       <div className="container mx-auto relative flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center">
@@ -97,14 +97,10 @@ export function Header({ user }: HeaderProps) {
         <TooltipProvider>
           <nav className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center space-x-1">
             {user ? (
-              <Link href="/dashboard">
-                <Button
-                  variant={isActive('/dashboard') ? 'secondary' : 'ghost'}
-                  className={isActive('/dashboard') ? 'text-ocean-700 bg-ocean-50' : 'text-slate-600 hover:text-ocean-700 hover:bg-ocean-50'}
-                >
-                  <Home className="mr-2 h-4 w-4" />
-                  Dashboard
-                </Button>
+              <Link href="/dashboard" className={`relative flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors rounded-md hover:bg-ocean-50 hover:text-ocean-700 ${isActive('/dashboard') ? 'text-ocean-700' : 'text-slate-600'} group`}>
+                <Home className="h-4 w-4" />
+                Dashboard
+                <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full transition-all duration-200 ${isActive('/dashboard') ? 'w-4/5' : 'w-0 group-hover:w-1/2'}`} />
               </Link>
             ) : (
               <Tooltip>
@@ -126,35 +122,23 @@ export function Header({ user }: HeaderProps) {
               </Tooltip>
             )}
 
-            <Link href="/write">
-              <Button
-                variant={isActive('/write') ? 'secondary' : 'ghost'}
-                className={isActive('/write') ? 'text-ocean-700 bg-ocean-50' : 'text-slate-600 hover:text-ocean-700 hover:bg-ocean-50'}
-              >
-                <FileText className="mr-2 h-4 w-4" />
-                Score Essay
-              </Button>
+            <Link href="/write" className={`relative flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors rounded-md hover:bg-ocean-50 hover:text-ocean-700 ${isActive('/write') ? 'text-ocean-700' : 'text-slate-600'} group`}>
+              <FileText className="h-4 w-4" />
+              Score Essay
+              <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full transition-all duration-200 ${isActive('/write') ? 'w-4/5' : 'w-0 group-hover:w-1/2'}`} />
             </Link>
 
-            <Link href="/write/prompts">
-              <Button
-                variant={pathname.startsWith('/write/prompts') ? 'secondary' : 'ghost'}
-                className={pathname.startsWith('/write/prompts') ? 'text-ocean-700 bg-ocean-50' : 'text-slate-600 hover:text-ocean-700 hover:bg-ocean-50'}
-              >
-                <PenTool className="mr-2 h-4 w-4" />
-                Write
-              </Button>
+            <Link href="/write/prompts" className={`relative flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors rounded-md hover:bg-ocean-50 hover:text-ocean-700 ${pathname.startsWith('/write/prompts') ? 'text-ocean-700' : 'text-slate-600'} group`}>
+              <PenTool className="h-4 w-4" />
+              Write
+              <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full transition-all duration-200 ${pathname.startsWith('/write/prompts') ? 'w-4/5' : 'w-0 group-hover:w-1/2'}`} />
             </Link>
 
             {user ? (
-              <Link href="/history">
-                <Button
-                  variant={isActive('/history') ? 'secondary' : 'ghost'}
-                  className={isActive('/history') ? 'text-ocean-700 bg-ocean-50' : 'text-slate-600 hover:text-ocean-700 hover:bg-ocean-50'}
-                >
-                  <History className="mr-2 h-4 w-4" />
-                  History
-                </Button>
+              <Link href="/history" className={`relative flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors rounded-md hover:bg-ocean-50 hover:text-ocean-700 ${isActive('/history') ? 'text-ocean-700' : 'text-slate-600'} group`}>
+                <History className="h-4 w-4" />
+                History
+                <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full transition-all duration-200 ${isActive('/history') ? 'w-4/5' : 'w-0 group-hover:w-1/2'}`} />
               </Link>
             ) : (
               <Tooltip>
