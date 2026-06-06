@@ -164,7 +164,7 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(videoJsonLd) }}
       />
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-sky-50 via-cyan-50 to-blue-50 py-6 sm:py-8 md:py-12 lg:py-16">
+      <section className="relative overflow-hidden bg-gradient-to-br from-sky-50 via-cyan-50 to-blue-50 pt-12 pb-8 sm:py-10 md:py-12 lg:py-16">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-[200px] -right-[200px] h-[800px] w-[800px] rounded-full bg-gradient-to-br from-cyan-400/30 to-blue-500/30 blur-3xl opacity-50" />
@@ -177,66 +177,71 @@ export default async function HomePage() {
 
         <div className="container relative z-10 mx-auto px-4">
           <div className="mx-auto max-w-7xl">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-0 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-0 items-center">
 
               {/* Left Column - Text */}
-              <div className="space-y-4 md:space-y-6 text-center lg:text-left z-20">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-tight tracking-tight shadow-sm" style={{ fontFamily: 'var(--font-shrikhand)' }}>
+              <div className="space-y-5 md:space-y-6 text-center lg:text-left z-20">
+                <h1 className="text-5xl sm:text-6xl md:text-5xl lg:text-6xl xl:text-7xl leading-none tracking-tight" style={{ fontFamily: 'var(--font-shrikhand)' }}>
                   <span className="bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-600 bg-clip-text text-transparent">IELTS</span>
                   <span className="text-slate-900">4LIFE</span>
                 </h1>
 
-                <p className="max-w-md text-base sm:text-lg md:text-xl leading-relaxed text-slate-700 mx-auto lg:mx-0 font-medium">
-                  Instant band scores, detailed feedback, and vocabulary tools to help you achieve your target IELTS Writing score.
+                <p className="max-w-md text-base sm:text-lg md:text-xl leading-relaxed text-slate-600 mx-auto lg:mx-0">
+                  AI coach for IELTS Writing Task 2 — instant band scores, detailed feedback, and vocabulary tools.
                 </p>
 
                 {/* CTA Buttons for guests */}
                 {!user && (
-                  <div className="flex flex-col items-center lg:items-start gap-4 pt-4">
-                    <div className="flex flex-col items-center lg:items-start gap-3 max-w-sm w-full">
-                      <Link href="/write" className="w-full">
-                        <Button
-                          size="default"
-                          className="group relative w-full h-auto px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-xl shadow-blue-500/25 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 rounded-2xl text-base font-bold overflow-hidden"
-                        >
-                          {/* Shine effect overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
-                          <span className="relative flex items-center gap-3">
-                            <Sparkles className="w-4 h-4 text-blue-100" />
-                            Try Essay Scoring
-                            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 text-blue-100" />
-                          </span>
-                        </Button>
-                      </Link>
+                  <div className="flex flex-col items-center lg:items-start gap-3 pt-1 md:pt-2">
+                    {/* Primary CTA — inline/auto width, centered on mobile */}
+                    <Link href="/write">
+                      <Button
+                        size="default"
+                        className="group relative h-auto px-7 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-lg shadow-blue-500/20 transition-all hover:scale-[1.02] rounded-xl text-base font-bold overflow-hidden"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                        <span className="relative flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-blue-100" />
+                          Try Essay Scoring — Free
+                        </span>
+                      </Button>
+                    </Link>
 
-                      <Link href="/write/prompts" className="w-full">
-                        <Button
-                          size="default"
-                          variant="outline"
-                          className="group w-full h-auto px-5 py-3 border-2 border-slate-300 hover:border-cyan-400 text-slate-700 hover:text-cyan-700 hover:bg-cyan-50 bg-white/80 rounded-2xl text-sm font-semibold transition-all"
-                        >
-                          <Library className="w-4 h-4 mr-2" />
-                          Browse Prompts
-                          <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-                        </Button>
-                      </Link>
-                    </div>
+                    {/* Secondary CTA — text link */}
+                    <Link
+                      href="/write/prompts"
+                      className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-cyan-600 transition-colors font-medium"
+                    >
+                      <Library className="w-3.5 h-3.5" />
+                      Browse prompt library
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
 
-                    <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-sm text-slate-600 font-medium">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-cyan-600" />
-                        <span>No sign-up required</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Zap className="w-4 h-4 text-blue-600" />
-                        <span>Instant results</span>
-                      </div>
-                    </div>
+                    {/* Single clean trust line */}
+                    <p className="text-xs text-slate-400">No sign-up needed · Instant results · 4 free essays</p>
                   </div>
                 )}
               </div>
 
-              {/* Right Column - Screenshot Collage */}
+              {/* Mobile-only: screenshot, clean — no floating badges */}
+              <div className="block md:hidden">
+                <div className="relative mx-auto max-w-[320px]">
+                  <div className="absolute inset-0 -z-10 bg-gradient-to-br from-cyan-200/50 to-blue-300/30 rounded-3xl blur-2xl scale-105" />
+                  <div className="rounded-2xl shadow-xl overflow-hidden border-2 border-white/80 animate-float">
+                    <Image
+                      src="/screenshots/hero-scoring.png"
+                      alt="AI-powered IELTS band scoring"
+                      width={1440}
+                      height={900}
+                      unoptimized
+                      className="w-full h-auto"
+                      priority
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Desktop-only: Screenshot Collage */}
               <div className="relative h-[450px] sm:h-[500px] md:h-[600px] lg:h-[700px] hidden md:block lg:-ml-12">
 
                 {/* 1. Main Dashboard - Center Hub */}
@@ -345,9 +350,9 @@ export default async function HomePage() {
       </section>
 
       {/* Features Section with Video */}
-      <section className="bg-white py-12 md:py-24">
+      <section className="bg-white py-10 md:py-24">
         <div className="container mx-auto px-4">
-          <div className="mb-6 sm:mb-10 md:mb-16 text-center space-y-3 md:space-y-4">
+          <div className="mb-6 sm:mb-10 md:mb-16 text-center space-y-2 md:space-y-4">
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900">
               Comprehensive IELTS Tools
             </h2>
@@ -356,59 +361,13 @@ export default async function HomePage() {
             </p>
           </div>
 
-          {/* Split Layout: Features 35% + Video 65% */}
-          <div className="grid gap-6 lg:gap-8 lg:grid-cols-[35%_65%] items-start">
-            {/* Left: Feature Cards (35%) */}
-            <div className="grid gap-4 sm:gap-6">
-              {/* Feature 1 */}
-              <Card className="group border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-br from-white to-cyan-50/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-                <FileText className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
-                <CardHeader className="relative z-10 p-4 md:p-6">
-                  <CardTitle className="text-lg font-bold text-slate-900 mb-2">AI Essay Scoring</CardTitle>
-                  <CardDescription className="text-sm text-slate-600 leading-relaxed">
-                    Get detailed band scores for all 4 IELTS criteria with authentic examiner-level assessment
-                  </CardDescription>
-                </CardHeader>
-              </Card>
+          {/* Mobile: Video first, then 2×2 grid. Desktop: Feature cards 35% + Video 65% */}
+          <div className="flex flex-col lg:grid lg:gap-8 lg:grid-cols-[35%_65%] lg:items-start gap-6">
 
-              {/* Feature 2 */}
-              <Card className="group border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-br from-white to-blue-50/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-                <Target className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
-                <CardHeader className="relative z-10 p-4 md:p-6">
-                  <CardTitle className="text-lg font-bold text-slate-900 mb-2">Detailed Feedback</CardTitle>
-                  <CardDescription className="text-sm text-slate-600 leading-relaxed">
-                    Receive specific error identification and actionable comments for improvement
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              {/* Feature 3 */}
-              <Card className="group border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-br from-white to-cyan-50/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-                <BookOpen className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
-                <CardHeader className="relative z-10 p-4 md:p-6">
-                  <CardTitle className="text-lg font-bold text-slate-900 mb-2">Vocabulary Builder</CardTitle>
-                  <CardDescription className="text-sm text-slate-600 leading-relaxed">
-                    Generate C1-C2 paraphrases and topic-specific vocabulary suggestions
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              {/* Feature 4 */}
-              <Card className="group border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-br from-white to-sky-50/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-                <TrendingUp className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
-                <CardHeader className="relative z-10 p-4 md:p-6">
-                  <CardTitle className="text-lg font-bold text-slate-900 mb-2">Progress Tracking</CardTitle>
-                  <CardDescription className="text-sm text-slate-600 leading-relaxed">
-                    Visualize improvement with charts and AI-powered insights on writing patterns
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </div>
-
-            {/* Right: Video Demo (65%) */}
-            <div className="lg:sticky lg:top-8">
+            {/* Video - shown first on mobile via order, sticky on desktop */}
+            <div className="order-first lg:order-last lg:sticky lg:top-8">
               <div className="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-2xl p-4 md:p-6 border-2 border-cyan-200">
-                <h3 className="text-lg font-bold text-slate-900 mb-4">See It In Action</h3>
+                <h3 className="text-base md:text-lg font-bold text-slate-900 mb-3 md:mb-4">See It In Action</h3>
 
                 {/* Video Embed */}
                 <div className="relative aspect-video rounded-xl overflow-hidden shadow-2xl bg-slate-900">
@@ -424,24 +383,84 @@ export default async function HomePage() {
                   />
                 </div>
 
-                <p className="text-sm text-slate-600 mt-4 text-center">
+                <p className="text-xs md:text-sm text-slate-600 mt-3 md:mt-4 text-center">
                   Watch how to submit your essay and get instant feedback in 2 minutes
                 </p>
               </div>
             </div>
+
+            {/* Feature Cards - 2×2 grid on mobile, vertical stack on desktop */}
+            <div className="order-last lg:order-first grid grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4 lg:gap-6">
+              {/* Feature 1 */}
+              <Card className="group border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-br from-white to-cyan-50/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                <FileText className="absolute right-2 top-2 h-36 w-36 lg:h-48 lg:w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
+                <CardHeader className="relative z-10 p-3 sm:p-4 md:p-6">
+                  <CardTitle className="text-sm sm:text-base lg:text-lg font-bold text-slate-900 mb-1 lg:mb-2">AI Essay Scoring</CardTitle>
+                  <CardDescription className="text-xs sm:text-sm text-slate-600 leading-relaxed hidden sm:block">
+                    Get detailed band scores for all 4 IELTS criteria with authentic examiner-level assessment
+                  </CardDescription>
+                  <CardDescription className="text-xs text-slate-600 leading-relaxed sm:hidden">
+                    Band scores for all 4 IELTS criteria
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              {/* Feature 2 */}
+              <Card className="group border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-br from-white to-blue-50/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                <Target className="absolute right-2 top-2 h-36 w-36 lg:h-48 lg:w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
+                <CardHeader className="relative z-10 p-3 sm:p-4 md:p-6">
+                  <CardTitle className="text-sm sm:text-base lg:text-lg font-bold text-slate-900 mb-1 lg:mb-2">Detailed Feedback</CardTitle>
+                  <CardDescription className="text-xs sm:text-sm text-slate-600 leading-relaxed hidden sm:block">
+                    Receive specific error identification and actionable comments for improvement
+                  </CardDescription>
+                  <CardDescription className="text-xs text-slate-600 leading-relaxed sm:hidden">
+                    Specific errors with rewrite suggestions
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              {/* Feature 3 */}
+              <Card className="group border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-br from-white to-cyan-50/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                <BookOpen className="absolute right-2 top-2 h-36 w-36 lg:h-48 lg:w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
+                <CardHeader className="relative z-10 p-3 sm:p-4 md:p-6">
+                  <CardTitle className="text-sm sm:text-base lg:text-lg font-bold text-slate-900 mb-1 lg:mb-2">Vocabulary Builder</CardTitle>
+                  <CardDescription className="text-xs sm:text-sm text-slate-600 leading-relaxed hidden sm:block">
+                    Generate C1-C2 paraphrases and topic-specific vocabulary suggestions
+                  </CardDescription>
+                  <CardDescription className="text-xs text-slate-600 leading-relaxed sm:hidden">
+                    C1-C2 vocab from your own essay
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              {/* Feature 4 */}
+              <Card className="group border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-br from-white to-sky-50/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                <TrendingUp className="absolute right-2 top-2 h-36 w-36 lg:h-48 lg:w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
+                <CardHeader className="relative z-10 p-3 sm:p-4 md:p-6">
+                  <CardTitle className="text-sm sm:text-base lg:text-lg font-bold text-slate-900 mb-1 lg:mb-2">Progress Tracking</CardTitle>
+                  <CardDescription className="text-xs sm:text-sm text-slate-600 leading-relaxed hidden sm:block">
+                    Visualize improvement with charts and AI-powered insights on writing patterns
+                  </CardDescription>
+                  <CardDescription className="text-xs text-slate-600 leading-relaxed sm:hidden">
+                    Charts & AI insights on your writing
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </div>
+
           </div>
         </div>
       </section>
 
       {/* Writing Prompts Library Section */}
-      <section className="bg-gradient-to-br from-slate-50 to-cyan-50/30 py-12 md:py-24">
+      <section className="bg-gradient-to-br from-slate-50 to-cyan-50/30 py-10 md:py-24">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-7xl">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
 
               {/* Left Column: Text */}
-              <div className="space-y-6 md:space-y-8">
-                <div className="space-y-4">
+              <div className="space-y-5 md:space-y-8">
+                <div className="space-y-3 md:space-y-4">
 
                   <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 leading-tight">
                     Practice with Real{' '}
@@ -456,29 +475,29 @@ export default async function HomePage() {
                 <div className="space-y-3 sm:space-y-4">
                   <div className="flex items-start gap-3 sm:gap-4">
                     <div className="flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg shadow-blue-500/30">
-                      <BookOpen className="h-5 w-5 text-white" />
+                      <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                     </div>
                     <div>
-                      <p className="font-bold text-slate-900 mb-0.5">Prompt Bank by Topic & Question Type</p>
-                      <p className="text-sm text-slate-600">7 formats including Agree/Disagree, Advantages & Disadvantages, Cause & Solution, and more — filterable by topic with your best score tracked</p>
+                      <p className="font-bold text-slate-900 mb-0.5 text-sm sm:text-base">Prompt Bank by Topic & Question Type</p>
+                      <p className="text-xs sm:text-sm text-slate-600">7 formats including Agree/Disagree, Advantages & Disadvantages, Cause & Solution, and more — filterable by topic with your best score tracked</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3 sm:gap-4">
                     <div className="flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-500 shadow-lg shadow-violet-500/30">
-                      <Lightbulb className="h-5 w-5 text-white" />
+                      <Lightbulb className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                     </div>
                     <div>
-                      <p className="font-bold text-slate-900 mb-0.5">AI Outline Suggestions</p>
-                      <p className="text-sm text-slate-600">Two AI-generated outlines per prompt to help you plan your essay structure before you start writing</p>
+                      <p className="font-bold text-slate-900 mb-0.5 text-sm sm:text-base">AI Outline Suggestions</p>
+                      <p className="text-xs sm:text-sm text-slate-600">Two AI-generated outlines per prompt to help you plan your essay structure before you start writing</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3 sm:gap-4">
                     <div className="flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/30">
-                      <Timer className="h-5 w-5 text-white" />
+                      <Timer className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                     </div>
                     <div>
-                      <p className="font-bold text-slate-900 mb-0.5">Timed Writing Session</p>
-                      <p className="text-sm text-slate-600">Timer starts automatically when you begin writing — drafts auto-save so you never lose your work mid-session</p>
+                      <p className="font-bold text-slate-900 mb-0.5 text-sm sm:text-base">Timed Writing Session</p>
+                      <p className="text-xs sm:text-sm text-slate-600">Timer starts automatically when you begin writing — drafts auto-save so you never lose your work mid-session</p>
                     </div>
                   </div>
                 </div>
@@ -544,7 +563,7 @@ export default async function HomePage() {
       </section>
 
       {/* Band 8–9 Rewrite Section */}
-      <section className="bg-gradient-to-br from-slate-50 to-violet-50/30 py-12 md:py-24">
+      <section className="bg-gradient-to-br from-slate-50 to-violet-50/30 py-10 md:py-24">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-7xl">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16 items-center">
@@ -650,8 +669,8 @@ export default async function HomePage() {
               </div>
 
               {/* Right Column: Text */}
-              <div className="space-y-6 md:space-y-8 order-first lg:order-last">
-                <div className="space-y-4">
+              <div className="space-y-5 md:space-y-8 order-first lg:order-last">
+                <div className="space-y-3 md:space-y-4">
                   <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 leading-tight">
                     See Exactly How to{' '}
                     <span className="bg-gradient-to-r from-violet-600 to-purple-500 bg-clip-text text-transparent">Write Better</span>
@@ -665,29 +684,29 @@ export default async function HomePage() {
                 <div className="space-y-3 sm:space-y-4">
                   <div className="flex items-start gap-3 sm:gap-4">
                     <div className="flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-violet-500/30">
-                      <GitCompare className="h-5 w-5 text-white" />
+                      <GitCompare className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                     </div>
                     <div>
-                      <p className="font-bold text-slate-900 mb-0.5">Side-by-side comparison</p>
-                      <p className="text-sm text-slate-600">Your original sentence next to the improved version — every substitution highlighted so you can spot the pattern</p>
+                      <p className="font-bold text-slate-900 mb-0.5 text-sm sm:text-base">Side-by-side comparison</p>
+                      <p className="text-xs sm:text-sm text-slate-600">Your original sentence next to the improved version — every substitution highlighted so you can spot the pattern</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3 sm:gap-4">
                     <div className="flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg shadow-blue-500/30">
-                      <BadgeCheck className="h-5 w-5 text-white" />
+                      <BadgeCheck className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                     </div>
                     <div>
-                      <p className="font-bold text-slate-900 mb-0.5">15–30 annotated changes</p>
-                      <p className="text-sm text-slate-600">Each change comes with a one-line explanation: why the original was weak and what the rewrite achieves at Band 8–9 level</p>
+                      <p className="font-bold text-slate-900 mb-0.5 text-sm sm:text-base">15–30 annotated changes</p>
+                      <p className="text-xs sm:text-sm text-slate-600">Each change comes with a one-line explanation: why the original was weak and what the rewrite achieves at Band 8–9 level</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3 sm:gap-4">
                     <div className="flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/30">
-                      <TrendingUp className="h-5 w-5 text-white" />
+                      <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                     </div>
                     <div>
-                      <p className="font-bold text-slate-900 mb-0.5">Learn, don&apos;t just read</p>
-                      <p className="text-sm text-slate-600">Vocabulary from the rewrite feeds directly into your flashcard deck — study the exact words used in a Band 8–9 context</p>
+                      <p className="font-bold text-slate-900 mb-0.5 text-sm sm:text-base">Learn, don&apos;t just read</p>
+                      <p className="text-xs sm:text-sm text-slate-600">Vocabulary from the rewrite feeds directly into your flashcard deck — study the exact words used in a Band 8–9 context</p>
                     </div>
                   </div>
                 </div>
@@ -717,8 +736,8 @@ export default async function HomePage() {
         </div>
 
         <div className="container relative z-10 mx-auto px-4 text-center">
-          <div className="mx-auto max-w-3xl space-y-5 md:space-y-8">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black leading-tight text-white">
+          <div className="mx-auto max-w-3xl space-y-4 md:space-y-8">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-black leading-tight text-white">
               Ready to Achieve Your
               <br />
               Target Band Score?
@@ -726,11 +745,11 @@ export default async function HomePage() {
             <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-cyan-50 px-4">
               Start improving your IELTS writing with AI-powered feedback
             </p>
-            <div className="pt-2 md:pt-4">
+            <div className="pt-1 md:pt-4">
               <Link href="/register">
                 <Button
                   size="lg"
-                  className="group relative overflow-hidden bg-white text-cyan-600 hover:bg-cyan-50 hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-white/50 px-5 py-3 sm:px-6 sm:py-4 md:px-10 md:py-7 text-sm sm:text-base md:text-lg font-bold rounded-xl md:rounded-2xl"
+                  className="group relative overflow-hidden bg-white text-cyan-600 hover:bg-cyan-50 hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-white/50 px-7 py-4 sm:px-8 sm:py-4 md:px-10 md:py-7 text-base sm:text-base md:text-lg font-bold rounded-2xl"
                 >
                   <Sparkles className="mr-2 h-4 md:h-5 w-4 md:w-5" />
                   Get Started Free
@@ -738,18 +757,18 @@ export default async function HomePage() {
                 </Button>
               </Link>
             </div>
-            <div className="flex flex-wrap items-center justify-center gap-3 md:gap-6 pt-2 md:pt-4 text-white/90">
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 pt-1 md:pt-4 text-white/90">
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-4 md:h-5 w-4 md:w-5 text-cyan-200" />
-                <span className="text-xs md:text-sm font-medium">Free to start</span>
+                <span className="text-sm md:text-sm font-medium">Free to start</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-4 md:h-5 w-4 md:w-5 text-cyan-200" />
-                <span className="text-xs md:text-sm font-medium">No credit card</span>
+                <span className="text-sm md:text-sm font-medium">No credit card</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-4 md:h-5 w-4 md:w-5 text-cyan-200" />
-                <span className="text-xs md:text-sm font-medium">4 free essays</span>
+                <span className="text-sm md:text-sm font-medium">4 free essays</span>
               </div>
             </div>
           </div>

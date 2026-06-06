@@ -157,10 +157,10 @@ export function FAQSection() {
   const filtered = faqs.filter((f) => f.tag === activeTag)
 
   return (
-    <section className="relative overflow-hidden bg-white py-12 md:py-24">
+    <section className="relative overflow-hidden bg-white py-10 md:py-24">
       <div className="container relative z-10 mx-auto px-4">
         {/* Header */}
-        <div className="mb-8 md:mb-12 text-center space-y-3">
+        <div className="mb-6 md:mb-12 text-center space-y-2 md:space-y-3">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900">
             Frequently Asked Questions
           </h2>
@@ -170,12 +170,12 @@ export function FAQSection() {
         </div>
 
         {/* Tag filter */}
-        <div className="mb-8 flex flex-wrap justify-center gap-2">
+        <div className="mb-6 md:mb-8 flex flex-wrap justify-center gap-2">
           {TAGS.map((tag) => (
             <button
               key={tag.value}
               onClick={() => setActiveTag(tag.value)}
-              className={`rounded-full px-4 py-1.5 text-sm font-medium transition-all ${
+              className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
                 activeTag === tag.value
                   ? 'bg-slate-900 text-white shadow-sm'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -195,7 +195,7 @@ export function FAQSection() {
                 value={`${faq.tag}-${i}`}
                 className="rounded-xl border border-slate-200 bg-white px-2 shadow-sm data-[state=open]:border-slate-300 data-[state=open]:shadow-md transition-all"
               >
-                <AccordionTrigger className="px-4 py-4 text-left text-base font-semibold text-slate-900 hover:no-underline [&[data-state=open]]:text-cyan-700">
+                <AccordionTrigger className="px-4 py-3.5 text-left text-sm sm:text-base font-semibold text-slate-900 hover:no-underline [&[data-state=open]]:text-cyan-700">
                   {faq.question}
                 </AccordionTrigger>
                 <AccordionContent className="px-4 pb-4 pt-0 text-sm text-slate-600 leading-relaxed">

@@ -39,7 +39,6 @@ interface HeaderProps {
 export function Header({ user }: HeaderProps) {
   const pathname = usePathname()
   const router = useRouter()
-  // Store in ref to avoid re-renders triggering new client creation
   const supabaseRef = useRef(createClient())
   const [isOpen, setIsOpen] = useState(false)
   const [unreadCount, setUnreadCount] = useState(0)
@@ -70,13 +69,10 @@ export function Header({ user }: HeaderProps) {
 
     fetchUnreadCount()
   // Fetch only when user changes (login/logout), NOT on every navigation.
-  // pathname was here before and caused one API call per route change,
-  // generating hundreds of token refresh requests per session.
   }, [user])
 
   const handleSignOut = async () => {
     await supabaseRef.current.auth.signOut()
-    // Reset singleton client to clear cached auth state
     resetClient()
     router.push('/login')
     router.refresh()
@@ -84,29 +80,27 @@ export function Header({ user }: HeaderProps) {
 
   const isActive = (path: string) => pathname === path
 
-  // Check if user is Pro (PTNK email)
   const isPro = user?.email.endsWith('@ptnk.edu.vn') || false
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-ocean-600 bg-ocean-700 shadow-md">
+    <header className="sticky top-0 z-50 w-full border-b border-ocean-100 bg-sky-50/90 backdrop-blur-md shadow-sm">
       <div className="container mx-auto relative flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <span className="text-2xl md:text-3xl lg:text-4xl font-[family-name:var(--font-shrikhand)]">
-            <span className="text-cyan-400">IELTS</span>
-            <span className="text-white">4Life</span>
+            <span className="bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">IELTS</span>
+            <span className="text-slate-800">4Life</span>
           </span>
         </Link>
 
-        {/* Navigation - Desktop (absolute center of header) */}
+        {/* Navigation - Desktop */}
         <TooltipProvider>
           <nav className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center space-x-1">
-            {/* Dashboard - Show for all, tooltip for guests */}
             {user ? (
               <Link href="/dashboard">
                 <Button
                   variant={isActive('/dashboard') ? 'secondary' : 'ghost'}
-                  className={isActive('/dashboard') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}
+                  className={isActive('/dashboard') ? 'text-ocean-700 bg-ocean-50' : 'text-slate-600 hover:text-ocean-700 hover:bg-ocean-50'}
                 >
                   <Home className="mr-2 h-4 w-4" />
                   Dashboard
@@ -118,7 +112,7 @@ export function Header({ user }: HeaderProps) {
                   <div>
                     <Button
                       variant="ghost"
-                      className="text-white/60 hover:bg-ocean-600 cursor-not-allowed"
+                      className="text-slate-300 cursor-not-allowed"
                       disabled
                     >
                       <Home className="mr-2 h-4 w-4" />
@@ -132,34 +126,31 @@ export function Header({ user }: HeaderProps) {
               </Tooltip>
             )}
 
-            {/* Score Essay */}
             <Link href="/write">
               <Button
                 variant={isActive('/write') ? 'secondary' : 'ghost'}
-                className={isActive('/write') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}
+                className={isActive('/write') ? 'text-ocean-700 bg-ocean-50' : 'text-slate-600 hover:text-ocean-700 hover:bg-ocean-50'}
               >
                 <FileText className="mr-2 h-4 w-4" />
                 Score Essay
               </Button>
             </Link>
 
-            {/* Write */}
             <Link href="/write/prompts">
               <Button
                 variant={pathname.startsWith('/write/prompts') ? 'secondary' : 'ghost'}
-                className={pathname.startsWith('/write/prompts') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}
+                className={pathname.startsWith('/write/prompts') ? 'text-ocean-700 bg-ocean-50' : 'text-slate-600 hover:text-ocean-700 hover:bg-ocean-50'}
               >
                 <PenTool className="mr-2 h-4 w-4" />
                 Write
               </Button>
             </Link>
 
-            {/* History - Show for all, tooltip for guests */}
             {user ? (
               <Link href="/history">
                 <Button
                   variant={isActive('/history') ? 'secondary' : 'ghost'}
-                  className={isActive('/history') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}
+                  className={isActive('/history') ? 'text-ocean-700 bg-ocean-50' : 'text-slate-600 hover:text-ocean-700 hover:bg-ocean-50'}
                 >
                   <History className="mr-2 h-4 w-4" />
                   History
@@ -171,7 +162,7 @@ export function Header({ user }: HeaderProps) {
                   <div>
                     <Button
                       variant="ghost"
-                      className="text-white/60 hover:bg-ocean-600 cursor-not-allowed"
+                      className="text-slate-300 cursor-not-allowed"
                       disabled
                     >
                       <History className="mr-2 h-4 w-4" />
@@ -184,7 +175,6 @@ export function Header({ user }: HeaderProps) {
                 </TooltipContent>
               </Tooltip>
             )}
-
           </nav>
         </TooltipProvider>
 
@@ -192,24 +182,23 @@ export function Header({ user }: HeaderProps) {
         <div className="md:hidden">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-white hover:bg-ocean-600">
+              <Button variant="ghost" size="icon" className="text-slate-600 hover:bg-ocean-50">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[280px] bg-ocean-700 text-white border-l border-ocean-600">
+            <SheetContent side="right" className="w-[280px] bg-white border-l border-slate-100">
               <SheetHeader>
                 <SheetTitle className="text-left text-xl font-[family-name:var(--font-shrikhand)]">
-                  <span className="text-cyan-400">IELTS</span>
-                  <span className="text-white">4Life</span>
+                  <span className="bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">IELTS</span>
+                  <span className="text-slate-800">4Life</span>
                 </SheetTitle>
               </SheetHeader>
-              <nav className="flex flex-col gap-2 mt-6">
-                {/* Dashboard */}
+              <nav className="flex flex-col gap-1 mt-6">
                 {user ? (
                   <Link href="/dashboard" onClick={() => setIsOpen(false)}>
                     <Button
                       variant={isActive('/dashboard') ? 'secondary' : 'ghost'}
-                      className={`w-full justify-start ${isActive('/dashboard') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}`}
+                      className={`w-full justify-start ${isActive('/dashboard') ? 'text-ocean-700 bg-ocean-50' : 'text-slate-600 hover:text-ocean-700 hover:bg-ocean-50'}`}
                     >
                       <Home className="mr-2 h-4 w-4" />
                       Dashboard
@@ -218,7 +207,7 @@ export function Header({ user }: HeaderProps) {
                 ) : (
                   <Button
                     variant="ghost"
-                    className="w-full justify-start text-white/60 hover:bg-ocean-600 cursor-not-allowed"
+                    className="w-full justify-start text-slate-300 cursor-not-allowed"
                     disabled
                   >
                     <Home className="mr-2 h-4 w-4" />
@@ -226,34 +215,31 @@ export function Header({ user }: HeaderProps) {
                   </Button>
                 )}
 
-                {/* Score Essay */}
                 <Link href="/write" onClick={() => setIsOpen(false)}>
                   <Button
                     variant={isActive('/write') ? 'secondary' : 'ghost'}
-                    className={`w-full justify-start ${isActive('/write') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}`}
+                    className={`w-full justify-start ${isActive('/write') ? 'text-ocean-700 bg-ocean-50' : 'text-slate-600 hover:text-ocean-700 hover:bg-ocean-50'}`}
                   >
                     <FileText className="mr-2 h-4 w-4" />
                     Score Essay
                   </Button>
                 </Link>
 
-                {/* Write */}
                 <Link href="/write/prompts" onClick={() => setIsOpen(false)}>
                   <Button
                     variant={pathname.startsWith('/write/prompts') ? 'secondary' : 'ghost'}
-                    className={`w-full justify-start ${pathname.startsWith('/write/prompts') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}`}
+                    className={`w-full justify-start ${pathname.startsWith('/write/prompts') ? 'text-ocean-700 bg-ocean-50' : 'text-slate-600 hover:text-ocean-700 hover:bg-ocean-50'}`}
                   >
                     <PenTool className="mr-2 h-4 w-4" />
                     Write
                   </Button>
                 </Link>
 
-                {/* History */}
                 {user ? (
                   <Link href="/history" onClick={() => setIsOpen(false)}>
                     <Button
                       variant={isActive('/history') ? 'secondary' : 'ghost'}
-                      className={`w-full justify-start ${isActive('/history') ? 'text-ocean-700' : 'text-white hover:bg-ocean-600'}`}
+                      className={`w-full justify-start ${isActive('/history') ? 'text-ocean-700 bg-ocean-50' : 'text-slate-600 hover:text-ocean-700 hover:bg-ocean-50'}`}
                     >
                       <History className="mr-2 h-4 w-4" />
                       History
@@ -262,7 +248,7 @@ export function Header({ user }: HeaderProps) {
                 ) : (
                   <Button
                     variant="ghost"
-                    className="w-full justify-start text-white/60 hover:bg-ocean-600 cursor-not-allowed"
+                    className="w-full justify-start text-slate-300 cursor-not-allowed"
                     disabled
                   >
                     <History className="mr-2 h-4 w-4" />
@@ -270,20 +256,18 @@ export function Header({ user }: HeaderProps) {
                   </Button>
                 )}
 
-                {/* Divider */}
-                <div className="border-t border-ocean-600 my-2" />
+                <div className="border-t border-slate-100 my-2" />
 
-                {/* User Actions */}
                 {user ? (
                   <>
                     <Link href="/subscription" onClick={() => setIsOpen(false)}>
-                      <Button variant="ghost" className="w-full justify-start text-white hover:bg-ocean-600">
+                      <Button variant="ghost" className="w-full justify-start text-slate-600 hover:text-ocean-700 hover:bg-ocean-50">
                         <Crown className="mr-2 h-4 w-4" />
                         Subscription
                       </Button>
                     </Link>
                     <Link href="/notifications" onClick={() => setIsOpen(false)}>
-                      <Button variant="ghost" className="w-full justify-start text-white hover:bg-ocean-600">
+                      <Button variant="ghost" className="w-full justify-start text-slate-600 hover:text-ocean-700 hover:bg-ocean-50">
                         <div className="flex items-center w-full">
                           <Bell className="mr-2 h-4 w-4" />
                           Notifications
@@ -295,7 +279,7 @@ export function Header({ user }: HeaderProps) {
                     </Link>
                     {user && !isPro && (
                       <Link href="/invite" onClick={() => setIsOpen(false)}>
-                        <Button variant="ghost" className="w-full justify-start text-white hover:bg-ocean-600">
+                        <Button variant="ghost" className="w-full justify-start text-slate-600 hover:text-ocean-700 hover:bg-ocean-50">
                           <Users className="mr-2 h-4 w-4" />
                           Invite Friends
                         </Button>
@@ -303,7 +287,7 @@ export function Header({ user }: HeaderProps) {
                     )}
                     {(user?.role === 'admin' || user?.role === 'dev') && (
                       <Link href="/admin" onClick={() => setIsOpen(false)}>
-                        <Button variant="ghost" className="w-full justify-start text-white hover:bg-ocean-600">
+                        <Button variant="ghost" className="w-full justify-start text-slate-600 hover:text-ocean-700 hover:bg-ocean-50">
                           <Settings className="mr-2 h-4 w-4" />
                           Admin Panel
                         </Button>
@@ -311,7 +295,7 @@ export function Header({ user }: HeaderProps) {
                     )}
                     <Button
                       variant="ghost"
-                      className="w-full justify-start text-red-400 hover:bg-ocean-600"
+                      className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50"
                       onClick={() => {
                         handleSignOut()
                         setIsOpen(false)
@@ -324,12 +308,12 @@ export function Header({ user }: HeaderProps) {
                 ) : (
                   <>
                     <Link href="/login" onClick={() => setIsOpen(false)}>
-                      <Button variant="ghost" className="w-full justify-start text-white hover:bg-ocean-600">
+                      <Button variant="ghost" className="w-full justify-start text-slate-600 hover:text-ocean-700 hover:bg-ocean-50">
                         Login
                       </Button>
                     </Link>
                     <Link href="/register" onClick={() => setIsOpen(false)}>
-                      <Button className="w-full justify-start bg-cyan-500 hover:bg-cyan-600">
+                      <Button className="w-full justify-start bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white">
                         Get Started
                       </Button>
                     </Link>
@@ -340,22 +324,22 @@ export function Header({ user }: HeaderProps) {
           </Sheet>
         </div>
 
-        {/* User Menu or Auth Buttons */}
+        {/* User Menu or Auth Buttons - Desktop */}
         <div className="hidden md:flex items-center space-x-2">
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="text-white hover:bg-ocean-600 relative">
+                <Button variant="ghost" className="text-slate-600 hover:text-ocean-700 hover:bg-ocean-50 relative">
                   <User className="h-4 w-4 md:mr-2" />
                   <span className="hidden md:inline max-w-[140px] truncate">{user.full_name || user.email}</span>
                   <ChevronDown className="hidden md:inline h-3.5 w-3.5 ml-1 opacity-70" />
                   {unreadCount > 0 && (
-                    <span className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-red-500 border border-ocean-700" />
+                    <span className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-red-500 border-2 border-white" />
                   )}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem className="text-sm text-slate-600">
+                <DropdownMenuItem className="text-sm text-slate-500">
                   {user.role === 'admin' ? 'Administrator' : 'Student'}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -405,14 +389,13 @@ export function Header({ user }: HeaderProps) {
           ) : (
             <>
               <Link href="/login">
-                <Button variant="ghost" className="text-white hover:bg-ocean-600 text-sm md:text-base px-2 md:px-4">
+                <Button variant="ghost" className="text-slate-600 hover:text-ocean-700 hover:bg-ocean-50 text-sm px-3">
                   Login
                 </Button>
               </Link>
               <Link href="/register">
-                <Button className="bg-cyan-500 hover:bg-cyan-600 text-sm md:text-base px-3 md:px-4">
-                  <span className="hidden sm:inline">Get Started</span>
-                  <span className="sm:hidden">Sign Up</span>
+                <Button className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white text-sm px-4">
+                  Get Started
                 </Button>
               </Link>
             </>
