@@ -63,10 +63,10 @@ export default async function HistoryPage() {
   }))
 
   return (
-    <div className="container mx-auto py-6 md:py-8 px-4">
-      <div className="mb-6 md:mb-8 animate-fadeInUp">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-ocean-700 to-cyan-700 bg-clip-text text-transparent">Essay History</h1>
-        <p className="mt-2 text-sm md:text-base text-slate-600">
+    <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Essay History</h1>
+        <p className="mt-1 text-sm sm:text-base text-slate-500">
           View all your submitted essays and review your progress
         </p>
       </div>

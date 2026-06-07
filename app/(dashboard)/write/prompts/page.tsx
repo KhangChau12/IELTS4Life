@@ -59,10 +59,10 @@ export default async function PromptsPage() {
   const topics: PromptTopic[] = topicsData || []
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="max-w-7xl mx-auto px-4 py-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-ocean-900 mb-2">Write New Essay</h1>
-        <p className="text-ocean-600">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Write New Essay</h1>
+        <p className="mt-1 text-sm sm:text-base text-slate-500">
           Pick a prompt and start practicing — we recommend trying one per day for the best results.
         </p>
         {!user && (

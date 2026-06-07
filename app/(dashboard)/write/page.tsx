@@ -99,6 +99,13 @@ export default function WritePage() {
   }, [draftKey, hasHydratedDraft])
 
   useEffect(() => {
+    const el = essayRef.current
+    if (!el) return
+    el.style.height = 'auto'
+    el.style.height = `${Math.max(el.scrollHeight, 420)}px`
+  }, [essay])
+
+  useEffect(() => {
     if (!draftKey || !hasHydratedDraft || isSubmitting) return
     const timeout = window.setTimeout(() => {
       try {
@@ -262,16 +269,16 @@ export default function WritePage() {
   }
 
   return (
-    <div className="min-h-screen">
-      <div className="max-w-3xl mx-auto px-4">
+    <div>
+      <div className="max-w-7xl mx-auto px-4 py-6">
 
         {isGuest && !showGuestLimit && <GuestBanner />}
 
         {/* Page header */}
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">Score My Essay</h1>
-            <p className="text-sm text-slate-500 mt-0.5">AI-powered IELTS Task 2 feedback in seconds</p>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Score My Essay</h1>
+            <p className="mt-1 text-sm sm:text-base text-slate-500">AI-powered IELTS Task 2 feedback in seconds</p>
           </div>
           {!isGuest && <QuotaDisplay />}
         </div>
@@ -285,7 +292,7 @@ export default function WritePage() {
 
             {/* Header row */}
             <div className="relative z-10 flex items-center justify-between px-5 pt-3.5 pb-2">
-              <span className="text-sm font-semibold text-slate-700">Essay Prompt</span>
+              <span className="text-sm font-bold text-slate-800">Essay Prompt</span>
               <div className="flex items-center gap-2">
                 {!prompt && (
                   <button
@@ -350,7 +357,7 @@ export default function WritePage() {
 
             {/* Toolbar */}
             <div className="relative z-10 flex items-center gap-2 px-5 py-3 border-b border-ocean-100">
-              <span className="text-sm font-semibold text-slate-700 flex-1">Your Essay</span>
+              <span className="text-sm font-bold text-slate-800 flex-1">Your Essay</span>
               {/* Live word count pill */}
               <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all duration-300 ${
                 hasReachedTarget
@@ -371,7 +378,7 @@ export default function WritePage() {
               placeholder="Write or paste your IELTS Task 2 essay here..."
               value={essay}
               onChange={(e) => setEssay(e.target.value)}
-              className="relative z-10 min-h-[420px] border-0 focus:ring-0 focus-visible:ring-0 rounded-none text-[15px] leading-relaxed resize-none bg-transparent px-5 py-4"
+              className="relative z-10 border-0 focus:ring-0 focus-visible:ring-0 rounded-none text-base leading-relaxed resize-none bg-transparent px-5 py-4 overflow-hidden"
               disabled={isSubmitting}
             />
 
