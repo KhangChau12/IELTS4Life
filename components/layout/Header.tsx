@@ -16,7 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { Home, FileText, User, LogOut, Settings, History, Crown, Users, Menu, PenTool, Bell, ChevronDown } from 'lucide-react'
+import { Home, FileText, LogOut, Settings, History, Crown, Users, Menu, PenTool, Bell, ChevronDown } from 'lucide-react'
 import { createClient, resetClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect, useRef } from 'react'
@@ -87,8 +87,8 @@ export function Header({ user }: HeaderProps) {
       <div className="container mx-auto relative flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          <span className="text-2xl md:text-3xl lg:text-4xl font-[family-name:var(--font-shrikhand)]">
-            <span className="bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">IELTS</span>
+          <span className="text-2xl md:text-3xl font-[family-name:var(--font-shrikhand)]">
+            <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">IELTS</span>
             <span className="text-slate-800">4Life</span>
           </span>
         </Link>
@@ -173,7 +173,7 @@ export function Header({ user }: HeaderProps) {
             <SheetContent side="right" className="w-[280px] bg-white border-l border-slate-100">
               <SheetHeader>
                 <SheetTitle className="text-left text-xl font-[family-name:var(--font-shrikhand)]">
-                  <span className="bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">IELTS</span>
+                  <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">IELTS</span>
                   <span className="text-slate-800">4Life</span>
                 </SheetTitle>
               </SheetHeader>
@@ -313,19 +313,27 @@ export function Header({ user }: HeaderProps) {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="text-slate-600 hover:text-ocean-700 hover:bg-ocean-50 relative">
-                  <User className="h-4 w-4 md:mr-2" />
-                  <span className="hidden md:inline max-w-[140px] truncate">{user.full_name || user.email}</span>
-                  <ChevronDown className="hidden md:inline h-3.5 w-3.5 ml-1 opacity-70" />
+                <Button variant="ghost" className="text-slate-600 hover:text-ocean-700 hover:bg-ocean-50 relative flex items-center gap-2 px-2">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-cyan-500 text-white text-xs font-semibold shrink-0 select-none">
+                    {(user.full_name || user.email).charAt(0).toUpperCase()}
+                  </span>
+                  <span className="hidden md:inline max-w-[120px] truncate text-sm">{user.full_name || user.email}</span>
+                  <ChevronDown className="hidden md:inline h-3.5 w-3.5 opacity-50" />
                   {unreadCount > 0 && (
                     <span className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-red-500 border-2 border-white" />
                   )}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem className="text-sm text-slate-500">
-                  {user.role === 'admin' ? 'Administrator' : 'Student'}
-                </DropdownMenuItem>
+              <DropdownMenuContent align="end" className="w-60">
+                <div className="flex items-center gap-3 px-3 py-2.5">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-cyan-500 text-white text-sm font-semibold shrink-0 select-none">
+                    {(user.full_name || user.email).charAt(0).toUpperCase()}
+                  </span>
+                  <div className="min-w-0">
+                    {user.full_name && <p className="text-sm font-medium text-slate-800 truncate">{user.full_name}</p>}
+                    <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                  </div>
+                </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link href="/subscription" className="cursor-pointer">
@@ -378,7 +386,7 @@ export function Header({ user }: HeaderProps) {
                 </Button>
               </Link>
               <Link href="/register">
-                <Button className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white text-sm px-4">
+                <Button className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white text-sm px-4 shadow-sm">
                   Get Started
                 </Button>
               </Link>

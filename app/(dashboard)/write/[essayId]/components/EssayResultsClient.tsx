@@ -273,7 +273,7 @@ export function EssayResultsClient({
 }: EssayResultsClientProps) {
   const [activeTab, setActiveTab] = useState<string>('score')
   const [visitedTabs, setVisitedTabs] = useState<Set<string>>(new Set(['score']))
-  const [expandedCriterion, setExpandedCriterion] = useState<string | null>(null)
+  const [expandedCriteria, setExpandedCriteria] = useState<Set<string>>(new Set())
   const [isImprovementGenerating, setIsImprovementGenerating] = useState(false)
 
   function handleTabChange(value: string) {
@@ -286,7 +286,11 @@ export function EssayResultsClient({
   }
 
   function toggleCriterion(name: string) {
-    setExpandedCriterion(prev => prev === name ? null : name)
+    setExpandedCriteria(prev => {
+      const next = new Set(prev)
+      next.has(name) ? next.delete(name) : next.add(name)
+      return next
+    })
   }
 
   const scoredCriteria = criteria.filter(c => c.score !== null) as Array<CriterionData & { score: number }>
@@ -496,7 +500,7 @@ export function EssayResultsClient({
               key={criterion.name}
               criterion={criterion}
               overallScore={essay.overall_score}
-              isExpanded={expandedCriterion === criterion.name}
+              isExpanded={expandedCriteria.has(criterion.name)}
               onToggle={() => toggleCriterion(criterion.name)}
             />
           ))}
