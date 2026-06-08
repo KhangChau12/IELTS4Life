@@ -34,7 +34,7 @@ export function NextActionBanner({
       title: 'Ready to start?',
       description: 'Write your first essay to unlock AI-powered feedback and vocabulary learning',
       cta: 'Write Your First Essay',
-      href: '/write',
+      href: '/score',
       bgClass: 'from-cyan-500 to-blue-600',
     }
   } else if (essaysWithoutVocab > 0) {
@@ -70,7 +70,7 @@ export function NextActionBanner({
       title: 'Keep improving',
       description: 'Write another essay or practice vocabulary quizzes to advance your skills',
       cta: 'Write Another Essay',
-      href: '/write',
+      href: '/score',
       bgClass: 'from-green-500 to-emerald-600',
     }
   }

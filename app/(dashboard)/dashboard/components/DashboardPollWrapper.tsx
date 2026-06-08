@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { SatisfactionPollModal } from '@/app/(dashboard)/write/[essayId]/components/SatisfactionPollModal'
+import { SatisfactionPollModal } from '@/app/(dashboard)/score/[essayId]/components/SatisfactionPollModal'
 
 interface DashboardPollWrapperProps {
   shouldShow: boolean

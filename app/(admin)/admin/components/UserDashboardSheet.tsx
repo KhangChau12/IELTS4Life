@@ -101,10 +101,11 @@ function getTierLabel(profile: UserProfile): { label: string; className: string 
 
 function getScoreColor(score: number | null): string {
   if (score === null) return 'bg-gray-500'
-  if (score >= 8) return 'bg-gradient-to-r from-amber-500 to-yellow-500'
-  if (score >= 7) return 'bg-green-600'
-  if (score >= 5.5) return 'bg-yellow-600'
-  return 'bg-red-600'
+  if (score >= 8) return 'bg-gradient-to-r from-violet-500 to-purple-600'
+  if (score >= 7) return 'bg-gradient-to-r from-emerald-500 to-green-600'
+  if (score >= 6) return 'bg-gradient-to-r from-ocean-500 to-blue-600'
+  if (score >= 5) return 'bg-gradient-to-r from-amber-500 to-orange-500'
+  return 'bg-gradient-to-r from-red-500 to-rose-600'
 }
 
 function SkeletonBlock({ className }: { className?: string }) {
@@ -158,6 +159,7 @@ export function UserDashboardSheet({ user, onClose }: UserDashboardSheetProps) {
       .then((json: DashboardData) => setData(json))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id])
 
   const chartData =

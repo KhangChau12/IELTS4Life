@@ -96,7 +96,7 @@ export function GuestLimitModal({ open, onOpenChange, existingEssayId }: GuestLi
               </Button>
             </Link>
             {existingEssayId && (
-              <Link href={`/write/${existingEssayId}`} className="flex-1">
+              <Link href={`/score/${existingEssayId}`} className="flex-1">
                 <Button variant="outline" className="w-full border-ocean-300 text-ocean-700 hover:bg-ocean-50">
                   View Your Essay
                 </Button>

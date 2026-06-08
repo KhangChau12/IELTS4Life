@@ -63,10 +63,10 @@ const formatDate = (dateString: string): string =>
 
 function getScoreBg(score: number | null): string {
   if (score === null) return 'bg-slate-400'
-  if (score >= 8) return 'bg-gradient-to-br from-amber-500 to-yellow-500'
-  if (score >= 7) return 'bg-gradient-to-br from-green-500 to-emerald-600'
-  if (score >= 6) return 'bg-gradient-to-br from-ocean-500 to-ocean-600'
-  if (score >= 5) return 'bg-gradient-to-br from-yellow-500 to-amber-600'
+  if (score >= 8) return 'bg-gradient-to-br from-violet-500 to-purple-600'
+  if (score >= 7) return 'bg-gradient-to-br from-emerald-500 to-green-600'
+  if (score >= 6) return 'bg-gradient-to-br from-ocean-500 to-blue-600'
+  if (score >= 5) return 'bg-gradient-to-br from-amber-500 to-orange-500'
   return 'bg-gradient-to-br from-red-500 to-rose-600'
 }
 
@@ -76,11 +76,11 @@ function getScoreStyle(score: number | null): React.CSSProperties {
     boxShadow: `0 4px 14px rgba(${r},${g},${b},0.55), inset 0 1px 0 rgba(255,255,255,0.25)`,
   })
   if (score === null) return glow(148, 163, 184)  // slate
-  if (score >= 8) return glow(245, 158, 11)        // amber
-  if (score >= 7) return glow(34,  197, 94)         // green
+  if (score >= 8) return glow(139, 92,  246)       // violet
+  if (score >= 7) return glow(16,  185, 129)        // emerald
   if (score >= 6) return glow(14,  165, 233)        // ocean/sky
-  if (score >= 5) return glow(234, 179, 8)          // yellow
-  return glow(239, 68, 68)                          // red
+  if (score >= 5) return glow(245, 158, 11)         // amber
+  return glow(239, 68,  68)                         // red
 }
 
 function getScoreLabel(score: number | null): string {
@@ -280,7 +280,7 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
 
                 {/* Icon-only action buttons */}
                 <div className="flex items-center gap-1.5 flex-shrink-0">
-                  <Link href={`/write/${essay.id}`}>
+                  <Link href={`/score/${essay.id}`}>
                     <Button
                       size="sm"
                       variant="outline"
@@ -391,7 +391,7 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
 
                   {/* ── Zone 3: Actions ── */}
                   <div className="flex sm:flex-col gap-2 flex-shrink-0 sm:w-[120px]">
-                    <Link href={`/write/${essay.id}`} className="flex-1 sm:flex-none">
+                    <Link href={`/score/${essay.id}`} className="flex-1 sm:flex-none">
                       <Button
                         size="sm"
                         className="w-full bg-ocean-600 text-white hover:bg-ocean-700 text-xs h-9"

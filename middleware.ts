@@ -66,6 +66,7 @@ export const config = {
      * - /favicon.ico, images, etc. (static assets)
      */
     '/dashboard/:path*',
+    '/score/:path*',
     '/write/:path*',
     '/vocabulary/:path*',
     '/history/:path*',

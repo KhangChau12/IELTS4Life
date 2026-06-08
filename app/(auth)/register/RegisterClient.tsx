@@ -250,7 +250,7 @@ export default function RegisterClient() {
             <div className="flex flex-col gap-4">
               <GoogleAuthButton label="Sign up with Google" />
 
-              <Link href="/write" className="block">
+              <Link href="/score" className="block">
                 <Button variant="outline" className="w-full h-11 border-ocean-200 hover:bg-ocean-50 text-ocean-700">
                   Try as Guest (1 Free Essay)
                 </Button>

@@ -29,7 +29,7 @@ export async function generateMetadata({
     title,
     description,
     robots: { index: false, follow: false },
-    openGraph: { title, description, url: `https://ielts4life.com/write/${params.essayId}` },
+    openGraph: { title, description, url: `https://ielts4life.com/score/${params.essayId}` },
   }
 }
 
@@ -51,7 +51,7 @@ export default async function EssayResultsPage({
     .single()
 
   if (error || !essay) {
-    redirect('/write')
+    redirect('/score')
   }
 
   const isGuest = essay.is_guest === true
@@ -68,7 +68,7 @@ export default async function EssayResultsPage({
       .single()
 
     if (profile?.role !== 'admin') {
-      redirect('/write')
+      redirect('/score')
     }
   }
 

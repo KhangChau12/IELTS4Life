@@ -21,7 +21,7 @@ export default function PromptWritingClient({
   const router = useRouter()
 
   const handleSubmitSuccess = (essayId: string) => {
-    router.push(`/write/${essayId}`)
+    router.push(`/score/${essayId}`)
   }
 
   return (

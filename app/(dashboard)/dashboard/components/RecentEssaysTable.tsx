@@ -14,9 +14,11 @@ interface RecentEssaysTableProps {
 
 function getScoreColor(score: number | null): string {
   if (score === null) return 'bg-gray-500'
-  if (score >= 7) return 'bg-green-600'
-  if (score >= 5.5) return 'bg-yellow-600'
-  return 'bg-red-600'
+  if (score >= 8) return 'bg-gradient-to-r from-violet-500 to-purple-600'
+  if (score >= 7) return 'bg-gradient-to-r from-emerald-500 to-green-600'
+  if (score >= 6) return 'bg-gradient-to-r from-ocean-500 to-blue-600'
+  if (score >= 5) return 'bg-gradient-to-r from-amber-500 to-orange-500'
+  return 'bg-gradient-to-r from-red-500 to-rose-600'
 }
 
 function truncateText(text: string, maxLength: number): string {
@@ -74,7 +76,7 @@ export function RecentEssaysTable({ essays }: RecentEssaysTableProps) {
             <Button
               size="sm"
               variant="outline"
-              onClick={() => router.push(`/write/${essay.id}`)}
+              onClick={() => router.push(`/score/${essay.id}`)}
               className="w-full border-ocean-300 text-ocean-700 hover:bg-ocean-100"
             >
               <Eye className="h-4 w-4 mr-1" />
@@ -137,7 +139,7 @@ export function RecentEssaysTable({ essays }: RecentEssaysTableProps) {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => router.push(`/write/${essay.id}`)}
+                    onClick={() => router.push(`/score/${essay.id}`)}
                     className="border-ocean-300 text-ocean-700 hover:bg-ocean-100"
                   >
                     <Eye className="h-4 w-4 mr-1" />

@@ -52,18 +52,20 @@ interface EssayResultsClientProps {
 
 function getScoreColor(score: number | null): string {
   if (score === null) return 'bg-gray-500'
-  if (score >= 8) return 'bg-gradient-to-r from-amber-500 to-yellow-500'
-  if (score >= 7) return 'bg-green-600'
-  if (score >= 5.5) return 'bg-yellow-600'
-  return 'bg-red-600'
+  if (score >= 8) return 'bg-gradient-to-r from-violet-500 to-purple-600'
+  if (score >= 7) return 'bg-gradient-to-r from-emerald-500 to-green-600'
+  if (score >= 6) return 'bg-gradient-to-r from-ocean-500 to-blue-600'
+  if (score >= 5) return 'bg-gradient-to-r from-amber-500 to-orange-500'
+  return 'bg-gradient-to-r from-red-500 to-rose-600'
 }
 
 function getScoreBarColor(score: number | null): string {
   if (score === null) return 'bg-gray-300'
-  if (score >= 8) return 'bg-gradient-to-r from-amber-400 to-yellow-400'
-  if (score >= 7) return 'bg-green-500'
-  if (score >= 5.5) return 'bg-yellow-500'
-  return 'bg-red-500'
+  if (score >= 8) return 'bg-gradient-to-r from-violet-400 to-purple-500'
+  if (score >= 7) return 'bg-gradient-to-r from-emerald-400 to-green-500'
+  if (score >= 6) return 'bg-gradient-to-r from-ocean-400 to-blue-500'
+  if (score >= 5) return 'bg-gradient-to-r from-amber-400 to-orange-400'
+  return 'bg-gradient-to-r from-red-400 to-rose-500'
 }
 
 function formatCriterionScore(score: number | null, overallScore: number | null): string {

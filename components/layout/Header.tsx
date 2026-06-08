@@ -122,16 +122,16 @@ export function Header({ user }: HeaderProps) {
               </Tooltip>
             )}
 
-            <Link href="/write" className={`relative flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors rounded-md hover:bg-ocean-50 hover:text-ocean-700 ${isActive('/write') ? 'text-ocean-700' : 'text-slate-600'} group`}>
+            <Link href="/score" className={`relative flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors rounded-md hover:bg-ocean-50 hover:text-ocean-700 ${isActive('/score') ? 'text-ocean-700' : 'text-slate-600'} group`}>
               <FileText className="h-4 w-4" />
               Score Essay
-              <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full transition-all duration-200 ${isActive('/write') ? 'w-4/5' : 'w-0 group-hover:w-1/2'}`} />
+              <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full transition-all duration-200 ${isActive('/score') ? 'w-4/5' : 'w-0 group-hover:w-1/2'}`} />
             </Link>
 
-            <Link href="/write/prompts" className={`relative flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors rounded-md hover:bg-ocean-50 hover:text-ocean-700 ${pathname.startsWith('/write/prompts') ? 'text-ocean-700' : 'text-slate-600'} group`}>
+            <Link href="/write" className={`relative flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors rounded-md hover:bg-ocean-50 hover:text-ocean-700 ${pathname.startsWith('/write') ? 'text-ocean-700' : 'text-slate-600'} group`}>
               <PenTool className="h-4 w-4" />
               Write
-              <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full transition-all duration-200 ${pathname.startsWith('/write/prompts') ? 'w-4/5' : 'w-0 group-hover:w-1/2'}`} />
+              <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full transition-all duration-200 ${pathname.startsWith('/write') ? 'w-4/5' : 'w-0 group-hover:w-1/2'}`} />
             </Link>
 
             {user ? (
@@ -199,20 +199,20 @@ export function Header({ user }: HeaderProps) {
                   </Button>
                 )}
 
-                <Link href="/write" onClick={() => setIsOpen(false)}>
+                <Link href="/score" onClick={() => setIsOpen(false)}>
                   <Button
-                    variant={isActive('/write') ? 'secondary' : 'ghost'}
-                    className={`w-full justify-start ${isActive('/write') ? 'text-ocean-700 bg-ocean-50' : 'text-slate-600 hover:text-ocean-700 hover:bg-ocean-50'}`}
+                    variant={isActive('/score') ? 'secondary' : 'ghost'}
+                    className={`w-full justify-start ${isActive('/score') ? 'text-ocean-700 bg-ocean-50' : 'text-slate-600 hover:text-ocean-700 hover:bg-ocean-50'}`}
                   >
                     <FileText className="mr-2 h-4 w-4" />
                     Score Essay
                   </Button>
                 </Link>
 
-                <Link href="/write/prompts" onClick={() => setIsOpen(false)}>
+                <Link href="/write" onClick={() => setIsOpen(false)}>
                   <Button
-                    variant={pathname.startsWith('/write/prompts') ? 'secondary' : 'ghost'}
-                    className={`w-full justify-start ${pathname.startsWith('/write/prompts') ? 'text-ocean-700 bg-ocean-50' : 'text-slate-600 hover:text-ocean-700 hover:bg-ocean-50'}`}
+                    variant={pathname.startsWith('/write') ? 'secondary' : 'ghost'}
+                    className={`w-full justify-start ${pathname.startsWith('/write') ? 'text-ocean-700 bg-ocean-50' : 'text-slate-600 hover:text-ocean-700 hover:bg-ocean-50'}`}
                   >
                     <PenTool className="mr-2 h-4 w-4" />
                     Write

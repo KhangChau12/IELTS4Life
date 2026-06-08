@@ -29,8 +29,8 @@ export default function PromptCard({ prompt, isAuthenticated }: PromptCardProps)
   const hasEssay = !!prompt.user_essay
   const isNew = (Date.now() - new Date(prompt.created_at).getTime()) < 7 * 24 * 60 * 60 * 1000
 
-  const writeHref = `/write/prompts/${prompt.id}`
-  const resultHref = hasEssay ? `/write/${prompt.user_essay!.id}` : null
+  const writeHref = `/write/${prompt.id}`
+  const resultHref = hasEssay ? `/score/${prompt.user_essay!.id}` : null
 
   return (
     <Link href={writeHref} className="block group">

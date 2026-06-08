@@ -38,12 +38,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title,
     description: `Practice IELTS Writing Task 2: "${shortPrompt}" — Get instant AI band score feedback.`,
     alternates: {
-      canonical: `https://ielts4life.com/write/prompts/${promptId}`,
+      canonical: `https://ielts4life.com/write/${promptId}`,
     },
     openGraph: {
       title,
       description: `Practice IELTS Writing Task 2 with AI scoring and outline suggestions.`,
-      url: `https://ielts4life.com/write/prompts/${promptId}`,
+      url: `https://ielts4life.com/write/${promptId}`,
     },
   }
 }
@@ -64,7 +64,7 @@ export default async function PromptWritingPage({ params }: PageProps) {
     .single()
 
   if (promptError || !promptData) {
-    redirect('/write/prompts')
+    redirect('/write')
   }
 
   const prompt: WritingPrompt & { prompt_topics?: { id: string; name: string } } = {
@@ -109,7 +109,7 @@ export default async function PromptWritingPage({ params }: PageProps) {
     educationalLevel: 'Advanced',
     learningResourceType: 'Practice Problem',
     inLanguage: 'en',
-    url: `https://ielts4life.com/write/prompts/${promptId}`,
+    url: `https://ielts4life.com/write/${promptId}`,
     provider: {
       '@type': 'Organization',
       name: 'IELTS4Life',
@@ -131,13 +131,13 @@ export default async function PromptWritingPage({ params }: PageProps) {
         '@type': 'ListItem',
         position: 2,
         name: 'Writing Prompts',
-        item: 'https://ielts4life.com/write/prompts',
+        item: 'https://ielts4life.com/write',
       },
       {
         '@type': 'ListItem',
         position: 3,
         name: topicName ? `${topicName} — Practice Prompt` : 'Write Essay',
-        item: `https://ielts4life.com/write/prompts/${promptId}`,
+        item: `https://ielts4life.com/write/${promptId}`,
       },
     ],
   }
@@ -154,7 +154,7 @@ export default async function PromptWritingPage({ params }: PageProps) {
       />
       <div className="mb-4">
         <nav className="text-sm text-gray-400 mb-2">
-          <a href="/write/prompts" className="hover:text-ocean-600">Prompts</a>
+          <a href="/write" className="hover:text-ocean-600">Prompts</a>
           <span className="mx-2">/</span>
           <span className="text-gray-600">Write Essay</span>
         </nav>

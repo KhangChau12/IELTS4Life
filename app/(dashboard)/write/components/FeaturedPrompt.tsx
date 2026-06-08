@@ -100,7 +100,7 @@ export default function FeaturedPrompt({ prompts, isAuthenticated }: FeaturedPro
         {/* CTA buttons */}
         <div className="flex items-center gap-3">
           <Button asChild size="sm" className="bg-white text-ocean-700 hover:bg-ocean-50 font-semibold shadow-sm">
-            <Link href={isAuthenticated ? `/write/prompts/${featured.id}` : `/login?redirect=/write/prompts/${featured.id}`}>
+            <Link href={isAuthenticated ? `/write/${featured.id}` : `/login?redirect=/write/${featured.id}`}>
               <PenTool className="h-4 w-4 mr-1" />
               {isAuthenticated ? 'Start Writing' : 'Sign in to Write'}
             </Link>

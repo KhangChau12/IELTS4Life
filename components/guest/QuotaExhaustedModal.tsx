@@ -52,7 +52,7 @@ export function QuotaExhaustedModal({ open, onOpenChange, type, lastEssayId }: Q
                 </Button>
               </Link>
               {lastEssayId && (
-                <Link href={`/write/${lastEssayId}`} className="flex-1">
+                <Link href={`/score/${lastEssayId}`} className="flex-1">
                   <Button
                     variant="outline"
                     className="w-full border-ocean-300 text-ocean-700 hover:bg-ocean-50"
@@ -149,7 +149,7 @@ export function QuotaExhaustedModal({ open, onOpenChange, type, lastEssayId }: Q
           {lastEssayId && (
             <div className="text-center">
               <Link
-                href={`/write/${lastEssayId}`}
+                href={`/score/${lastEssayId}`}
                 className="text-xs text-ocean-500 underline underline-offset-2 hover:text-ocean-700"
                 onClick={() => onOpenChange?.(false)}
               >

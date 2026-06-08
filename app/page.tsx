@@ -194,7 +194,7 @@ export default async function HomePage() {
                 {!user && (
                   <div className="flex flex-col items-center lg:items-start gap-3 pt-1 md:pt-2">
                     {/* Primary CTA — inline/auto width, centered on mobile */}
-                    <Link href="/write">
+                    <Link href="/score">
                       <Button
                         size="default"
                         className="group relative h-auto px-7 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-lg shadow-blue-500/20 transition-all hover:scale-[1.02] rounded-xl text-base font-bold overflow-hidden"
@@ -209,7 +209,7 @@ export default async function HomePage() {
 
                     {/* Secondary CTA — text link */}
                     <Link
-                      href="/write/prompts"
+                      href="/write"
                       className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-cyan-600 transition-colors font-medium"
                     >
                       <Library className="w-3.5 h-3.5" />

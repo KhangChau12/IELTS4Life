@@ -219,7 +219,7 @@ export default function OutlinesPanel({ prompt, initialOutlines, isGuest }: Outl
               </p>
             </div>
             <a
-              href={`/login?redirect=/write/prompts/${prompt.id}`}
+              href={`/login?redirect=/write/${prompt.id}`}
               className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-ocean-600 hover:bg-ocean-700 text-white h-9 px-4 py-2 transition-colors"
             >
               Sign In

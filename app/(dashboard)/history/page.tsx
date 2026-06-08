@@ -77,7 +77,7 @@ export default async function HistoryPage() {
             <FileText className="h-12 w-12 md:h-16 md:w-16 mx-auto mb-4 text-ocean-400 opacity-50" />
             <h3 className="text-lg md:text-xl font-semibold text-ocean-800 mb-2">No Essays Yet</h3>
             <p className="text-sm md:text-base text-ocean-600 mb-4 px-4">You haven&apos;t submitted any essays yet. Start writing to see your progress!</p>
-            <Link href="/write">
+            <Link href="/score">
               <Button className="bg-gradient-to-r from-ocean-600 to-cyan-600 hover:from-ocean-700 hover:to-cyan-700 text-white text-sm md:text-base">
                 <FileText className="mr-2 h-4 w-4" />
                 Write Your First Essay

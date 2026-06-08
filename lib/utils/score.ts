@@ -16,8 +16,10 @@ export function calculateOverallScore(scores: {
 }
 
 export function getScoreColor(score: number): string {
-  if (score >= 7) return 'text-green-600'
-  if (score >= 5.5) return 'text-yellow-600'
+  if (score >= 8) return 'text-violet-600'
+  if (score >= 7) return 'text-emerald-600'
+  if (score >= 6) return 'text-ocean-600'
+  if (score >= 5) return 'text-amber-600'
   return 'text-red-600'
 }
 

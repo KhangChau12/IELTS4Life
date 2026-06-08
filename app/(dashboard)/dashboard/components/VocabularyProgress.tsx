@@ -181,7 +181,7 @@ export function VocabularyProgress({
               Submit essays to extract vocabulary and practice with engaging quizzes.
             </p>
             <Link
-              href="/write"
+              href="/score"
               className="inline-flex items-center gap-2 bg-gradient-to-r from-ocean-600 to-cyan-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-ocean-700 hover:to-cyan-700 transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
             >
               Start with an Essay
