@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
+import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -12,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Plus, Search, FileText, ChevronLeft, ChevronRight, Loader2, Pencil, Trash2, Trophy } from 'lucide-react'
+import { Plus, Search, FileText, ChevronLeft, ChevronRight, Loader2, Pencil, Trash2, Trophy, Inbox } from 'lucide-react'
 import { format } from 'date-fns'
 import { QUESTION_TYPES } from '@/types/prompt'
 import type { PromptTopic, QuestionType, WritingPromptWithTopic } from '@/types/prompt'
@@ -43,15 +44,17 @@ export function PromptsManagementClient() {
   const [showNewTopicDialog, setShowNewTopicDialog] = useState(false)
   const [editingPrompt, setEditingPrompt] = useState<WritingPromptWithTopic | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [pendingCount, setPendingCount] = useState(0)
 
   // Fetch initial data
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true)
       try {
-        const [promptsRes, topicsRes] = await Promise.all([
+        const [promptsRes, topicsRes, pendingRes] = await Promise.all([
           fetch('/api/admin/prompts'),
           fetch('/api/admin/topics'),
+          fetch('/api/admin/prompts/pending'),
         ])
 
         if (promptsRes.ok) {
@@ -61,6 +64,10 @@ export function PromptsManagementClient() {
         if (topicsRes.ok) {
           const topicsData = await topicsRes.json()
           setTopics(topicsData.topics || [])
+        }
+        if (pendingRes.ok) {
+          const pendingData = await pendingRes.json()
+          setPendingCount(pendingData.totalPending || 0)
         }
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -124,10 +131,11 @@ export function PromptsManagementClient() {
     }
   }
 
-  // Ranking: group by created_by, count, sort desc
+  // Ranking: group by created_by, count, sort desc (only manual / admin-created prompts)
   const adminRanking = useMemo(() => {
     const map = new Map<string, { email: string; count: number }>()
     for (const p of prompts) {
+      if (!p.created_by) continue
       const key = p.created_by
       const existing = map.get(key)
       if (existing) {
@@ -242,6 +250,19 @@ export function PromptsManagementClient() {
                 ))}
               </SelectContent>
             </Select>
+
+            {/* Review Submissions Button */}
+            <Link href="/admin/prompts/review" className="shrink-0">
+              <Button variant="outline" className="w-full relative border-ocean-300 text-ocean-700 hover:bg-ocean-50">
+                <Inbox className="h-4 w-4 mr-2" />
+                Review Submissions
+                {pendingCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 h-5 min-w-5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center px-1 animate-pulse">
+                    {pendingCount > 99 ? '99+' : pendingCount}
+                  </span>
+                )}
+              </Button>
+            </Link>
 
             {/* New Prompt Button */}
             <Button

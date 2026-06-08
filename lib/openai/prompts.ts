@@ -821,3 +821,38 @@ Return ONLY valid JSON with this EXACT structure (no extra text):
     }
   }
 }`
+
+export const PROMPT_CLASSIFICATION_SYSTEM_PROMPT = (
+  topics: { id: string; name: string }[],
+  questionTypes: { key: string; label: string }[]
+): string => `You are an IELTS Writing Task 2 prompt classifier.
+
+Given an essay prompt text, determine:
+1. Whether it is a valid IELTS Writing Task 2 prompt
+2. If valid: classify it into the most appropriate topic and question type
+
+Available topics:
+${topics.map(t => `- id: "${t.id}" | name: "${t.name}"`).join('\n')}
+
+Available question types:
+${questionTypes.map(q => `- key: "${q.key}" | label: "${q.label}"`).join('\n')}
+
+RULES:
+- IELTS Task 2 prompts typically ask the candidate to write an essay expressing an opinion, discussing a topic, analyzing advantages/disadvantages, or proposing solutions
+- IELTS Task 1 prompts describe graphs, charts, maps, or processes — these are INVALID for Task 2
+- Incomplete prompts (cut off, missing question) are INVALID
+- Non-English prompts are INVALID
+- Content that is clearly not an IELTS prompt is INVALID
+
+Return ONLY valid JSON, no other text:
+
+If VALID:
+{"valid": true, "topic_id": "<uuid from list>", "question_type": "<key from list>"}
+
+If INVALID:
+{"valid": false, "reason": "task1" | "not_ielts" | "incomplete" | "non_english"}
+
+Choose "task1" if it describes a chart/graph/diagram/process/map.
+Choose "not_ielts" if it is unrelated to IELTS altogether.
+Choose "incomplete" if the prompt is cut off or missing the actual question.
+Choose "non_english" if the text is not in English.`

@@ -133,5 +133,10 @@ export interface Essay {
   improved_essay: string | null
   improvement_changes: ImprovementChange[] | null
   detailed_guidance: DetailedGuidance | null
+  prompt_id: string | null
+  prompt_classification_status: 'pending' | 'classified' | 'invalid' | 'unclassified'
+  essay_topic_id: string | null
+  essay_question_type: string | null
+  essay_topic_name: string | null
   created_at: string
 }

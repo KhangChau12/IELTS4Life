@@ -3,35 +3,41 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export default function EssayResultsLoading() {
   return (
-    <div className="max-w-6xl mx-auto space-y-6 px-4">
+    <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
       <div>
         <Skeleton className="h-10 w-48 mb-1" />
-        <Skeleton className="h-5 w-72" />
+        <Skeleton className="h-5 w-80" />
       </div>
 
-      {/* Quick Summary — 3 chips */}
-      <Card className="border-cyan-200 bg-gradient-to-br from-cyan-50 to-blue-50 shadow-sm">
-        <CardContent className="p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <Skeleton className="h-4 w-4 rounded-full" />
-            <Skeleton className="h-4 w-28" />
+      {/* PromptContextZone skeleton */}
+      <Card className="border-ocean-200 shadow-lg overflow-hidden">
+        <CardContent className="p-5 space-y-4">
+          {/* "Your Prompt" heading row */}
+          <div>
+            <div className="flex items-center justify-between gap-3 mb-3">
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-5 w-5 rounded" />
+                <Skeleton className="h-6 w-28" />
+              </div>
+              {/* Classification badges placeholder */}
+              <div className="flex gap-1.5">
+                <Skeleton className="h-5 w-24 rounded-full" />
+                <Skeleton className="h-5 w-16 rounded-full" />
+              </div>
+            </div>
+            {/* Prompt text box */}
+            <div className="bg-ocean-50 border border-ocean-200 rounded-lg p-3.5 space-y-2">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-5/6" />
+              <Skeleton className="h-4 w-4/5" />
+            </div>
           </div>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="bg-white/70 rounded-lg p-3 text-center border border-cyan-100">
-              <Skeleton className="h-8 w-12 mx-auto mb-1" />
-              <Skeleton className="h-3 w-16 mx-auto" />
-            </div>
-            <div className="bg-white/70 rounded-lg p-3 text-center border border-green-100 space-y-1">
-              <Skeleton className="h-4 w-4 mx-auto rounded-full" />
-              <Skeleton className="h-4 w-16 mx-auto" />
-              <Skeleton className="h-3 w-8 mx-auto" />
-            </div>
-            <div className="bg-white/70 rounded-lg p-3 text-center border border-amber-100 space-y-1">
-              <Skeleton className="h-4 w-4 mx-auto rounded-full" />
-              <Skeleton className="h-4 w-16 mx-auto" />
-              <Skeleton className="h-3 w-8 mx-auto" />
-            </div>
+
+          {/* Pending indicator */}
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-3.5 w-3.5 rounded-full" />
+            <Skeleton className="h-4 w-64" />
           </div>
         </CardContent>
       </Card>
@@ -41,7 +47,7 @@ export default function EssayResultsLoading() {
         {[1, 2, 3, 4].map((i) => (
           <div key={i} className="flex-1 flex items-center justify-center gap-2 py-3 border-b-2 border-transparent">
             <Skeleton className="h-4 w-4 rounded" />
-            <Skeleton className="h-4 w-12 hidden sm:block" />
+            <Skeleton className="h-4 w-14 hidden sm:block" />
           </div>
         ))}
       </div>
@@ -50,7 +56,7 @@ export default function EssayResultsLoading() {
       <div className="flex flex-col md:flex-row gap-6 mt-6">
         {/* Left column */}
         <div className="md:w-2/5 space-y-4">
-          {/* Score card */}
+          {/* Overall score card */}
           <Card className="border-ocean-300 shadow-lg overflow-hidden">
             <div className="bg-ocean-700 p-6">
               <div className="text-center space-y-2">
@@ -83,36 +89,23 @@ export default function EssayResultsLoading() {
           </div>
         </div>
 
-        {/* Right column */}
+        {/* Right column — essay text */}
         <div className="md:w-3/5">
-          <Card className="border-ocean-200 shadow-lg">
+          <Card className="border-ocean-200 shadow-lg overflow-hidden">
             <CardHeader className="border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <Skeleton className="h-5 w-5 rounded" />
                 <Skeleton className="h-5 w-24" />
               </div>
             </CardHeader>
-            <CardContent className="pt-6 space-y-4">
-              <div>
-                <Skeleton className="h-5 w-16 mb-2" />
-                <div className="bg-ocean-50 border border-ocean-200 rounded-md p-4 space-y-2">
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-5/6" />
-                  <Skeleton className="h-4 w-4/5" />
-                </div>
-              </div>
-              <div>
-                <Skeleton className="h-5 w-28 mb-2" />
-                <div className="bg-gray-50 border border-gray-200 rounded-md p-4 space-y-2">
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-5/6" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-3/4" />
-                </div>
-                <Skeleton className="h-4 w-28 mt-2" />
+            <CardContent className="pt-6 space-y-2">
+              {[...Array(9)].map((_, i) => (
+                <Skeleton key={i} className={`h-4 ${i % 3 === 2 ? 'w-3/4' : 'w-full'}`} />
+              ))}
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-5/6" />
+              <div className="pt-2">
+                <Skeleton className="h-4 w-32" />
               </div>
             </CardContent>
           </Card>

@@ -29,18 +29,16 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const questionType = searchParams.get('question_type')
     const topicId = searchParams.get('topic_id')
+    const status = searchParams.get('status')
 
     let query = supabase
       .from('writing_prompts')
       .select('*, prompt_topics(id, name), profiles!created_by(email)')
       .order('created_at', { ascending: false })
 
-    if (questionType) {
-      query = query.eq('question_type', questionType)
-    }
-    if (topicId) {
-      query = query.eq('topic_id', topicId)
-    }
+    if (questionType) query = query.eq('question_type', questionType)
+    if (topicId) query = query.eq('topic_id', topicId)
+    if (status) query = query.eq('status', status)
 
     const { data: prompts, error } = await query
 

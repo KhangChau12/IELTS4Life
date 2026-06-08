@@ -16,19 +16,34 @@ export interface PromptTopic {
   created_at: string
 }
 
+export type PromptStatus = 'approved' | 'pending'
+export type PromptSource = 'manual' | 'user_submission'
+
 export interface WritingPrompt {
   id: string
   prompt_text: string
   question_type: QuestionType
   topic_id: string
-  created_by: string
+  created_by: string | null
   created_at: string
   updated_at: string
+  status?: PromptStatus
+  source?: PromptSource
+  submitted_count?: number
+  classification_confidence?: number | null
+  normalized_text?: string | null
 }
 
 export interface WritingPromptWithTopic extends WritingPrompt {
   prompt_topics: PromptTopic
-  profiles: { email: string }
+  profiles: { email: string } | null
+}
+
+export interface SimilarPrompt {
+  id: string
+  prompt_text: string
+  question_type: QuestionType
+  prompt_topics: Pick<PromptTopic, 'id' | 'name'>
 }
 
 export interface PromptOutlines {

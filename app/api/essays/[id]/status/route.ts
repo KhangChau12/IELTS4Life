@@ -10,13 +10,11 @@ export async function GET(
 
     const {
       data: { user },
-      error: authError,
     } = await supabase.auth.getUser()
 
-    // Allow both authenticated users and guests
     const { data: essay, error } = await supabase
       .from('essays')
-      .select('improved_essay, user_id, is_guest, guest_fingerprint')
+      .select('improved_essay, user_id, is_guest, guest_fingerprint, prompt_classification_status, prompt_id, essay_topic_id, essay_question_type, essay_topic_name')
       .eq('id', params.id)
       .single()
 
@@ -29,11 +27,13 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
-    // For guests, allow access (no fingerprint verification needed for read-only status check)
-    // Guest essays are public for the duration of the session
-
     return NextResponse.json({
       has_improved_essay: !!essay.improved_essay,
+      prompt_classification_status: essay.prompt_classification_status ?? 'unclassified',
+      prompt_id: essay.prompt_id ?? null,
+      essay_topic_id: essay.essay_topic_id ?? null,
+      essay_question_type: essay.essay_question_type ?? null,
+      essay_topic_name: essay.essay_topic_name ?? null,
     })
   } catch (error) {
     console.error('Error checking essay status:', error)

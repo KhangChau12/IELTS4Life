@@ -9,14 +9,11 @@ import {
   CheckCircle2,
   FileText,
   BookOpen,
-  Sparkles,
   Info,
   BarChart2,
   PenLine,
   ChevronDown,
   ChevronRight,
-  TrendingUp,
-  Target,
 } from 'lucide-react'
 import {
   RadarChart,
@@ -28,6 +25,7 @@ import {
 import { EssayImprovement } from './EssayImprovement'
 import { VocabGenerateButtons } from './VocabGenerateButtons'
 import { DetailedGuidance } from './DetailedGuidance'
+import { PromptContextZone } from './PromptContextZone'
 import { GuestBanner } from '@/components/guest/GuestBanner'
 import type { Essay } from '@/types/essay'
 
@@ -48,6 +46,11 @@ interface EssayResultsClientProps {
   hasParaphrase: boolean
   hasTopic: boolean
   isGuest: boolean
+  initialClassificationStatus: 'pending' | 'classified' | 'invalid' | 'unclassified'
+  initialPromptId: string | null
+  initialTopicId: string | null
+  initialQuestionType: string | null
+  initialTopicName: string | null
 }
 
 function getScoreColor(score: number | null): string {
@@ -272,6 +275,11 @@ export function EssayResultsClient({
   hasParaphrase,
   hasTopic,
   isGuest,
+  initialClassificationStatus,
+  initialPromptId,
+  initialTopicId,
+  initialQuestionType,
+  initialTopicName,
 }: EssayResultsClientProps) {
   const [activeTab, setActiveTab] = useState<string>('score')
   const [visitedTabs, setVisitedTabs] = useState<Set<string>>(new Set(['score']))
@@ -321,41 +329,16 @@ export function EssayResultsClient({
         <p className="text-ocean-600">Detailed scoring and feedback for your IELTS essay</p>
       </div>
 
-      {/* Quick Summary — 3 stat chips */}
-      <Card className="border-cyan-200 bg-gradient-to-br from-cyan-50 to-blue-50 shadow-sm">
-        <CardContent className="p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <Sparkles className="h-4 w-4 text-cyan-600" />
-            <h2 className="text-sm font-semibold text-ocean-800">Quick Summary</h2>
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="bg-white/70 rounded-lg p-3 text-center border border-cyan-100">
-              <p className="text-2xl font-bold text-ocean-800">
-                {essay.overall_score?.toFixed(1) ?? 'N/A'}
-              </p>
-              <p className="text-xs text-ocean-500 mt-0.5">Overall Band</p>
-            </div>
-            <div className="bg-white/70 rounded-lg p-3 text-center border border-green-100">
-              <TrendingUp className="h-4 w-4 text-green-600 mx-auto mb-1" />
-              <p className="text-sm font-semibold text-ocean-800 leading-tight">
-                {highestCriterion ? (CRITERION_SHORT[highestCriterion.name] ?? highestCriterion.name) : '—'}
-              </p>
-              <p className="text-xs text-green-600 mt-0.5">
-                {highestCriterion ? highestCriterion.score.toFixed(1) : ''}
-              </p>
-            </div>
-            <div className="bg-white/70 rounded-lg p-3 text-center border border-amber-100">
-              <Target className="h-4 w-4 text-amber-600 mx-auto mb-1" />
-              <p className="text-sm font-semibold text-ocean-800 leading-tight">
-                {lowestCriterion ? (CRITERION_SHORT[lowestCriterion.name] ?? lowestCriterion.name) : '—'}
-              </p>
-              <p className="text-xs text-amber-600 mt-0.5">
-                {lowestCriterion ? lowestCriterion.score.toFixed(1) : ''}
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Prompt Context Zone — classification status + similar prompts */}
+      <PromptContextZone
+        essayId={essayId}
+        promptText={essay.prompt}
+        initialClassificationStatus={initialClassificationStatus}
+        initialPromptId={initialPromptId}
+        initialTopicId={initialTopicId}
+        initialQuestionType={initialQuestionType}
+        initialTopicName={initialTopicName}
+      />
 
       {/* Tabbed content */}
       <Tabs value={activeTab} onValueChange={handleTabChange}>
@@ -394,7 +377,7 @@ export function EssayResultsClient({
                     <div className="text-5xl font-bold mb-1">
                       {essay.overall_score !== null
                         ? (essay.overall_score >= 8.0
-                            ? `${essay.overall_score.toFixed(1)}~9`
+                            ? `${Math.floor(essay.overall_score)}+`
                             : essay.overall_score.toFixed(1))
                         : 'N/A'}
                     </div>
@@ -458,31 +441,21 @@ export function EssayResultsClient({
               </div>
             </div>
 
-            {/* Right column — essay */}
+            {/* Right column — essay response */}
             <div className="md:w-3/5">
-              <Card className="border-ocean-200 shadow-lg">
-                <CardHeader className="border-b border-slate-100">
+              <Card className="border-ocean-200 shadow-lg overflow-hidden relative">
+                <FileText className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
+                <CardHeader className="border-b border-slate-100 relative z-10">
                   <div className="flex items-center gap-2">
                     <FileText className="h-5 w-5 text-ocean-600" />
                     <CardTitle className="text-ocean-800">Your Essay</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="pt-6 space-y-4">
-                  <div>
-                    <h3 className="font-semibold text-ocean-800 mb-2">Prompt</h3>
-                    <div className="bg-ocean-50 border border-ocean-200 rounded-md p-4">
-                      <p className="text-ocean-700 leading-relaxed">{essay.prompt}</p>
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-ocean-800 mb-2">Your Response</h3>
-                    <div className="bg-gray-50 border border-gray-200 rounded-md p-4 max-h-[60vh] overflow-y-auto">
-                      <p className="text-gray-800 leading-relaxed whitespace-pre-wrap font-mono text-sm">
-                        {essay.essay_content}
-                      </p>
-                    </div>
-                    <p className="text-sm text-ocean-600 mt-2">Word count: {wordCount} words</p>
-                  </div>
+                <CardContent className="pt-6 relative z-10">
+                  <p className="text-gray-800 leading-relaxed whitespace-pre-wrap text-sm">
+                    {essay.essay_content}
+                  </p>
+                  <p className="text-sm text-ocean-600 mt-2">Word count: {wordCount} words</p>
                 </CardContent>
               </Card>
             </div>
