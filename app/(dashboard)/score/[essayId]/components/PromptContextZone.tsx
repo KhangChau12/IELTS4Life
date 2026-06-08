@@ -321,9 +321,16 @@ export function PromptContextZone({
 
         {/* State: Pending */}
         {status === 'pending' && (
-          <div className="flex items-center gap-2 text-ocean-500 text-sm">
-            <Loader2 className="h-3.5 w-3.5 animate-spin flex-shrink-0" />
-            <span>Analyzing prompt to find similar practice questions…</span>
+          <div className="border-t border-ocean-100 pt-4 flex items-center gap-3">
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <PenLine className="h-5 w-5 text-ocean-600 flex-shrink-0" />
+              <h2 className="text-xl font-semibold text-ocean-800">Practice Similar Prompts</h2>
+            </div>
+            <span className="flex-1 h-px bg-ocean-100" />
+            <div className="flex items-center gap-1.5 text-ocean-400 flex-shrink-0">
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              <span className="text-sm font-medium">Analyzing…</span>
+            </div>
           </div>
         )}
 
