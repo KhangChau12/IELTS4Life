@@ -319,17 +319,16 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
           {filteredEssays.map(essay => (
             <Card
               key={essay.id}
-              className="border-ocean-200 shadow-lg overflow-hidden relative bg-white hover:shadow-xl transition-shadow duration-200"
+              className="border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-r from-white to-ocean-50/40 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
             >
-              {/* Watermark icon — per project convention */}
+              {/* Watermark icon */}
               <BookOpen className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-[0.07] rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
 
               <div className="relative z-10 p-4 md:p-5">
-                {/* Mobile: stacked — Desktop: 3 zones side by side */}
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-4">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
 
-                  {/* ── Zone 1: Score ── */}
-                  <div className="flex sm:flex-col items-center sm:items-center sm:justify-center sm:w-[76px] gap-3 sm:gap-1.5 flex-shrink-0">
+                  {/* ── Zone 1: Score badge ── */}
+                  <div className="flex sm:flex-col items-center sm:justify-center sm:w-[72px] gap-3 sm:gap-1.5 flex-shrink-0">
                     <div
                       className={cn(
                         'h-16 w-16 rounded-2xl flex items-center justify-center font-bold text-white flex-shrink-0',
@@ -348,13 +347,10 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
 
                   {/* ── Zone 2: Content ── */}
                   <div className="flex-1 min-w-0 flex flex-col gap-2">
-                    {/* Prompt */}
                     <p className="text-sm md:text-base font-semibold text-ocean-900 line-clamp-2 leading-snug">
                       {essay.prompt}
                     </p>
-
-                    {/* Meta row */}
-                    <div className="flex items-center gap-3 text-xs text-ocean-500">
+                    <div className="flex items-center gap-3 text-xs text-ocean-400">
                       <span className="flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
                         {formatDate(essay.created_at)}
@@ -364,8 +360,6 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
                         {essay.word_count} words
                       </span>
                     </div>
-
-                    {/* Mini-bars — 4 criteria, no boxes */}
                     {essay.overall_score !== null && (
                       <div className="flex flex-wrap gap-3 mt-0.5">
                         {miniBarCriteria.map(({ label, key, color }) => {
@@ -389,38 +383,32 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
                     )}
                   </div>
 
-                  {/* ── Zone 3: Actions ── */}
-                  <div className="flex sm:flex-col gap-2 flex-shrink-0 sm:w-[120px]">
+                  {/* ── Zone 3: Actions — border-left divider on desktop ── */}
+                  <div className="flex sm:flex-col gap-2 flex-shrink-0 sm:w-[130px] sm:pl-4 sm:border-l sm:border-ocean-100">
                     <Link href={`/score/${essay.id}`} className="flex-1 sm:flex-none">
                       <Button
                         size="sm"
-                        className="w-full bg-ocean-600 text-white hover:bg-ocean-700 text-xs h-9"
+                        variant="outline"
+                        className="w-full h-9 text-xs border-ocean-200 text-ocean-700 hover:bg-ocean-50 hover:border-ocean-300 font-medium"
                       >
                         <Eye className="h-3.5 w-3.5 mr-1.5" />
-                        View Details
+                        View Score
                       </Button>
                     </Link>
-
                     <Link href={`/history/${essay.id}/vocabulary`} className="flex-1 sm:flex-none">
                       <Button
                         size="sm"
                         className={cn(
-                          'w-full text-xs h-9',
+                          'w-full h-9 text-xs font-medium',
                           essay.has_vocab
-                            ? 'bg-cyan-600 hover:bg-cyan-700 text-white'
-                            : 'bg-violet-600 hover:bg-violet-700 text-white'
+                            ? 'bg-gradient-to-r from-cyan-500 to-ocean-600 hover:from-cyan-600 hover:to-ocean-700 text-white shadow-sm'
+                            : 'bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-sm'
                         )}
                       >
                         {essay.has_vocab ? (
-                          <>
-                            <BookOpen className="h-3.5 w-3.5 mr-1.5" />
-                            Study Vocab
-                          </>
+                          <><BookOpen className="h-3.5 w-3.5 mr-1.5" />Study Vocab</>
                         ) : (
-                          <>
-                            <Sparkles className="h-3.5 w-3.5 mr-1.5" />
-                            Generate Vocab
-                          </>
+                          <><Sparkles className="h-3.5 w-3.5 mr-1.5" />Gen Vocab</>
                         )}
                       </Button>
                     </Link>

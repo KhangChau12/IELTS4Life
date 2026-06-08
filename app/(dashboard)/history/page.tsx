@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { createServerClient } from '@/lib/supabase/server'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { FileText } from 'lucide-react'
+import { FileText, PenTool, ArrowRight } from 'lucide-react'
 import { HistoryListClient } from './components/HistoryListClient'
 
 export const metadata: Metadata = {
@@ -89,15 +89,38 @@ export default async function HistoryPage() {
         <HistoryListClient essays={enrichedEssays} />
       )}
 
-      {/* Write New Essay Button */}
-      <div className="mt-6 md:mt-8 text-center">
-        <Link href="/write">
-          <Button size="lg" className="bg-gradient-to-r from-cyan-500 to-ocean-600 hover:from-cyan-600 hover:to-ocean-700 shadow-lg hover:shadow-xl transition-all text-sm md:text-base">
-            <FileText className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-            Write New Essay
-          </Button>
-        </Link>
-      </div>
+      {/* Write New Essay — banner strip */}
+      {enrichedEssays.length > 0 && (
+        <Card className="mt-6 md:mt-8 border-0 shadow-lg bg-gradient-to-r from-ocean-600 to-cyan-600 overflow-hidden relative">
+          <PenTool className="absolute right-3 top-1/2 -translate-y-1/2 h-32 w-32 text-white opacity-10 rotate-[-12deg] pointer-events-none select-none" />
+          <CardContent className="relative z-10 px-5 md:px-6 py-5">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="flex items-center gap-4 flex-1 min-w-0">
+                <div className="flex-shrink-0 h-10 w-10 rounded-xl bg-white/20 flex items-center justify-center">
+                  <PenTool className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-base font-bold text-white">Ready for another essay?</p>
+                  <p className="text-sm text-white/80">Pick a prompt and keep improving your band score</p>
+                </div>
+              </div>
+              <div className="flex gap-2 flex-shrink-0">
+                <Link href="/write">
+                  <Button size="sm" className="bg-white text-ocean-700 hover:bg-ocean-50 font-semibold shadow-sm h-9 px-4">
+                    Browse Prompts
+                  </Button>
+                </Link>
+                <Link href="/score">
+                  <Button size="sm" variant="ghost" className="text-white hover:bg-white/15 border border-white/30 h-9 px-4 font-medium">
+                    Free Write
+                    <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }
