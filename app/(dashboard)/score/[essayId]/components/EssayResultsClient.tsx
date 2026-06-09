@@ -116,6 +116,13 @@ function parseCommentSections(comment: string): string[] {
     .filter(Boolean)
 }
 
+const CRITERION_ACCENT: Record<string, { bar: string; bg: string; text: string; dot: string }> = {
+  'Task Response':        { bar: 'bg-blue-500',    bg: 'bg-blue-50',    text: 'text-blue-700',    dot: 'bg-blue-400' },
+  'Coherence & Cohesion': { bar: 'bg-emerald-500', bg: 'bg-emerald-50', text: 'text-emerald-700', dot: 'bg-emerald-400' },
+  'Lexical Resource':     { bar: 'bg-amber-500',   bg: 'bg-amber-50',   text: 'text-amber-700',   dot: 'bg-amber-400' },
+  'Grammatical Accuracy': { bar: 'bg-pink-500',    bg: 'bg-pink-50',    text: 'text-pink-700',    dot: 'bg-pink-400' },
+}
+
 function CriterionRow({
   criterion,
   overallScore,
@@ -131,34 +138,51 @@ function CriterionRow({
   const barPercent = score !== null ? (score / 9) * 100 : 0
   const hasErrors = criterion.errors && criterion.errors.length > 0
   const hasStrengths = criterion.strengths && criterion.strengths.length > 0
+  const errorCount = criterion.errors?.length ?? 0
+  const strengthCount = criterion.strengths?.length ?? 0
+  const accent = CRITERION_ACCENT[criterion.name] ?? { bar: 'bg-ocean-500', bg: 'bg-ocean-50', text: 'text-ocean-700', dot: 'bg-ocean-400' }
 
   return (
-    <div className="border border-ocean-200 rounded-xl overflow-hidden shadow-sm">
+    <div className={`border border-ocean-200 rounded-xl overflow-hidden shadow-sm transition-shadow duration-200 ${isExpanded ? 'shadow-md' : 'hover:shadow-md'}`}>
       <button
         onClick={onToggle}
-        className="w-full flex items-center gap-2 sm:gap-4 px-3 sm:px-5 py-3 sm:py-4 hover:bg-ocean-50 transition-colors text-left"
+        className={`w-full flex items-center gap-3 sm:gap-4 px-4 sm:px-5 py-3.5 sm:py-4 transition-colors text-left ${isExpanded ? accent.bg : 'bg-white hover:bg-ocean-50/60'}`}
       >
+        {/* Left accent strip */}
+        <div className={`w-1 self-stretch rounded-full flex-shrink-0 ${accent.bar} opacity-80`} />
+
         <div className="flex-1 min-w-0">
-          <p className="font-semibold text-ocean-800 text-xs sm:text-sm">{criterion.name}</p>
-          <div className="mt-1.5 sm:mt-2 flex items-center gap-2 sm:gap-3">
-            <div className="flex-1 h-1.5 sm:h-2 bg-slate-100 rounded-full overflow-hidden">
+          <div className="flex items-center gap-2 mb-1.5 sm:mb-2">
+            <p className="font-semibold text-ocean-800 text-sm sm:text-[15px] leading-tight">{criterion.name}</p>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all duration-500 ${getScoreBarColor(score)}`}
                 style={{ width: `${barPercent}%` }}
               />
             </div>
-            <span className="text-xs text-ocean-600 font-medium whitespace-nowrap">
+            <span className="text-xs text-ocean-500 font-medium whitespace-nowrap tabular-nums">
               {score !== null ? `${formatCriterionScore(score, overallScore)} / 9` : 'N/A'}
             </span>
           </div>
+          {/* Collapsed: inline counts as plain text */}
+          {!isExpanded && (errorCount > 0 || strengthCount > 0) && (
+            <p className="mt-1 text-[11px] text-ocean-400">
+              {[
+                strengthCount > 0 && `${strengthCount} strength${strengthCount !== 1 ? 's' : ''}`,
+                errorCount > 0 && `${errorCount} issue${errorCount !== 1 ? 's' : ''}`,
+              ].filter(Boolean).join(' · ')}
+            </p>
+          )}
         </div>
 
-        <Badge className={`${getScoreColor(score)} text-white font-bold px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm flex-shrink-0`}>
+        <Badge className={`${getScoreColor(score)} text-white font-bold px-2.5 sm:px-3 py-1 text-sm sm:text-base flex-shrink-0 min-w-[2.5rem] text-center justify-center`}>
           {formatCriterionScore(score, overallScore)}
         </Badge>
 
         <ChevronDown
-          className={`h-3.5 w-3.5 sm:h-4 sm:w-4 text-ocean-400 flex-shrink-0 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+          className={`h-4 w-4 text-ocean-400 flex-shrink-0 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
         />
       </button>
 

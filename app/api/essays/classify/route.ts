@@ -29,7 +29,8 @@ export async function POST(request: Request) {
       .eq('id', essay_id)
       .single()
 
-    const skipStatuses = ['classified', 'pending', 'invalid']
+    // Skip only if already done — 'pending' may be stale from a killed serverless invocation
+    const skipStatuses = ['classified', 'invalid']
     if (skipStatuses.includes(existingEssay?.prompt_classification_status ?? '')) {
       return NextResponse.json({ classified: existingEssay?.prompt_classification_status === 'classified', skipped: true })
     }

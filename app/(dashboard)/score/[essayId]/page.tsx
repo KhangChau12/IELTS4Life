@@ -147,7 +147,7 @@ export default async function EssayResultsPage({
       hasParaphrase={hasParaphrase}
       hasTopic={hasTopic}
       isGuest={isGuest}
-      initialClassificationStatus={typedEssay.prompt_classification_status ?? 'pending'}
+      initialClassificationStatus={typedEssay.prompt_classification_status ?? 'unclassified'}
       initialPromptId={typedEssay.prompt_id ?? null}
       initialTopicId={typedEssay.essay_topic_id ?? null}
       initialQuestionType={typedEssay.essay_question_type ?? null}

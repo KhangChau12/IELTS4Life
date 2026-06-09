@@ -238,7 +238,8 @@ export function PromptContextZone({
     }
   }, [])
 
-  // For old essays (unclassified): trigger classification on mount, then poll
+  // Trigger classification whenever status is unclassified (on mount for new/old essays,
+  // or after polling gives up on a stale pending status from a killed serverless run)
   useEffect(() => {
     if (status !== 'unclassified') return
     setStatus('pending')
@@ -247,7 +248,7 @@ export function PromptContextZone({
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ essay_id: essayId, prompt_text: promptText }),
     }).catch(() => {/* silent */})
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [status, essayId, promptText])
 
   // On mount: if already classified with topic+type, fetch similar immediately
   useEffect(() => {
@@ -257,9 +258,15 @@ export function PromptContextZone({
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Poll status until classification is done (max 30 polls × 2s = 60s)
+  // If still pending after 30 polls (classify was likely killed by serverless timeout),
+  // reset to unclassified so the next useEffect retriggers classification.
   useEffect(() => {
     if (status !== 'pending') return
-    if (pollCount >= 30) return
+    if (pollCount >= 30) {
+      setStatus('unclassified')
+      setPollCount(0)
+      return
+    }
 
     const timer = setTimeout(async () => {
       try {
