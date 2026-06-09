@@ -294,19 +294,19 @@ export function EssayImprovement({
   if (isGenerating) {
     return (
       <Card className="border-ocean-200 shadow-card animate-fadeInUp">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-ocean-800">
-            <Loader2 className="h-5 w-5 animate-spin text-cyan-600" />
+        <CardHeader className="px-4 sm:px-6 py-3 sm:py-4">
+          <CardTitle className="flex items-center gap-2 text-ocean-800 text-base sm:text-lg">
+            <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin text-cyan-600" />
             Generating Improved Essay
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-3 sm:space-y-4 px-4 sm:px-6">
           <div className="space-y-2">
-            <div className="flex justify-between text-sm">
+            <div className="flex justify-between text-xs sm:text-sm">
               <span className="text-ocean-700">{stage}</span>
               <span className="text-ocean-600 font-medium">{Math.round(progress)}%</span>
             </div>
-            <Progress value={progress} className="h-2" />
+            <Progress value={progress} className="h-1.5 sm:h-2" />
           </div>
           <div className="bg-cyan-50 border border-cyan-200 rounded-md p-3">
             <p className="text-xs text-ocean-600 leading-relaxed">
@@ -325,27 +325,27 @@ export function EssayImprovement({
 
   return (
     <Card className="border-ocean-200 shadow-card animate-fadeInUp">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-ocean-800">
-            <Sparkles className="h-5 w-5 text-cyan-600" />
+      <CardHeader className="px-4 sm:px-6 py-3 sm:py-4">
+        <div className="flex items-center justify-between gap-2">
+          <CardTitle className="flex items-center gap-2 text-ocean-800 text-base sm:text-lg">
+            <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-cyan-600" />
             Improved Essay (Band 7-8+ Example)
           </CardTitle>
-          <CheckCircle className="h-5 w-5 text-green-600" />
+          <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />
         </div>
-        <p className="text-sm text-ocean-600 mt-2">
-          <span className="inline-block px-2 py-0.5 bg-green-100 text-green-800 rounded mr-2">
+        <p className="text-xs sm:text-sm text-ocean-600 mt-2">
+          <span className="inline-block px-1.5 sm:px-2 py-0.5 bg-green-100 text-green-800 rounded mr-1.5 sm:mr-2">
             ✨ Highlighted
           </span>
-          sections show improvements made to your original essay. Hover over highlighted text to see what was changed.
+          sections show improvements. Hover over highlighted text to see what was changed.
         </p>
       </CardHeader>
-      <CardContent>
-        <div className="bg-white border border-ocean-200 rounded-lg p-6 leading-relaxed">
+      <CardContent className="px-4 sm:px-6">
+        <div className="bg-white border border-ocean-200 rounded-lg p-3 sm:p-6 leading-relaxed">
           {renderDiff()}
         </div>
-        <div className="mt-4 p-4 bg-cyan-50 border border-cyan-200 rounded-md">
-          <p className="text-sm text-ocean-700">
+        <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-cyan-50 border border-cyan-200 rounded-md">
+          <p className="text-xs sm:text-sm text-ocean-700">
             <strong>How to use this:</strong> Compare the highlighted improvements with your original essay.
             Notice how vocabulary, grammar, and sentence structures have been enhanced while keeping your main ideas intact.
           </p>

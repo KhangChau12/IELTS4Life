@@ -454,7 +454,7 @@ export default async function HomePage() {
 
       {/* Writing Prompts Library Section */}
       <section className="bg-gradient-to-br from-slate-50 to-cyan-50/30 py-10 md:py-24">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-5 sm:px-8 lg:px-6">
           <div className="mx-auto max-w-7xl">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
 
@@ -509,26 +509,26 @@ export default async function HomePage() {
                 <div className="w-full max-w-md animate-float">
                   <div className="relative rounded-2xl shadow-2xl border-2 border-cyan-200 bg-gradient-to-br from-white to-cyan-50/50 p-4 sm:p-6 space-y-3 sm:space-y-4">
                     {/* Timer badge */}
-                    <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-emerald-100 text-emerald-700 text-xs font-mono px-2.5 py-1 rounded-full">
+                    <div className="absolute top-3 right-3 sm:top-4 sm:right-4 flex items-center gap-1.5 bg-emerald-100 text-emerald-700 text-xs font-mono px-2 sm:px-2.5 py-1 rounded-full">
                       <Timer className="h-3 w-3" />
                       40:00
                     </div>
 
                     {/* Prompt text */}
-                    <div className="pr-16">
-                      <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Prompt</p>
-                      <p className="text-sm md:text-base font-medium text-slate-800 leading-relaxed">
+                    <div className="pr-14 sm:pr-16">
+                      <p className="text-[11px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Prompt</p>
+                      <p className="text-xs sm:text-sm md:text-base font-medium text-slate-800 leading-relaxed">
                         Some people think the best way to reduce crime is to give longer prison sentences. Others, however, believe there are better alternative methods.
                         <span className="text-slate-400"> Discuss both views and give your own opinion.</span>
                       </p>
                     </div>
 
                     {/* Badges */}
-                    <div className="flex flex-wrap gap-2">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-cyan-100 text-cyan-800 border border-cyan-200">
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                      <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-medium bg-cyan-100 text-cyan-800 border border-cyan-200">
                         Discussion (Both Views)
                       </span>
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
+                      <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
                         Society &amp; Crime
                       </span>
                     </div>
@@ -538,7 +538,7 @@ export default async function HomePage() {
 
                     {/* Outline columns */}
                     <div>
-                      <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">AI Outline Suggestions</p>
+                      <p className="text-[11px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">AI Outline Suggestions</p>
                       <div className="grid grid-cols-2 gap-2 sm:gap-3">
                         {[1, 2].map((n) => (
                           <div key={n} className="rounded-xl bg-gradient-to-br from-slate-50 to-blue-50/50 border border-slate-200 p-3 space-y-2">

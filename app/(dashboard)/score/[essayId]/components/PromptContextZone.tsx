@@ -43,13 +43,13 @@ function SimilarPromptCard({ prompt }: { prompt: SimilarPrompt }) {
   return (
     <Link
       href={`/write/${prompt.id}`}
-      className="group flex flex-col justify-between rounded-xl border border-ocean-200 bg-white p-4 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-ocean-300 relative overflow-hidden flex-shrink-0 w-[calc(50%-6px)] min-w-[220px]"
+      className="group flex flex-col justify-between rounded-xl border border-ocean-200 bg-white p-3 sm:p-4 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-ocean-300 relative overflow-hidden flex-shrink-0 w-[calc(50%-6px)] min-w-[160px] sm:min-w-[220px]"
     >
-      <PenLine className="absolute right-1 top-1 h-20 w-20 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_8px_rgba(14,165,233,0.25))]" />
-      <p className="text-sm text-ocean-800 leading-relaxed line-clamp-3 group-hover:text-ocean-900 relative z-10">
+      <PenLine className="absolute right-1 top-1 h-16 w-16 sm:h-20 sm:w-20 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_8px_rgba(14,165,233,0.25))]" />
+      <p className="text-xs sm:text-sm text-ocean-800 leading-relaxed line-clamp-3 group-hover:text-ocean-900 relative z-10">
         {prompt.prompt_text}
       </p>
-      <span className="mt-3 text-xs text-ocean-400 group-hover:text-ocean-600 flex items-center justify-end gap-0.5 font-medium transition-colors relative z-10">
+      <span className="mt-2 sm:mt-3 text-xs text-ocean-400 group-hover:text-ocean-600 flex items-center justify-end gap-0.5 font-medium transition-colors relative z-10">
         Practice this prompt <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
       </span>
     </Link>
@@ -143,22 +143,22 @@ function SimilarPromptsSection({
       {!expanded ? (
         <button
           onClick={() => setExpanded(true)}
-          className="w-full flex items-center gap-3 group"
+          className="w-full flex items-center gap-2 sm:gap-3 group"
         >
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <PenLine className="h-5 w-5 text-ocean-600 flex-shrink-0" />
-            <h2 className="text-xl font-semibold text-ocean-800 group-hover:text-ocean-700 transition-colors">Practice Similar Prompts</h2>
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+            <PenLine className="h-4 w-4 sm:h-5 sm:w-5 text-ocean-600 flex-shrink-0" />
+            <h2 className="text-base sm:text-xl font-semibold text-ocean-800 group-hover:text-ocean-700 transition-colors">Practice Similar Prompts</h2>
           </div>
           <span className="flex-1 h-px bg-ocean-200 group-hover:bg-ocean-300 transition-colors" />
-          <span className="text-sm text-ocean-400 group-hover:text-ocean-600 font-medium transition-colors whitespace-nowrap flex-shrink-0">
+          <span className="text-xs sm:text-sm text-ocean-400 group-hover:text-ocean-600 font-medium transition-colors whitespace-nowrap flex-shrink-0">
             Show details
           </span>
         </button>
       ) : (
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <PenLine className="h-5 w-5 text-ocean-600 flex-shrink-0" />
-            <h2 className="text-xl font-semibold text-ocean-800">Practice Similar Prompts</h2>
+        <div className="flex items-center justify-between gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+            <PenLine className="h-4 w-4 sm:h-5 sm:w-5 text-ocean-600 flex-shrink-0" />
+            <h2 className="text-base sm:text-xl font-semibold text-ocean-800">Practice Similar Prompts</h2>
           </div>
           <Link
             href="/write"
@@ -298,38 +298,38 @@ export function PromptContextZone({
       <CardContent className="p-5 space-y-4 relative z-10">
         {/* Prompt text — always shown */}
         <div>
-          <div className="flex items-start justify-between gap-3 mb-3">
-            <div className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-ocean-600 flex-shrink-0" />
-              <h2 className="text-xl font-semibold text-ocean-800">Your Prompt</h2>
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-3 mb-3">
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-ocean-600 flex-shrink-0" />
+              <h2 className="text-base sm:text-xl font-semibold text-ocean-800">Your Prompt</h2>
             </div>
             {status === 'classified' && displayQuestionType && displayTopicName && (
-              <div className="flex gap-1.5 flex-wrap justify-end">
-                <Badge variant="outline" className={`text-xs font-medium ${QUESTION_TYPE_COLORS[displayQuestionType] ?? 'bg-slate-200 text-slate-700 border-slate-300'}`}>
+              <div className="flex gap-1.5 flex-wrap">
+                <Badge variant="outline" className={`text-[11px] sm:text-xs font-medium ${QUESTION_TYPE_COLORS[displayQuestionType] ?? 'bg-slate-200 text-slate-700 border-slate-300'}`}>
                   {QUESTION_TYPE_LABELS[displayQuestionType] ?? displayQuestionType}
                 </Badge>
-                <Badge variant="outline" className="text-xs bg-orange-100 text-orange-800 border-orange-300 font-medium">
+                <Badge variant="outline" className="text-[11px] sm:text-xs bg-orange-100 text-orange-800 border-orange-300 font-medium">
                   {displayTopicName}
                 </Badge>
               </div>
             )}
           </div>
-          <div className="bg-ocean-50 border border-ocean-200 rounded-lg p-3.5">
-            <p className="text-ocean-800 leading-relaxed text-sm">{promptText}</p>
+          <div className="bg-ocean-50 border border-ocean-200 rounded-lg p-3 sm:p-3.5">
+            <p className="text-ocean-800 leading-relaxed text-xs sm:text-sm">{promptText}</p>
           </div>
         </div>
 
         {/* State: Pending */}
         {status === 'pending' && (
-          <div className="border-t border-ocean-100 pt-4 flex items-center gap-3">
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <PenLine className="h-5 w-5 text-ocean-600 flex-shrink-0" />
-              <h2 className="text-xl font-semibold text-ocean-800">Practice Similar Prompts</h2>
+          <div className="border-t border-ocean-100 pt-3 sm:pt-4 flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+              <PenLine className="h-4 w-4 sm:h-5 sm:w-5 text-ocean-600 flex-shrink-0" />
+              <h2 className="text-base sm:text-xl font-semibold text-ocean-800">Practice Similar Prompts</h2>
             </div>
             <span className="flex-1 h-px bg-ocean-100" />
-            <div className="flex items-center gap-1.5 text-ocean-400 flex-shrink-0">
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              <span className="text-sm font-medium">Analyzing…</span>
+            <div className="flex items-center gap-1 sm:gap-1.5 text-ocean-400 flex-shrink-0">
+              <Loader2 className="h-3 w-3 sm:h-3.5 sm:w-3.5 animate-spin" />
+              <span className="text-xs sm:text-sm font-medium">Analyzing…</span>
             </div>
           </div>
         )}

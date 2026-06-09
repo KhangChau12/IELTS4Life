@@ -171,18 +171,18 @@ export function DetailedGuidance({ essayId, hasImprovedEssay, initialGuidance }:
 
   return (
     <Card className="border-ocean-200 shadow-lg">
-      <CardHeader className="border-b border-ocean-200">
+      <CardHeader className="border-b border-ocean-200 px-4 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center gap-2">
-          <Lightbulb className="h-5 w-5 text-ocean-600" />
-          <CardTitle className="text-ocean-800">Detailed Writing Guidance</CardTitle>
+          <Lightbulb className="h-4 w-4 sm:h-5 sm:w-5 text-ocean-600" />
+          <CardTitle className="text-base sm:text-lg text-ocean-800">Detailed Writing Guidance</CardTitle>
         </div>
-        <CardDescription>
+        <CardDescription className="text-xs sm:text-sm">
           Personalized feedback and actionable tips to improve your next essay
         </CardDescription>
       </CardHeader>
-      <CardContent className="pt-6">
+      <CardContent className="pt-4 sm:pt-6 px-4 sm:px-6">
         {isGenerating && (
-          <div className="flex items-center gap-3 text-sm text-ocean-700 pb-2">
+          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-ocean-700 pb-2">
             <span>Analyzing your essay and generating personalized guidance</span>
             <BouncingDots size="sm" color="bg-ocean-500" />
           </div>
@@ -202,31 +202,31 @@ export function DetailedGuidance({ essayId, hasImprovedEssay, initialGuidance }:
           <div className="space-y-6">
             {/* Overall Assessment */}
             {guidance.overall_assessment && (
-              <div className="bg-gradient-to-br from-ocean-50 to-cyan-50 border border-ocean-200 rounded-lg p-5 space-y-4">
+              <div className="bg-gradient-to-br from-ocean-50 to-cyan-50 border border-ocean-200 rounded-lg p-3 sm:p-5 space-y-3 sm:space-y-4">
                 <div>
-                  <h3 className="font-semibold text-ocean-800 mb-2 flex items-center gap-2">
-                    <Target className="h-4 w-4 text-ocean-600" />
+                  <h3 className="font-semibold text-ocean-800 mb-2 flex items-center gap-2 text-sm sm:text-base">
+                    <Target className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-ocean-600" />
                     Overall Assessment
                   </h3>
-                  <p className="text-sm text-ocean-700 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-ocean-700 leading-relaxed">
                     {guidance.overall_assessment.first_impression}
                   </p>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
                   {/* Strongest Aspect - Green */}
-                  <div className="bg-white rounded-md p-3 border border-green-200">
+                  <div className="bg-white rounded-md p-2.5 sm:p-3 border border-green-200">
                     <p className="text-xs font-semibold text-green-700 mb-1">✓ Strongest Aspect</p>
-                    <p className="text-sm text-ocean-800 font-medium">{guidance.overall_assessment.strongest_aspect}</p>
-                    <p className="text-xs text-ocean-600 mt-2">{guidance.overall_assessment.maintain_this}</p>
+                    <p className="text-xs sm:text-sm text-ocean-800 font-medium">{guidance.overall_assessment.strongest_aspect}</p>
+                    <p className="text-xs text-ocean-600 mt-1.5 sm:mt-2">{guidance.overall_assessment.maintain_this}</p>
                   </div>
 
                   {/* Priority Fixes - Ocean Blue */}
-                  <div className="bg-white rounded-md p-3 border border-ocean-200">
+                  <div className="bg-white rounded-md p-2.5 sm:p-3 border border-ocean-200">
                     <p className="text-xs font-semibold text-ocean-700 mb-1">→ Priority Improvements</p>
                     <ul className="space-y-1">
                       {guidance.overall_assessment.priority_fixes.map((fix, idx) => (
-                        <li key={idx} className="text-sm text-ocean-800 flex items-start gap-1">
+                        <li key={idx} className="text-xs sm:text-sm text-ocean-800 flex items-start gap-1">
                           <span className="text-ocean-500 mt-0.5">•</span>
                           <span>{fix}</span>
                         </li>
@@ -237,12 +237,12 @@ export function DetailedGuidance({ essayId, hasImprovedEssay, initialGuidance }:
 
                 {/* Next Essay Goals */}
                 {guidance.overall_assessment.next_essay_goals && (
-                  <div className="bg-white rounded-md p-3 border border-ocean-200">
+                  <div className="bg-white rounded-md p-2.5 sm:p-3 border border-ocean-200">
                     <p className="text-xs font-semibold text-ocean-700 mb-2">🎯 Next Essay Goals</p>
-                    <div className="grid sm:grid-cols-2 gap-2 text-sm">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm">
                       {Object.entries(guidance.overall_assessment.next_essay_goals).map(([key, value]) => (
-                        <div key={key} className="flex items-start gap-2">
-                          <CheckCircle2 className="h-4 w-4 text-ocean-600 mt-0.5 flex-shrink-0" />
+                        <div key={key} className="flex items-start gap-1.5 sm:gap-2">
+                          <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-ocean-600 mt-0.5 flex-shrink-0" />
                           <span className="text-ocean-800">{value}</span>
                         </div>
                       ))}
@@ -251,8 +251,8 @@ export function DetailedGuidance({ essayId, hasImprovedEssay, initialGuidance }:
                 )}
 
                 {/* Encouragement - Green */}
-                <div className="bg-green-50 rounded-md p-3 border border-green-200">
-                  <p className="text-sm text-green-800">
+                <div className="bg-green-50 rounded-md p-2.5 sm:p-3 border border-green-200">
+                  <p className="text-xs sm:text-sm text-green-800">
                     💪 {guidance.overall_assessment.encouragement}
                   </p>
                 </div>
@@ -264,15 +264,15 @@ export function DetailedGuidance({ essayId, hasImprovedEssay, initialGuidance }:
               {/* Grammar Improvements - Ocean Blue for improvements, Red for errors, Green for positive */}
               {guidance.grammar_improvements && guidance.grammar_improvements.length > 0 && (
                 <AccordionItem value="grammar" className="border border-ocean-200 rounded-lg">
-                  <AccordionTrigger className="px-4 hover:bg-ocean-50 rounded-lg">
+                  <AccordionTrigger className="px-3 sm:px-4 hover:bg-ocean-50 rounded-lg">
                     <div className="flex items-center gap-2">
                       <Badge className="bg-ocean-600">
                         {guidance.grammar_improvements.length}
                       </Badge>
-                      <span className="font-semibold text-ocean-800">Grammar Enhancements</span>
+                      <span className="font-semibold text-ocean-800 text-sm">Grammar Enhancements</span>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="px-4 pb-4 pt-2">
+                  <AccordionContent className="px-3 sm:px-4 pb-3 sm:pb-4 pt-2">
                     <div className="space-y-3">
                       {guidance.grammar_improvements.map((item, idx) => (
                         <div key={idx}>
@@ -384,15 +384,15 @@ export function DetailedGuidance({ essayId, hasImprovedEssay, initialGuidance }:
               {/* Coherence Improvements */}
               {guidance.coherence_improvements && guidance.coherence_improvements.length > 0 && (
                 <AccordionItem value="coherence" className="border border-ocean-200 rounded-lg">
-                  <AccordionTrigger className="px-4 hover:bg-ocean-50 rounded-lg">
+                  <AccordionTrigger className="px-3 sm:px-4 hover:bg-ocean-50 rounded-lg">
                     <div className="flex items-center gap-2">
                       <Badge className="bg-ocean-600">
                         {guidance.coherence_improvements.length}
                       </Badge>
-                      <span className="font-semibold text-ocean-800">Coherence & Flow</span>
+                      <span className="font-semibold text-ocean-800 text-sm">Coherence & Flow</span>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="px-4 pb-4 pt-2">
+                  <AccordionContent className="px-3 sm:px-4 pb-3 sm:pb-4 pt-2">
                     <div className="space-y-3">
                       {guidance.coherence_improvements.map((item, idx) => (
                         <div key={idx}>
@@ -450,15 +450,15 @@ export function DetailedGuidance({ essayId, hasImprovedEssay, initialGuidance }:
               {/* Task Response Depth */}
               {guidance.task_response_depth && guidance.task_response_depth.length > 0 && (
                 <AccordionItem value="task" className="border border-ocean-200 rounded-lg">
-                  <AccordionTrigger className="px-4 hover:bg-ocean-50 rounded-lg">
+                  <AccordionTrigger className="px-3 sm:px-4 hover:bg-ocean-50 rounded-lg">
                     <div className="flex items-center gap-2">
                       <Badge className="bg-ocean-600">
                         {guidance.task_response_depth.length}
                       </Badge>
-                      <span className="font-semibold text-ocean-800">Task Response & Depth</span>
+                      <span className="font-semibold text-ocean-800 text-sm">Task Response & Depth</span>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="px-4 pb-4 pt-2">
+                  <AccordionContent className="px-3 sm:px-4 pb-3 sm:pb-4 pt-2">
                     <div className="space-y-3">
                       {guidance.task_response_depth.map((item, idx) => (
                         <div key={idx}>

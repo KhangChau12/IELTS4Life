@@ -181,34 +181,34 @@ export function VocabGenerateButtons({
   if (isGuest) {
     return (
       <div className="space-y-4">
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
-          <div className="flex items-start gap-3 mb-4">
-            <GraduationCap className="h-6 w-6 text-cyan-600 mt-1 flex-shrink-0" />
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 sm:p-6">
+          <div className="flex items-start gap-3 mb-3 sm:mb-4">
+            <GraduationCap className="h-5 w-5 sm:h-6 sm:w-6 text-cyan-600 mt-1 flex-shrink-0" />
             <div>
-              <h3 className="font-semibold text-ocean-800 text-lg mb-2">
+              <h3 className="font-semibold text-ocean-800 text-base sm:text-lg mb-1.5 sm:mb-2">
                 Sign Up FREE to Unlock Advanced Vocabulary Features
               </h3>
-              <p className="text-ocean-700 text-sm leading-relaxed mb-3">
+              <p className="text-ocean-700 text-xs sm:text-sm leading-relaxed mb-2 sm:mb-3">
                 Generate <strong>C1-C2 level vocabulary</strong> to paraphrase words from your essay and discover <strong>fancy topic-specific vocabulary</strong> for higher Lexical Resource scores.
               </p>
             </div>
           </div>
-          <div className="space-y-2 mb-4 ml-9">
-            <div className="flex items-center gap-2 text-sm text-ocean-700">
-              <Sparkles className="h-4 w-4 text-amber-500" />
+          <div className="space-y-2 mb-3 sm:mb-4 ml-0 sm:ml-9">
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-ocean-700">
+              <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-500 flex-shrink-0" />
               <span>AI-powered vocabulary suggestions tailored to your essay</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-ocean-700">
-              <Zap className="h-4 w-4 text-blue-500" />
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-ocean-700">
+              <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-500 flex-shrink-0" />
               <span>Create flashcards &amp; take quizzes to master new vocabulary</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-ocean-700">
-              <BarChart3 className="h-4 w-4 text-green-500" />
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-ocean-700">
+              <BarChart3 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-green-500 flex-shrink-0" />
               <span>Track your writing progress &amp; vocabulary growth in Dashboard</span>
             </div>
           </div>
-          <Link href="/login" className="block ml-9">
-            <Button className="bg-ocean-700 hover:bg-ocean-800 text-white">
+          <Link href="/login" className="block ml-0 sm:ml-9">
+            <Button className="bg-ocean-700 hover:bg-ocean-800 text-white w-full sm:w-auto">
               <GraduationCap className="h-4 w-4 mr-2" />
               Sign Up FREE - Get 3 Essays/Day
             </Button>
@@ -232,10 +232,10 @@ export function VocabGenerateButtons({
       )}
 
       {/* Paraphrase Vocabulary section */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div>
-            <h4 className="text-sm font-semibold text-ocean-800">Paraphrase Vocabulary</h4>
+      <div className="space-y-2 sm:space-y-3">
+        <div className="flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <h4 className="text-xs sm:text-sm font-semibold text-ocean-800">Paraphrase Vocabulary</h4>
             <p className="text-xs text-ocean-500 mt-0.5">Words from your essay upgraded to C1–C2 level</p>
           </div>
           {hasParaphrase && paraphrasePreview.length > 0 && (
@@ -274,10 +274,10 @@ export function VocabGenerateButtons({
       <div className="border-t border-slate-100" />
 
       {/* Topic Vocabulary section */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div>
-            <h4 className="text-sm font-semibold text-ocean-800">Topic Vocabulary</h4>
+      <div className="space-y-2 sm:space-y-3">
+        <div className="flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <h4 className="text-xs sm:text-sm font-semibold text-ocean-800">Topic Vocabulary</h4>
             <p className="text-xs text-ocean-500 mt-0.5">Advanced topic-specific words for higher Lexical Resource</p>
           </div>
           {hasTopic && topicPreview.length > 0 && (
