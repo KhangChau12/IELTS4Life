@@ -229,13 +229,13 @@ export default function VocabularyDetailPage({ params }: VocabularyPageProps) {
         <Tabs defaultValue={hasParaphraseVocab ? 'paraphrase' : 'topic'} className="w-full">
           {/* CTA strip */}
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
-            <Link href={`/history/${params.essayId}/vocabulary/flashcards?type=mixed`}>
+            <Link href={`/history/${params.essayId}/vocabulary/flashcards`}>
               <Button className="bg-gradient-to-r from-ocean-600 to-cyan-600 hover:from-ocean-700 hover:to-cyan-700 text-white shadow-sm text-sm h-9">
                 <BookOpen className="mr-2 h-4 w-4" />
                 Flashcards
               </Button>
             </Link>
-            <Link href={`/history/${params.essayId}/vocabulary/quiz?type=both`}>
+            <Link href={`/history/${params.essayId}/vocabulary/quiz`}>
               <Button variant="outline" className="border-ocean-300 text-ocean-700 hover:bg-ocean-50 text-sm h-9">
                 <BrainCircuit className="mr-2 h-4 w-4" />
                 Quiz
