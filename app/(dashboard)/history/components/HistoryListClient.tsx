@@ -63,10 +63,10 @@ const formatDate = (dateString: string): string =>
 
 function getScoreBg(score: number | null): string {
   if (score === null) return 'bg-slate-400'
-  if (score >= 8) return 'bg-gradient-to-br from-violet-500 to-purple-600'
-  if (score >= 7) return 'bg-gradient-to-br from-emerald-500 to-green-600'
-  if (score >= 6) return 'bg-gradient-to-br from-ocean-500 to-blue-600'
-  if (score >= 5) return 'bg-gradient-to-br from-amber-500 to-orange-500'
+  if (score >= 8) return 'bg-gradient-to-br from-violet-500 to-purple-500'
+  if (score >= 7) return 'bg-gradient-to-br from-teal-500 to-cyan-600'
+  if (score >= 6) return 'bg-gradient-to-br from-sky-500 to-sky-600'
+  if (score >= 5) return 'bg-gradient-to-br from-orange-400 to-orange-500'
   return 'bg-gradient-to-br from-red-500 to-rose-600'
 }
 
@@ -77,9 +77,9 @@ function getScoreStyle(score: number | null): React.CSSProperties {
   })
   if (score === null) return glow(148, 163, 184)  // slate
   if (score >= 8) return glow(139, 92,  246)       // violet
-  if (score >= 7) return glow(16,  185, 129)        // emerald
-  if (score >= 6) return glow(14,  165, 233)        // ocean/sky
-  if (score >= 5) return glow(245, 158, 11)         // amber
+  if (score >= 7) return glow(20,  184, 166)        // teal
+  if (score >= 6) return glow(14,  165, 233)        // sky
+  if (score >= 5) return glow(249, 115, 22)         // orange
   return glow(239, 68,  68)                         // red
 }
 

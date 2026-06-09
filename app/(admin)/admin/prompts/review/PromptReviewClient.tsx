@@ -55,6 +55,7 @@ export function PromptReviewClient() {
   const [similarPrompts, setSimilarPrompts] = useState<SimilarApprovedPrompt[]>([])
   const [isSimilarLoading, setIsSimilarLoading] = useState(false)
   const [actionResult, setActionResult] = useState<'approved' | 'rejected' | null>(null)
+  const [reviewedCount, setReviewedCount] = useState(0)
 
   const currentPrompt = prompts[currentIndex] ?? null
 
@@ -119,8 +120,14 @@ export function PromptReviewClient() {
     return () => clearTimeout(timer)
   }, [editTopicId, editQuestionType]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const advance = useCallback(() => {
-    setCurrentIndex(i => i + 1)
+  const removeCurrentAndAdvance = useCallback((id: string) => {
+    setReviewedCount(c => c + 1)
+    setPrompts(prev => {
+      const next = prev.filter(p => p.id !== id)
+      // clamp index so it never exceeds the new list length
+      setCurrentIndex(i => Math.min(i, Math.max(0, next.length - 1)))
+      return next
+    })
   }, [])
 
   const handleApprove = async () => {
@@ -138,10 +145,7 @@ export function PromptReviewClient() {
       })
       if (res.ok) {
         setActionResult('approved')
-        setTimeout(() => {
-          setPrompts(prev => prev.filter(p => p.id !== currentPrompt.id))
-          advance()
-        }, 800)
+        setTimeout(() => removeCurrentAndAdvance(currentPrompt.id), 800)
       }
     } finally {
       setIsActing(false)
@@ -157,10 +161,7 @@ export function PromptReviewClient() {
       })
       if (res.ok) {
         setActionResult('rejected')
-        setTimeout(() => {
-          setPrompts(prev => prev.filter(p => p.id !== currentPrompt.id))
-          advance()
-        }, 800)
+        setTimeout(() => removeCurrentAndAdvance(currentPrompt.id), 800)
       }
     } finally {
       setIsActing(false)
@@ -187,8 +188,7 @@ export function PromptReviewClient() {
     )
   }
 
-  const remaining = prompts.length - currentIndex
-  const reviewed = currentIndex
+  const remaining = prompts.length
 
   if (remaining <= 0) {
     return (
@@ -200,7 +200,7 @@ export function PromptReviewClient() {
           <div>
             <p className="text-lg font-semibold text-ocean-800">All caught up!</p>
             <p className="text-ocean-500 text-sm mt-1">
-              {reviewed > 0 ? `You reviewed ${reviewed} prompt${reviewed > 1 ? 's' : ''} this session.` : 'No pending prompts to review.'}
+              {reviewedCount > 0 ? `You reviewed ${reviewedCount} prompt${reviewedCount > 1 ? 's' : ''} this session.` : 'No pending prompts to review.'}
             </p>
           </div>
         </CardContent>
@@ -221,10 +221,10 @@ export function PromptReviewClient() {
             <Inbox className="h-4 w-4" />
             <span className="font-semibold text-ocean-800">{remaining}</span> remaining
           </div>
-          {reviewed > 0 && (
+          {reviewedCount > 0 && (
             <div className="flex items-center gap-1.5 text-sm text-ocean-500">
               <CheckCircle2 className="h-3.5 w-3.5" />
-              {reviewed} reviewed this session
+              {reviewedCount} reviewed this session
             </div>
           )}
           {currentPrompt?.submitted_count > 1 && (

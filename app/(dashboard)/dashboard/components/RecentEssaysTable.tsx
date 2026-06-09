@@ -14,10 +14,10 @@ interface RecentEssaysTableProps {
 
 function getScoreColor(score: number | null): string {
   if (score === null) return 'bg-gray-500'
-  if (score >= 8) return 'bg-gradient-to-r from-violet-500 to-purple-600'
-  if (score >= 7) return 'bg-gradient-to-r from-emerald-500 to-green-600'
-  if (score >= 6) return 'bg-gradient-to-r from-ocean-500 to-blue-600'
-  if (score >= 5) return 'bg-gradient-to-r from-amber-500 to-orange-500'
+  if (score >= 8) return 'bg-gradient-to-r from-violet-500 to-purple-500'
+  if (score >= 7) return 'bg-gradient-to-r from-teal-500 to-cyan-600'
+  if (score >= 6) return 'bg-gradient-to-r from-sky-500 to-sky-600'
+  if (score >= 5) return 'bg-gradient-to-r from-orange-400 to-orange-500'
   return 'bg-gradient-to-r from-red-500 to-rose-600'
 }
 

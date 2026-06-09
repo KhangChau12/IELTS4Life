@@ -55,19 +55,19 @@ interface EssayResultsClientProps {
 
 function getScoreColor(score: number | null): string {
   if (score === null) return 'bg-gray-500'
-  if (score >= 8) return 'bg-gradient-to-r from-violet-500 to-purple-600'
-  if (score >= 7) return 'bg-gradient-to-r from-emerald-500 to-green-600'
-  if (score >= 6) return 'bg-gradient-to-r from-ocean-500 to-blue-600'
-  if (score >= 5) return 'bg-gradient-to-r from-amber-500 to-orange-500'
+  if (score >= 8) return 'bg-gradient-to-r from-violet-500 to-purple-500'
+  if (score >= 7) return 'bg-gradient-to-r from-teal-500 to-cyan-600'
+  if (score >= 6) return 'bg-gradient-to-r from-sky-500 to-sky-600'
+  if (score >= 5) return 'bg-gradient-to-r from-orange-400 to-orange-500'
   return 'bg-gradient-to-r from-red-500 to-rose-600'
 }
 
 function getScoreBarColor(score: number | null): string {
   if (score === null) return 'bg-gray-300'
-  if (score >= 8) return 'bg-gradient-to-r from-violet-400 to-purple-500'
-  if (score >= 7) return 'bg-gradient-to-r from-emerald-400 to-green-500'
-  if (score >= 6) return 'bg-gradient-to-r from-ocean-400 to-blue-500'
-  if (score >= 5) return 'bg-gradient-to-r from-amber-400 to-orange-400'
+  if (score >= 8) return 'bg-gradient-to-r from-violet-400 to-purple-400'
+  if (score >= 7) return 'bg-gradient-to-r from-teal-400 to-cyan-500'
+  if (score >= 6) return 'bg-gradient-to-r from-sky-400 to-sky-500'
+  if (score >= 5) return 'bg-gradient-to-r from-orange-300 to-orange-400'
   return 'bg-gradient-to-r from-red-400 to-rose-500'
 }
 
@@ -438,16 +438,24 @@ export function EssayResultsClient({
                   <p className="font-semibold text-ocean-800 text-sm mb-2">Score Guide</p>
                   <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-1 gap-1.5">
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-green-600 flex-shrink-0" />
-                      <span><strong>7.0+:</strong> Good to Excellent</span>
+                      <div className="w-2 h-2 rounded-full bg-violet-500 flex-shrink-0" />
+                      <span><strong>8.0+:</strong> Very Good to Expert</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-yellow-600 flex-shrink-0" />
-                      <span><strong>5.5–6.5:</strong> Moderate to Competent</span>
+                      <div className="w-2 h-2 rounded-full bg-teal-500 flex-shrink-0" />
+                      <span><strong>7.0–7.9:</strong> Good</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-red-600 flex-shrink-0" />
-                      <span><strong>&lt;5.5:</strong> Needs Improvement</span>
+                      <div className="w-2 h-2 rounded-full bg-sky-500 flex-shrink-0" />
+                      <span><strong>6.0–6.9:</strong> Competent</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-orange-400 flex-shrink-0" />
+                      <span><strong>5.0–5.9:</strong> Modest</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-red-500 flex-shrink-0" />
+                      <span><strong>&lt;5.0:</strong> Needs Improvement</span>
                     </div>
                   </div>
                 </div>
