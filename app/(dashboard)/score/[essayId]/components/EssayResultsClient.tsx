@@ -155,26 +155,12 @@ function CriterionRow({
           <div className="flex items-center gap-2 mb-1.5 sm:mb-2">
             <p className="font-semibold text-ocean-800 text-sm sm:text-[15px] leading-tight">{criterion.name}</p>
           </div>
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all duration-500 ${getScoreBarColor(score)}`}
-                style={{ width: `${barPercent}%` }}
-              />
-            </div>
-            <span className="text-xs text-ocean-500 font-medium whitespace-nowrap tabular-nums">
-              {score !== null ? `${formatCriterionScore(score, overallScore)} / 9` : 'N/A'}
-            </span>
+          <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+            <div
+              className={`h-full rounded-full transition-all duration-500 ${getScoreBarColor(score)}`}
+              style={{ width: `${barPercent}%` }}
+            />
           </div>
-          {/* Collapsed: inline counts as plain text */}
-          {!isExpanded && (errorCount > 0 || strengthCount > 0) && (
-            <p className="mt-1 text-[11px] text-ocean-400">
-              {[
-                strengthCount > 0 && `${strengthCount} strength${strengthCount !== 1 ? 's' : ''}`,
-                errorCount > 0 && `${errorCount} issue${errorCount !== 1 ? 's' : ''}`,
-              ].filter(Boolean).join(' · ')}
-            </p>
-          )}
         </div>
 
         <Badge className={`${getScoreColor(score)} text-white font-bold px-2.5 sm:px-3 py-1 text-sm sm:text-base flex-shrink-0 min-w-[2.5rem] text-center justify-center`}>

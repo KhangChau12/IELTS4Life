@@ -225,6 +225,7 @@ export function PromptContextZone({
   const [topicName, setTopicName] = useState(initialTopicName)
   const [similar, setSimilar] = useState<SimilarData | null>(null)
   const [pollCount, setPollCount] = useState(0)
+  const hasPolledRef = useRef(false)
 
   const fetchSimilar = useCallback(async (tid: string, qtype: string) => {
     try {
@@ -238,17 +239,32 @@ export function PromptContextZone({
     }
   }, [])
 
-  // Trigger classification whenever status is unclassified (on mount for new/old essays,
-  // or after polling gives up on a stale pending status from a killed serverless run)
-  useEffect(() => {
-    if (status !== 'unclassified') return
+  // Trigger classification:
+  // - on mount if status is 'unclassified' (new paste essay) or 'pending' (stale from killed serverless)
+  // - again whenever polling gives up and resets status back to 'unclassified'
+  const triggerClassify = useCallback(() => {
     setStatus('pending')
     fetch('/api/essays/classify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ essay_id: essayId, prompt_text: promptText }),
     }).catch(() => {/* silent */})
-  }, [status, essayId, promptText])
+  }, [essayId, promptText])
+
+  // On mount: trigger if not yet done
+  useEffect(() => {
+    if (initialClassificationStatus === 'unclassified' || initialClassificationStatus === 'pending') {
+      triggerClassify()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // After polling gives up and resets to 'unclassified': trigger classify again
+  useEffect(() => {
+    if (status === 'unclassified' && hasPolledRef.current) {
+      triggerClassify()
+    }
+  }, [status, triggerClassify])
 
   // On mount: if already classified with topic+type, fetch similar immediately
   useEffect(() => {
@@ -259,9 +275,10 @@ export function PromptContextZone({
 
   // Poll status until classification is done (max 30 polls × 2s = 60s)
   // If still pending after 30 polls (classify was likely killed by serverless timeout),
-  // reset to unclassified so the next useEffect retriggers classification.
+  // reset to unclassified so the retry useEffect above retriggers classification.
   useEffect(() => {
     if (status !== 'pending') return
+    hasPolledRef.current = true
     if (pollCount >= 30) {
       setStatus('unclassified')
       setPollCount(0)

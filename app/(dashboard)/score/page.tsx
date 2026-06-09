@@ -262,7 +262,7 @@ export default function WritePage() {
               </div>
             </div>
           </div>
-          <p className="text-center text-xs text-slate-400 mt-4">This usually takes 3–5 seconds</p>
+          <p className="text-center text-xs text-slate-400 mt-4">This usually takes 5–10 seconds</p>
         </div>
       </div>
     )

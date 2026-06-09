@@ -12,9 +12,12 @@ function normalizePromptText(text: string): string {
 }
 
 export async function POST(request: Request) {
+  let essay_id: string | null = null
+
   try {
     const body = await request.json()
-    const { essay_id, prompt_text } = body
+    const { essay_id: eid, prompt_text } = body
+    essay_id = eid ?? null
 
     if (!essay_id || !prompt_text) {
       return NextResponse.json({ error: 'essay_id and prompt_text are required' }, { status: 400 })
@@ -22,14 +25,13 @@ export async function POST(request: Request) {
 
     const supabase = createServiceRoleClient()
 
-    // Guard: skip if already classified (e.g. user refreshes while classification was in progress)
+    // Guard: skip if already done — 'pending' may be stale from a killed serverless invocation
     const { data: existingEssay } = await supabase
       .from('essays')
       .select('prompt_classification_status')
       .eq('id', essay_id)
       .single()
 
-    // Skip only if already done — 'pending' may be stale from a killed serverless invocation
     const skipStatuses = ['classified', 'invalid']
     if (skipStatuses.includes(existingEssay?.prompt_classification_status ?? '')) {
       return NextResponse.json({ classified: existingEssay?.prompt_classification_status === 'classified', skipped: true })
@@ -47,30 +49,37 @@ export async function POST(request: Request) {
       .select('id, name')
       .order('name')
 
-    if (topicsError || !topics) {
-      logger.error('[classify] Failed to fetch topics:', topicsError)
+    if (topicsError || !topics || topics.length === 0) {
+      logger.error('[classify] Failed to fetch topics or no topics exist:', topicsError)
+      await supabase
+        .from('essays')
+        .update({ prompt_classification_status: 'unclassified' })
+        .eq('id', essay_id)
       return NextResponse.json({ error: 'Failed to fetch topics' }, { status: 500 })
     }
 
     const questionTypesList = Object.entries(QUESTION_TYPES).map(([key, label]) => ({ key, label }))
 
-    // Call Groq to classify the prompt
+    // Call Groq to classify the prompt (8s timeout to leave room for DB ops within serverless limit)
     const groqClient = createGroqClient()
-    const completion = await groqClient.chat.completions.create({
-      model: MODELS.ESSAY_SCORING,
-      messages: [
-        {
-          role: 'system',
-          content: PROMPT_CLASSIFICATION_SYSTEM_PROMPT(topics, questionTypesList),
-        },
-        {
-          role: 'user',
-          content: prompt_text,
-        },
-      ],
-      response_format: { type: 'json_object' },
-      temperature: 0.1,
-    })
+    const completion = await groqClient.chat.completions.create(
+      {
+        model: MODELS.ESSAY_SCORING,
+        messages: [
+          {
+            role: 'system',
+            content: PROMPT_CLASSIFICATION_SYSTEM_PROMPT(topics, questionTypesList),
+          },
+          {
+            role: 'user',
+            content: prompt_text,
+          },
+        ],
+        response_format: { type: 'json_object' },
+        temperature: 0.1,
+      },
+      { timeout: 8000 }
+    )
 
     const raw = completion.choices[0].message.content || '{}'
     let result: { valid: boolean; topic_id?: string; question_type?: string; reason?: string }
@@ -87,12 +96,10 @@ export async function POST(request: Request) {
     }
 
     if (!result.valid) {
-      // Mark essay as invalid classification — no prompt inserted
       await supabase
         .from('essays')
         .update({ prompt_classification_status: 'invalid' })
         .eq('id', essay_id)
-
       return NextResponse.json({ classified: false, reason: result.reason })
     }
 
@@ -111,14 +118,12 @@ export async function POST(request: Request) {
     let promptId: string | null = null
 
     if (existing) {
-      // Duplicate — increment submitted_count and reuse existing prompt
       promptId = existing.id
       await supabase
         .from('writing_prompts')
         .update({ submitted_count: existing.submitted_count + 1 })
         .eq('id', existing.id)
     } else {
-      // New prompt — insert as pending for admin review
       const { data: inserted, error: insertError } = await supabase
         .from('writing_prompts')
         .insert({
@@ -129,7 +134,7 @@ export async function POST(request: Request) {
           status: 'pending',
           source: 'user_submission',
           submitted_count: 1,
-          created_by: null, // null = user submission, not admin-created
+          created_by: null,
         })
         .select('id')
         .single()
@@ -137,12 +142,10 @@ export async function POST(request: Request) {
       if (!insertError && inserted) {
         promptId = inserted.id
       } else {
-        // Log but don't fail — classification result goes into essay regardless
         logger.error('[classify] Failed to insert prompt (non-fatal):', insertError)
       }
     }
 
-    // Update essay: store classification directly (topic/type survive prompt deletion)
     await supabase
       .from('essays')
       .update({
@@ -163,6 +166,17 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     logger.error('[classify] Unexpected error:', error)
+    // Reset to unclassified so the client can retry — avoids essay stuck at 'pending'
+    if (essay_id) {
+      try {
+        const supabase = createServiceRoleClient()
+        await supabase
+          .from('essays')
+          .update({ prompt_classification_status: 'unclassified' })
+          .eq('id', essay_id)
+          .eq('prompt_classification_status', 'pending')
+      } catch { /* best-effort */ }
+    }
     return NextResponse.json({ error: 'Classification failed' }, { status: 500 })
   }
 }
