@@ -139,7 +139,7 @@ export default function WritePage() {
     const interval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 95) { clearInterval(interval); return 95 }
-        return prev + 2.375
+        return prev + 1.1875
       })
     }, 100)
     return () => clearInterval(interval)

@@ -34,6 +34,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ classified: existingEssay?.prompt_classification_status === 'classified', skipped: true })
     }
 
+    // Mark as pending immediately to prevent duplicate concurrent classify calls
+    await supabase
+      .from('essays')
+      .update({ prompt_classification_status: 'pending' })
+      .eq('id', essay_id)
+
     // Fetch all topics for the classification prompt
     const { data: topics, error: topicsError } = await supabase
       .from('prompt_topics')
