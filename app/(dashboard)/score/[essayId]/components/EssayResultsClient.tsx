@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -313,6 +313,19 @@ export function EssayResultsClient({
     })
   }
 
+  useEffect(() => {
+    const tabValues = TABS.map(t => t.value)
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) return
+      const num = parseInt(e.key)
+      if (num >= 1 && num <= tabValues.length) {
+        handleTabChange(tabValues[num - 1])
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [activeTab])
+
   const scoredCriteria = criteria.filter(c => c.score !== null) as Array<CriterionData & { score: number }>
   const highestCriterion = scoredCriteria.reduce<(CriterionData & { score: number }) | null>((best, cur) => {
     if (!best || cur.score > best.score) return cur
@@ -354,21 +367,24 @@ export function EssayResultsClient({
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         {/* Sticky tab bar */}
         <div className="sticky top-20 z-30 -mx-4 px-4 bg-ocean-50/95 backdrop-blur-sm border-b border-ocean-100">
-          <TabsList className="w-full h-auto bg-transparent p-0 rounded-none border-0 gap-0">
-            {TABS.map(({ value, label, Icon }) => (
-              <TabsTrigger
-                key={value}
-                value={value}
-                className="flex-1 flex items-center justify-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent px-1 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-slate-500 transition-colors hover:text-ocean-700 hover:bg-ocean-100 data-[state=active]:border-ocean-600 data-[state=active]:text-ocean-700 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
-              >
-                <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
-                <span>{label}</span>
-                {value === 'improvement' && isImprovementGenerating && visitedTabs.has('improvement') && (
-                  <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-cyan-500 animate-pulse flex-shrink-0" />
-                )}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+          <div className="flex items-center">
+            <TabsList className="flex-1 h-auto bg-transparent p-0 rounded-none border-0 gap-0">
+              {TABS.map(({ value, label, Icon }, idx) => (
+                <TabsTrigger
+                  key={value}
+                  value={value}
+                  className="flex-1 flex items-center justify-center gap-1 sm:gap-2 rounded-none border-b-2 border-transparent px-1 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-slate-500 transition-colors hover:text-ocean-700 hover:bg-ocean-100 data-[state=active]:border-ocean-600 data-[state=active]:text-ocean-700 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+                >
+                  <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
+                  <span>{label}</span>
+                  <span className="hidden sm:inline ml-0.5 text-[10px] text-ocean-300 font-mono">{idx + 1}</span>
+                  {value === 'improvement' && isImprovementGenerating && visitedTabs.has('improvement') && (
+                    <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-cyan-500 animate-pulse flex-shrink-0" />
+                  )}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
         </div>
 
         {/* ── Score tab ── */}

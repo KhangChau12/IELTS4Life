@@ -69,6 +69,28 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vocabulary])
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
+
+      if (showResults) {
+        if (e.key === 'Enter') restartQuiz()
+        return
+      }
+
+      if (!currentQuestion?.options) return
+
+      const num = parseInt(e.key)
+      if (num >= 1 && num <= currentQuestion.options.length) {
+        handleAnswerSelect(currentQuestion.options[num - 1])
+      } else if (e.key === 'Enter' && currentAnswer.trim()) {
+        handleNextQuestion()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  })
+
   const generateQuestions = (type: QuizType) => {
     if (!type) return
 
@@ -373,7 +395,11 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
             </CardContent>
           </Card>
 
-          <div className="flex justify-end">
+          <div className="flex justify-between items-center">
+            <p className="text-xs text-ocean-400 flex items-center gap-x-2 flex-wrap gap-y-1">
+              <span><kbd className="px-1.5 py-0.5 rounded bg-ocean-50 border border-ocean-200 font-mono text-xs">1–4</kbd> Select</span>
+              <span><kbd className="px-1.5 py-0.5 rounded bg-ocean-50 border border-ocean-200 font-mono text-xs">Enter</kbd> Next</span>
+            </p>
             <Button
               onClick={handleNextQuestion}
               disabled={!currentAnswer.trim()}
@@ -440,7 +466,11 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
             </CardContent>
           </Card>
 
-          <div className="flex gap-3 justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <p className="text-xs text-ocean-400">
+              <kbd className="px-1.5 py-0.5 rounded bg-ocean-50 border border-ocean-200 font-mono text-xs">Enter</kbd> Take another quiz
+            </p>
+            <div className="flex gap-3">
             <Button
               onClick={restartQuiz}
               className="bg-ocean-600 hover:bg-ocean-700 text-white"
@@ -452,6 +482,7 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
                 Back to Vocabulary
               </Button>
             </Link>
+            </div>
           </div>
         </div>
       )}

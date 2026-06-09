@@ -58,6 +58,22 @@ export default function FlashcardsPage({ params }: { params: { essayId: string }
     fetchVocabulary()
   }, [fetchVocabulary])
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
+      if (e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault()
+        handleFlip()
+      } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+        handleNext()
+      } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        handlePrevious()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  })
+
   const handleNext = () => {
     if (currentIndex < vocabulary.length - 1) {
       setIsFlipped(false)
@@ -308,8 +324,10 @@ export default function FlashcardsPage({ params }: { params: { essayId: string }
 
       {/* Keyboard Shortcuts Hint */}
       <div className="mt-6 p-3 bg-gradient-to-br from-cyan-50 to-blue-50 border border-cyan-200 rounded-lg">
-        <p className="text-sm text-ocean-700 text-center">
-          <strong>Tip:</strong> Click the card or press the Flip button to reveal the answer
+        <p className="text-sm text-ocean-700 text-center flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+          <span><kbd className="px-1.5 py-0.5 rounded bg-white border border-cyan-300 font-mono text-xs">Space</kbd> Flip</span>
+          <span><kbd className="px-1.5 py-0.5 rounded bg-white border border-cyan-300 font-mono text-xs">←</kbd> Previous</span>
+          <span><kbd className="px-1.5 py-0.5 rounded bg-white border border-cyan-300 font-mono text-xs">→</kbd> Next</span>
         </p>
       </div>
 
