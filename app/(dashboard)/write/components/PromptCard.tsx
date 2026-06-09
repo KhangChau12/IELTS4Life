@@ -46,24 +46,24 @@ export default function PromptCard({ prompt, isAuthenticated }: PromptCardProps)
           <PenTool className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
         )}
 
-        <CardContent className="p-5 relative z-10 flex flex-col h-full">
+        <CardContent className="p-4 sm:p-5 relative z-10 flex flex-col h-full">
           {/* Badges row */}
-          <div className="flex flex-wrap gap-2 mb-3">
-            <Badge variant="outline" className={`text-xs font-medium ${typeColor}`}>
+          <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-2 sm:mb-3">
+            <Badge variant="outline" className={`text-[11px] sm:text-xs font-medium ${typeColor}`}>
               {typeName}
             </Badge>
             {prompt.prompt_topics?.name && (
-              <Badge variant="outline" className="text-xs bg-orange-100 text-orange-800 border-orange-300 font-medium">
+              <Badge variant="outline" className="text-[11px] sm:text-xs bg-orange-100 text-orange-800 border-orange-300 font-medium">
                 {prompt.prompt_topics.name}
               </Badge>
             )}
             {isNew && !hasEssay && (
-              <Badge variant="outline" className="text-xs bg-amber-100 text-amber-700 border-amber-200">
+              <Badge variant="outline" className="text-[11px] sm:text-xs bg-amber-100 text-amber-700 border-amber-200">
                 NEW
               </Badge>
             )}
             {hasEssay && (
-              <Badge className="text-xs bg-green-100 text-green-800 border-green-200 ml-auto">
+              <Badge className="text-[11px] sm:text-xs bg-green-100 text-green-800 border-green-200 ml-auto">
                 <CheckCircle className="h-3 w-3 mr-1" />
                 Score: {prompt.user_essay!.overall_score ?? 'N/A'}
               </Badge>
@@ -71,7 +71,7 @@ export default function PromptCard({ prompt, isAuthenticated }: PromptCardProps)
           </div>
 
           {/* Prompt text */}
-          <p className="text-sm text-ocean-800 line-clamp-4 mb-4 leading-relaxed flex-1">
+          <p className="text-xs sm:text-sm text-ocean-800 line-clamp-4 mb-3 sm:mb-4 leading-relaxed flex-1">
             {prompt.prompt_text}
           </p>
 

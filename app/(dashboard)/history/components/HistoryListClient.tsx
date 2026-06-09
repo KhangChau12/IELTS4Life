@@ -161,66 +161,13 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
       {/* ── Filter Toolbar ── flat, no CardHeader chrome */}
       <Card className="border-ocean-100 shadow-sm bg-ocean-50/50">
         <CardContent className="p-3 md:p-4">
-          <div className="flex flex-wrap items-center gap-2">
-            {/* Count pill */}
+          {/* Row 1: count pill + view toggle + reset */}
+          <div className="flex items-center gap-2 mb-2">
             <span className="inline-flex items-center gap-1.5 text-xs font-medium text-ocean-700 bg-ocean-100 rounded-full px-3 py-1.5 flex-shrink-0">
               <LayoutGrid className="h-3.5 w-3.5" />
-              {filteredEssays.length} of {essays.length} essays
+              {filteredEssays.length} / {essays.length}
             </span>
-
-            {/* Score filter */}
-            <Select value={scoreFilter} onValueChange={setScoreFilter}>
-              <SelectTrigger className="h-8 text-xs border-ocean-200 bg-white w-36">
-                <SlidersHorizontal className="h-3 w-3 mr-1 text-ocean-400 flex-shrink-0" />
-                <SelectValue placeholder="Score" />
-              </SelectTrigger>
-              <SelectContent>
-                {scoreRanges.map(r => (
-                  <SelectItem key={r.value} value={r.value} className="text-xs">{r.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* Date filter */}
-            <Select value={dateFilter} onValueChange={setDateFilter}>
-              <SelectTrigger className="h-8 text-xs border-ocean-200 bg-white w-36">
-                <Calendar className="h-3 w-3 mr-1 text-ocean-400 flex-shrink-0" />
-                <SelectValue placeholder="Date" />
-              </SelectTrigger>
-              <SelectContent>
-                {dateRanges.map(r => (
-                  <SelectItem key={r.value} value={r.value} className="text-xs">{r.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* Vocab status filter */}
-            <Select value={vocabFilter} onValueChange={setVocabFilter}>
-              <SelectTrigger className="h-8 text-xs border-ocean-200 bg-white w-36">
-                <BookMarked className="h-3 w-3 mr-1 text-ocean-400 flex-shrink-0" />
-                <SelectValue placeholder="Vocab" />
-              </SelectTrigger>
-              <SelectContent>
-                {vocabStatuses.map(s => (
-                  <SelectItem key={s.value} value={s.value} className="text-xs">{s.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* Sort */}
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="h-8 text-xs border-ocean-200 bg-white w-36">
-                <SelectValue placeholder="Sort" />
-              </SelectTrigger>
-              <SelectContent>
-                {sortOptions.map(o => (
-                  <SelectItem key={o.value} value={o.value} className="text-xs">{o.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* View toggle + Reset — pushed to right */}
-            <div className="flex items-center gap-1.5 sm:ml-auto">
+            <div className="flex items-center gap-1.5 ml-auto">
               <Button
                 variant="ghost"
                 size="sm"
@@ -233,13 +180,67 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-8 text-xs text-slate-500 hover:text-slate-700"
+                className="h-8 text-xs text-slate-500 hover:text-slate-700 px-2"
                 onClick={clearFilters}
                 disabled={!hasActiveFilters}
               >
                 Reset
               </Button>
             </div>
+          </div>
+
+          {/* Row 2: 4 filters — 2×2 grid on mobile, single row on md+ */}
+          <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2">
+            {/* Score filter */}
+            <Select value={scoreFilter} onValueChange={setScoreFilter}>
+              <SelectTrigger className="h-8 text-xs border-ocean-200 bg-white w-full md:w-32">
+                <SlidersHorizontal className="h-3 w-3 mr-1 text-ocean-400 flex-shrink-0" />
+                <SelectValue placeholder="Score" />
+              </SelectTrigger>
+              <SelectContent>
+                {scoreRanges.map(r => (
+                  <SelectItem key={r.value} value={r.value} className="text-xs">{r.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Date filter */}
+            <Select value={dateFilter} onValueChange={setDateFilter}>
+              <SelectTrigger className="h-8 text-xs border-ocean-200 bg-white w-full md:w-32">
+                <Calendar className="h-3 w-3 mr-1 text-ocean-400 flex-shrink-0" />
+                <SelectValue placeholder="Date" />
+              </SelectTrigger>
+              <SelectContent>
+                {dateRanges.map(r => (
+                  <SelectItem key={r.value} value={r.value} className="text-xs">{r.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Vocab status filter */}
+            <Select value={vocabFilter} onValueChange={setVocabFilter}>
+              <SelectTrigger className="h-8 text-xs border-ocean-200 bg-white w-full md:w-32">
+                <BookMarked className="h-3 w-3 mr-1 text-ocean-400 flex-shrink-0" />
+                <SelectValue placeholder="Vocab" />
+              </SelectTrigger>
+              <SelectContent>
+                {vocabStatuses.map(s => (
+                  <SelectItem key={s.value} value={s.value} className="text-xs">{s.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Sort */}
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="h-8 text-xs border-ocean-200 bg-white w-full md:w-32">
+                <SelectValue placeholder="Sort" />
+              </SelectTrigger>
+              <SelectContent>
+                {sortOptions.map(o => (
+                  <SelectItem key={o.value} value={o.value} className="text-xs">{o.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </CardContent>
       </Card>
@@ -324,29 +325,66 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
               {/* Watermark icon */}
               <BookOpen className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-[0.07] rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
 
-              <div className="relative z-10 p-4 md:p-5">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
+              <div className="relative z-10 p-3 sm:p-4 md:p-5">
+                {/* Mobile: score badge + actions on same row; content below */}
+                {/* Desktop (sm+): all 3 zones in a single row */}
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
 
-                  {/* ── Zone 1: Score badge ── */}
-                  <div className="flex sm:flex-col items-center sm:justify-center sm:w-[72px] gap-3 sm:gap-1.5 flex-shrink-0">
-                    <div
-                      className={cn(
-                        'h-16 w-16 rounded-2xl flex items-center justify-center font-bold text-white flex-shrink-0',
-                        getScoreBg(essay.overall_score)
-                      )}
-                      style={getScoreStyle(essay.overall_score)}
-                    >
-                      <span className="text-2xl leading-none">
-                        {essay.overall_score?.toFixed(1) ?? '?'}
+                  {/* ── Zone 1+3 combined on mobile: score left, actions right ── */}
+                  {/* On sm+: Zone 1 is its own column */}
+                  <div className="flex items-center justify-between sm:contents">
+                    {/* Zone 1: Score badge */}
+                    <div className="flex items-center sm:flex-col sm:justify-center sm:w-[72px] gap-2 sm:gap-1.5 flex-shrink-0">
+                      <div
+                        className={cn(
+                          'h-12 w-12 sm:h-16 sm:w-16 rounded-xl sm:rounded-2xl flex items-center justify-center font-bold text-white flex-shrink-0',
+                          getScoreBg(essay.overall_score)
+                        )}
+                        style={getScoreStyle(essay.overall_score)}
+                      >
+                        <span className="text-lg sm:text-2xl leading-none">
+                          {essay.overall_score?.toFixed(1) ?? '?'}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-ocean-500 font-semibold uppercase tracking-wide sm:text-center">
+                        {getScoreLabel(essay.overall_score)}
                       </span>
                     </div>
-                    <span className="text-[10px] text-ocean-500 font-semibold uppercase tracking-wide text-center">
-                      {getScoreLabel(essay.overall_score)}
-                    </span>
+
+                    {/* Zone 3: Actions — only visible on mobile here (hidden sm+) */}
+                    <div className="flex gap-2 flex-shrink-0 sm:hidden">
+                      <Link href={`/score/${essay.id}`}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-8 w-8 p-0 border-ocean-200 text-ocean-700 hover:bg-ocean-50"
+                          title="View Score"
+                        >
+                          <Eye className="h-3.5 w-3.5" />
+                        </Button>
+                      </Link>
+                      <Link href={`/history/${essay.id}/vocabulary`}>
+                        <Button
+                          size="sm"
+                          className={cn(
+                            'h-8 px-3 text-xs font-medium',
+                            essay.has_vocab
+                              ? 'bg-gradient-to-r from-cyan-500 to-ocean-600 text-white'
+                              : 'bg-gradient-to-r from-violet-500 to-purple-600 text-white'
+                          )}
+                        >
+                          {essay.has_vocab ? (
+                            <><BookOpen className="h-3.5 w-3.5 mr-1" />Vocab</>
+                          ) : (
+                            <><Sparkles className="h-3.5 w-3.5 mr-1" />Gen</>
+                          )}
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
 
                   {/* ── Zone 2: Content ── */}
-                  <div className="flex-1 min-w-0 flex flex-col gap-2">
+                  <div className="flex-1 min-w-0 flex flex-col gap-1.5 sm:gap-2">
                     <p className="text-sm md:text-base font-semibold text-ocean-900 line-clamp-2 leading-snug">
                       {essay.prompt}
                     </p>
@@ -361,14 +399,14 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
                       </span>
                     </div>
                     {essay.overall_score !== null && (
-                      <div className="flex flex-wrap gap-3 mt-0.5">
+                      <div className="flex flex-wrap gap-2.5 sm:gap-3 mt-0.5">
                         {miniBarCriteria.map(({ label, key, color }) => {
                           const s = essay[key]
                           return (
                             <div key={label} className="flex flex-col items-start gap-0.5">
                               <span className="text-[9px] text-ocean-400 font-semibold uppercase tracking-wide">{label}</span>
                               <div className="flex items-center gap-1.5">
-                                <div className="w-10 h-1.5 bg-ocean-100 rounded-full overflow-hidden">
+                                <div className="w-8 sm:w-10 h-1.5 bg-ocean-100 rounded-full overflow-hidden">
                                   <div
                                     className={cn('h-full rounded-full', color)}
                                     style={{ width: s !== null ? `${(s / 9) * 100}%` : '0%' }}
@@ -383,9 +421,9 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
                     )}
                   </div>
 
-                  {/* ── Zone 3: Actions — border-left divider on desktop ── */}
-                  <div className="flex sm:flex-col gap-2 flex-shrink-0 sm:w-[130px] sm:pl-4 sm:border-l sm:border-ocean-100">
-                    <Link href={`/score/${essay.id}`} className="flex-1 sm:flex-none">
+                  {/* ── Zone 3: Actions — desktop only (hidden on mobile, shown above) ── */}
+                  <div className="hidden sm:flex sm:flex-col gap-2 flex-shrink-0 sm:w-[130px] sm:pl-4 sm:border-l sm:border-ocean-100">
+                    <Link href={`/score/${essay.id}`}>
                       <Button
                         size="sm"
                         variant="outline"
@@ -395,7 +433,7 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
                         View Score
                       </Button>
                     </Link>
-                    <Link href={`/history/${essay.id}/vocabulary`} className="flex-1 sm:flex-none">
+                    <Link href={`/history/${essay.id}/vocabulary`}>
                       <Button
                         size="sm"
                         className={cn(

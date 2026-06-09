@@ -74,13 +74,13 @@ export default function FeaturedPrompt({ prompts, isAuthenticated }: FeaturedPro
   const handleAnother = () => setIndex((prev) => (prev + 1) % suggestedPool.length)
 
   return (
-    <Card className="border-0 shadow-lg bg-gradient-to-br from-ocean-600 to-cyan-600 overflow-hidden relative mb-5">
-      <PenTool className="absolute right-2 top-2 h-48 w-48 text-white opacity-10 rotate-[-12deg] pointer-events-none select-none" />
+    <Card className="border-0 shadow-lg bg-gradient-to-br from-ocean-600 to-cyan-600 overflow-hidden relative mb-4 sm:mb-5">
+      <PenTool className="absolute right-2 top-2 h-40 w-40 sm:h-48 sm:w-48 text-white opacity-10 rotate-[-12deg] pointer-events-none select-none" />
 
-      <CardContent className="relative z-10 p-6">
+      <CardContent className="relative z-10 p-4 sm:p-6">
         {/* Header row */}
-        <div className="flex items-center justify-between gap-4 mb-3">
-          <div className="flex items-center gap-2 text-white/70 text-xs">
+        <div className="flex items-center justify-between gap-3 mb-2 sm:mb-3">
+          <div className="flex items-center gap-1.5 sm:gap-2 text-white/70 text-xs">
             <Sparkles className="h-3 w-3 shrink-0" />
             <span className="font-medium">Suggested for you</span>
             <span className="text-white/40 hidden sm:inline">·</span>
@@ -93,37 +93,37 @@ export default function FeaturedPrompt({ prompts, isAuthenticated }: FeaturedPro
         </div>
 
         {/* Reason — mobile only */}
-        <p className="text-white/50 text-xs mb-3 sm:hidden">{reasonText}</p>
+        <p className="text-white/50 text-xs mb-2 sm:hidden">{reasonText}</p>
 
         {/* Type + topic badges */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          <Badge className={`text-xs font-medium border ${typeColor}`}>
+        <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+          <Badge className={`text-[11px] sm:text-xs font-medium border ${typeColor}`}>
             {typeName}
           </Badge>
           {featured.prompt_topics?.name && (
-            <Badge className="text-xs bg-white/20 text-white border-white/30 border font-medium">
+            <Badge className="text-[11px] sm:text-xs bg-white/20 text-white border-white/30 border font-medium">
               {featured.prompt_topics.name}
             </Badge>
           )}
         </div>
 
-        {/* Prompt text — larger than before */}
-        <p className="text-base text-white/95 leading-relaxed mb-5">
+        {/* Prompt text */}
+        <p className="text-sm sm:text-base text-white/95 leading-relaxed mb-4 sm:mb-5">
           {featured.prompt_text}
         </p>
 
         {/* CTA */}
-        <div className="flex items-center gap-3">
-          <Button asChild size="sm" className="bg-white text-ocean-700 hover:bg-ocean-50 font-semibold shadow-sm">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Button asChild size="sm" className="bg-white text-ocean-700 hover:bg-ocean-50 font-semibold shadow-sm h-8 sm:h-9 text-xs sm:text-sm px-3 sm:px-4">
             <Link href={isAuthenticated ? `/write/${featured.id}` : `/login?redirect=/write/${featured.id}`}>
-              <PenTool className="h-4 w-4 mr-1.5" />
+              <PenTool className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-1.5" />
               {isAuthenticated ? 'Start Writing' : 'Sign in to Write'}
             </Link>
           </Button>
           {suggestedPool.length > 1 && (
-            <Button variant="ghost" size="sm" onClick={handleAnother} className="text-white/70 hover:text-white hover:bg-white/10 gap-1.5">
-              <RefreshCw className="h-3.5 w-3.5" />
-              Another one
+            <Button variant="ghost" size="sm" onClick={handleAnother} className="text-white/70 hover:text-white hover:bg-white/10 gap-1 sm:gap-1.5 h-8 sm:h-9 text-xs sm:text-sm px-2 sm:px-3">
+              <RefreshCw className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+              Another
             </Button>
           )}
         </div>

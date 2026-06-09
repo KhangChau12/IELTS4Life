@@ -59,15 +59,15 @@ export default async function PromptsPage() {
   const topics: PromptTopic[] = topicsData || []
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
-      <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Write New Essay</h1>
-        <p className="mt-1 text-sm sm:text-base text-slate-500">
+    <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
+      <div className="mb-4 sm:mb-8">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-900">Write New Essay</h1>
+        <p className="mt-1 text-xs sm:text-sm md:text-base text-slate-500">
           Pick a prompt and start practicing — we recommend trying one per day for the best results.
         </p>
         {!user && (
-          <div className="mt-4 flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-sm">
-            <Info className="h-4 w-4 text-amber-500 flex-shrink-0 mt-0.5" />
+          <div className="mt-3 sm:mt-4 flex items-start gap-2 sm:gap-3 p-3 sm:p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs sm:text-sm">
+            <Info className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-500 flex-shrink-0 mt-0.5" />
             <span>Sign in to track your progress, save your writing sessions, and unlock AI outline suggestions.</span>
           </div>
         )}

@@ -188,21 +188,21 @@ export default function OutlinesPanel({ prompt, initialOutlines, isGuest }: Outl
     <div className="flex flex-col gap-4 h-full">
       {/* Prompt */}
       <Card className="border-ocean-100">
-        <CardHeader className="pb-2">
-          <div className="flex flex-wrap gap-2 items-center">
-            <Badge variant="outline" className="text-xs bg-teal-50 text-teal-800 border-teal-200">
+        <CardHeader className="pb-2 px-4 sm:px-6 pt-4 sm:pt-6">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2 items-center">
+            <Badge variant="outline" className="text-[11px] sm:text-xs bg-teal-50 text-teal-800 border-teal-200">
               {typeName}
             </Badge>
             {prompt.prompt_topics?.name && (
-              <Badge variant="outline" className="text-xs bg-orange-50 text-orange-700 border-orange-200">
+              <Badge variant="outline" className="text-[11px] sm:text-xs bg-orange-50 text-orange-700 border-orange-200">
                 {prompt.prompt_topics.name}
               </Badge>
             )}
           </div>
-          <CardTitle className="text-base text-ocean-900">Prompt</CardTitle>
+          <CardTitle className="text-sm sm:text-base text-ocean-900">Prompt</CardTitle>
         </CardHeader>
-        <CardContent>
-          <p className="text-sm text-gray-700 leading-relaxed">{prompt.prompt_text}</p>
+        <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
+          <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">{prompt.prompt_text}</p>
         </CardContent>
       </Card>
 

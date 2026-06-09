@@ -143,7 +143,7 @@ export default async function PromptWritingPage({ params }: PageProps) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-7xl">
+    <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 max-w-7xl">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -152,8 +152,8 @@ export default async function PromptWritingPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <div className="mb-4">
-        <nav className="text-sm text-gray-400 mb-2">
+      <div className="mb-3 sm:mb-4">
+        <nav className="text-xs sm:text-sm text-gray-400 mb-2">
           <a href="/write" className="hover:text-ocean-600">Prompts</a>
           <span className="mx-2">/</span>
           <span className="text-gray-600">Write Essay</span>
