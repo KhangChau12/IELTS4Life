@@ -564,7 +564,7 @@ export default async function HomePage() {
 
       {/* Band 8–9 Rewrite Section */}
       <section className="bg-gradient-to-br from-slate-50 to-violet-50/30 py-10 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6">
+        <div className="container mx-auto px-5 sm:px-8 lg:px-6">
           <div className="mx-auto max-w-7xl">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16 items-center">
 
@@ -576,13 +576,13 @@ export default async function HomePage() {
                 <div className="relative space-y-3">
                   {/* BEFORE card */}
                   <div className="rounded-2xl border-2 border-red-200/80 bg-gradient-to-br from-red-50/60 to-white shadow-lg overflow-hidden">
-                    <div className="flex items-center gap-2 px-3 sm:px-4 py-2.5 bg-red-50 border-b border-red-100">
-                      <div className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-red-400" />
-                      <span className="text-xs font-semibold text-red-600 uppercase tracking-tight sm:tracking-wider truncate">Your Essay — Band 6.0</span>
-                      <span className="ml-auto flex-shrink-0 text-xs text-red-400">Before</span>
+                    <div className="flex items-center gap-2 px-4 py-2 bg-red-50 border-b border-red-100">
+                      <div className="h-2 w-2 flex-shrink-0 rounded-full bg-red-400" />
+                      <span className="text-[11px] font-semibold text-red-600 uppercase tracking-wide truncate">Your Essay — Band 6.0</span>
+                      <span className="ml-auto flex-shrink-0 text-[11px] text-red-400">Before</span>
                     </div>
-                    <div className="px-3 sm:px-4 py-3 space-y-1.5">
-                      <p className="text-sm text-slate-700 leading-relaxed">
+                    <div className="px-4 py-3 space-y-2">
+                      <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
                         <span className="bg-red-100 text-red-800 line-through decoration-red-400 rounded px-0.5">Nowadays</span>
                         {' '}many people think that{' '}
                         <span className="bg-red-100 text-red-800 line-through decoration-red-400 rounded px-0.5">using</span>
@@ -594,7 +594,7 @@ export default async function HomePage() {
                         <span className="bg-red-100 text-red-800 line-through decoration-red-400 rounded px-0.5">deal with</span>
                         {' '}this problem. In my opinion, I think both sides have valid points.
                       </p>
-                      <p className="text-sm text-slate-700 leading-relaxed">
+                      <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
                         The first reason why longer sentences can help is that{' '}
                         <span className="bg-red-100 text-red-800 line-through decoration-red-400 rounded px-0.5">it stops criminals from doing crimes again</span>
                         . When people are in prison{' '}
@@ -617,13 +617,13 @@ export default async function HomePage() {
 
                   {/* AFTER card */}
                   <div className="rounded-2xl border-2 border-emerald-200/80 bg-gradient-to-br from-emerald-50/60 to-white shadow-lg overflow-hidden">
-                    <div className="flex items-center gap-2 px-3 sm:px-4 py-2.5 bg-emerald-50 border-b border-emerald-100">
-                      <div className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-emerald-500" />
-                      <span className="text-xs font-semibold text-emerald-700 uppercase tracking-tight sm:tracking-wider truncate">AI Rewrite — Band 8.5</span>
-                      <span className="ml-auto flex-shrink-0 text-xs text-emerald-500">After</span>
+                    <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 border-b border-emerald-100">
+                      <div className="h-2 w-2 flex-shrink-0 rounded-full bg-emerald-500" />
+                      <span className="text-[11px] font-semibold text-emerald-700 uppercase tracking-wide truncate">AI Rewrite — Band 8.5</span>
+                      <span className="ml-auto flex-shrink-0 text-[11px] text-emerald-500">After</span>
                     </div>
-                    <div className="px-3 sm:px-4 py-3 space-y-1.5">
-                      <p className="text-sm text-slate-700 leading-relaxed">
+                    <div className="px-4 py-3 space-y-2">
+                      <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
                         <span className="bg-emerald-100 text-emerald-800 font-medium rounded px-0.5">In contemporary society</span>
                         {' '}there is ongoing debate regarding whether{' '}
                         <span className="bg-emerald-100 text-emerald-800 font-medium rounded px-0.5">imposing</span>
@@ -633,7 +633,7 @@ export default async function HomePage() {
                         <span className="bg-emerald-100 text-emerald-800 font-medium rounded px-0.5">While proponents of this view argue for its deterrent effect,</span>
                         {' '}others contend that rehabilitative measures yield superior outcomes.
                       </p>
-                      <p className="text-sm text-slate-700 leading-relaxed">
+                      <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
                         One compelling argument in favour of extended incarceration is its role in{' '}
                         <span className="bg-emerald-100 text-emerald-800 font-medium rounded px-0.5">incapacitating repeat offenders</span>
                         . By{' '}
