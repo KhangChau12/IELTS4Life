@@ -30,6 +30,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     serviceClient.from('profiles').select(`
       id,
       email,
+      full_name,
       created_at,
       role,
       quiz_total_attempts,
@@ -128,6 +129,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
   const allUsers = (allUsersWithEssays ?? []).map(u => ({
     id: u.id,
     email: u.email,
+    full_name: u.full_name ?? null,
     created_at: u.created_at,
     role: u.role,
     essay_count: Array.isArray(u.essays) ? (u.essays[0]?.count ?? 0) : 0,

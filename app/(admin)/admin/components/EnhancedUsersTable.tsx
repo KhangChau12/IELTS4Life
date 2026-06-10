@@ -11,6 +11,7 @@ import { format } from 'date-fns'
 interface User {
   id: string
   email: string
+  full_name: string | null
   created_at: string
   role: string
   essay_count: number
@@ -34,8 +35,10 @@ export function EnhancedUsersTable({ users, onUserClick }: EnhancedUsersTablePro
 
   // Filter users by search term
   const filteredUsers = useMemo(() => {
+    const term = searchTerm.toLowerCase()
     return users.filter(user =>
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      user.email.toLowerCase().includes(term) ||
+      (user.full_name ?? '').toLowerCase().includes(term)
     )
   }, [users, searchTerm])
 
@@ -98,7 +101,7 @@ export function EnhancedUsersTable({ users, onUserClick }: EnhancedUsersTablePro
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ocean-400" />
             <Input
               type="text"
-              placeholder="Search by email..."
+              placeholder="Search by name or email..."
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value)
@@ -121,20 +124,11 @@ export function EnhancedUsersTable({ users, onUserClick }: EnhancedUsersTablePro
                   onClick={() => onUserClick(user)}
                   className="border border-ocean-200 rounded-lg p-3 bg-white hover:bg-ocean-50 hover:border-ocean-400 transition-colors cursor-pointer"
                 >
-                  <div className="flex items-start justify-between mb-2">
-                    <p className="text-sm text-ocean-800 font-medium break-all flex-1 pr-2">
-                      {user.email}
-                    </p>
-                    <Badge
-                      variant={user.role === 'admin' ? 'default' : 'secondary'}
-                      className={`text-xs whitespace-nowrap ${
-                        user.role === 'admin'
-                          ? 'bg-cyan-600 hover:bg-cyan-700'
-                          : 'bg-ocean-200 text-ocean-800 hover:bg-ocean-300'
-                      }`}
-                    >
-                      {user.role}
-                    </Badge>
+                  <div className="flex flex-col mb-2 gap-0.5">
+                    {user.full_name && (
+                      <p className="text-sm text-ocean-900 font-semibold">{user.full_name}</p>
+                    )}
+                    <p className="text-xs text-ocean-600 break-all">{user.email}</p>
                   </div>
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-ocean-600">
@@ -160,6 +154,9 @@ export function EnhancedUsersTable({ users, onUserClick }: EnhancedUsersTablePro
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-ocean-200">
+                    <th className="text-left py-3 px-4 text-ocean-700 font-semibold text-sm">
+                      Name
+                    </th>
                     <th className="text-left py-3 px-4">
                       <button
                         onClick={() => handleSort('email')}
@@ -168,9 +165,6 @@ export function EnhancedUsersTable({ users, onUserClick }: EnhancedUsersTablePro
                         Email
                         <ArrowUpDown className="h-3 w-3" />
                       </button>
-                    </th>
-                    <th className="text-left py-3 px-4 text-ocean-700 font-semibold text-sm">
-                      Role
                     </th>
                     <th className="text-left py-3 px-4">
                       <button
@@ -211,19 +205,10 @@ export function EnhancedUsersTable({ users, onUserClick }: EnhancedUsersTablePro
                       onClick={() => onUserClick(user)}
                       className="border-b border-ocean-100 hover:bg-ocean-50 transition-colors cursor-pointer group"
                     >
-                      <td className="py-3 px-4 text-ocean-800 text-sm">{user.email}</td>
-                      <td className="py-3 px-4">
-                        <Badge
-                          variant={user.role === 'admin' ? 'default' : 'secondary'}
-                          className={
-                            user.role === 'admin'
-                              ? 'bg-cyan-600 hover:bg-cyan-700'
-                              : 'bg-ocean-200 text-ocean-800 hover:bg-ocean-300'
-                          }
-                        >
-                          {user.role}
-                        </Badge>
+                      <td className="py-3 px-4 text-ocean-800 text-sm">
+                        {user.full_name ?? <span className="text-ocean-400 italic">—</span>}
                       </td>
+                      <td className="py-3 px-4 text-ocean-800 text-sm">{user.email}</td>
                       <td className="py-3 px-4">
                         <span className="inline-flex items-center gap-1 text-sm font-semibold text-cyan-700">
                           {user.essay_count}
