@@ -24,7 +24,7 @@ export interface AdminStats {
     essay_count: number
     quiz_total_attempts: number
   }>
-  essaysOverTime: Array<{ date: string; count: number }>
+  essaysOverTime: Array<{ date: string; count: number; prompt_count: number }>
   totalVocabulary: number
   totalQuizAttempts: number
   totalCorrectAnswers: number

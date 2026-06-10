@@ -89,10 +89,11 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
     { name: 'Paid Pro', value: stats.paidProUsers, color: COLORS.violet },
   ]
 
-  // Daily essay activity — already a per-day count from API
+  // Daily essay activity — total essays + essays written from system prompts
   const dailyEssayActivityData = stats.essaysOverTime.map(item => ({
     date: format(new Date(item.date + 'T00:00:00'), 'MMM dd'),
     essays: item.count,
+    fromPrompt: item.prompt_count,
   }))
 
   // User growth over time
@@ -288,18 +289,38 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
             <CardDescription className="text-ocean-600">New essays submitted per day (last 14 days)</CardDescription>
           </CardHeader>
           <CardContent className="relative z-10">
-            <ResponsiveContainer width="100%" height={260}>
+            <div className="flex items-center gap-4 mb-3 text-xs text-slate-500">
+              <span className="flex items-center gap-1.5">
+                <span className="inline-block h-2 w-6 rounded-full" style={{ background: COLORS.primary }} />
+                Total essays
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="inline-block h-2 w-6 rounded-full" style={{ background: COLORS.accent }} />
+                From system prompts
+              </span>
+            </div>
+            <ResponsiveContainer width="100%" height={240}>
               <AreaChart data={dailyEssayActivityData}>
                 <defs>
                   <linearGradient id="colorEssays" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor={COLORS.primary} stopOpacity={0.3} />
                     <stop offset="95%" stopColor={COLORS.primary} stopOpacity={0} />
                   </linearGradient>
+                  <linearGradient id="colorFromPrompt" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={COLORS.accent} stopOpacity={0.35} />
+                    <stop offset="95%" stopColor={COLORS.accent} stopOpacity={0} />
+                  </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
                 <XAxis dataKey="date" stroke="#64748b" style={{ fontSize: '12px' }} axisLine={false} tickLine={false} />
-                <YAxis stroke="#64748b" style={{ fontSize: '12px' }} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={{ backgroundColor: 'white', border: '1px solid #e2e8f0', borderRadius: '8px' }} />
+                <YAxis stroke="#64748b" style={{ fontSize: '12px' }} axisLine={false} tickLine={false} allowDecimals={false} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: 'white', border: '1px solid #e2e8f0', borderRadius: '8px' }}
+                  formatter={(value: number, name: string) => [
+                    value,
+                    name === 'essays' ? 'Total Essays' : 'From Prompts',
+                  ]}
+                />
                 <Area
                   type="monotone"
                   dataKey="essays"
@@ -307,7 +328,16 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
                   strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#colorEssays)"
-                  name="New Essays"
+                  name="essays"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="fromPrompt"
+                  stroke={COLORS.accent}
+                  strokeWidth={2}
+                  fillOpacity={1}
+                  fill="url(#colorFromPrompt)"
+                  name="fromPrompt"
                 />
               </AreaChart>
             </ResponsiveContainer>

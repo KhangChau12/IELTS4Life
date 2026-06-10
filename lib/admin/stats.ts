@@ -26,7 +26,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     satisfactionResult,
   ] = await Promise.all([
     serviceClient.from('essays').select('overall_score'),
-    serviceClient.from('essays').select('created_at').gte('created_at', fourteenDaysAgoISO).order('created_at', { ascending: true }),
+    serviceClient.from('essays').select('created_at, prompt_id').gte('created_at', fourteenDaysAgoISO).order('created_at', { ascending: true }),
     serviceClient.from('profiles').select(`
       id,
       email,
@@ -202,14 +202,16 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     }
   }
 
-  // Essays over time — last 14 days, per-day count
-  const essaysOverTime: Array<{ date: string; count: number }> = []
+  // Essays over time — last 14 days, per-day count (total + from system prompts)
+  const essaysOverTime: Array<{ date: string; count: number; prompt_count: number }> = []
   for (let i = 13; i >= 0; i--) {
     const date = new Date()
     date.setDate(date.getDate() - i)
     const dateStr = date.toISOString().split('T')[0]
-    const count = essaysLast14Days.filter(e => e.created_at.startsWith(dateStr)).length
-    essaysOverTime.push({ date: dateStr, count })
+    const dayEssays = essaysLast14Days.filter(e => e.created_at.startsWith(dateStr))
+    const count = dayEssays.length
+    const prompt_count = dayEssays.filter(e => e.prompt_id !== null).length
+    essaysOverTime.push({ date: dateStr, count, prompt_count })
   }
 
   const essaysFromPrompts = essaysWithPromptId.length
