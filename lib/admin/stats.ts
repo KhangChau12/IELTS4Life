@@ -26,7 +26,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     satisfactionResult,
   ] = await Promise.all([
     serviceClient.from('essays').select('overall_score'),
-    serviceClient.from('essays').select('created_at, prompt_id').gte('created_at', fourteenDaysAgoISO).order('created_at', { ascending: true }),
+    serviceClient.from('essays').select('created_at, prompt_id, writing_prompts(status)').gte('created_at', fourteenDaysAgoISO).order('created_at', { ascending: true }),
     serviceClient.from('profiles').select(`
       id,
       email,
@@ -39,7 +39,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     serviceClient.from('profiles').select('id, email, created_at').order('created_at', { ascending: true }),
     serviceClient.from('profiles').select('quiz_total_attempts, quiz_total_correct, quiz_total_questions'),
     serviceClient.from('profiles').select('invited_by'),
-    serviceClient.from('essays').select('prompt_id').not('prompt_id', 'is', null),
+    serviceClient.from('essays').select('prompt_id, writing_prompts(status)').not('prompt_id', 'is', null),
     serviceClient.from('profiles')
       .select('id, email')
       .eq('subscription_status', 'active')
@@ -212,11 +212,11 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     const dateStr = date.toISOString().split('T')[0]
     const dayEssays = essaysLast14Days.filter(e => e.created_at.startsWith(dateStr))
     const count = dayEssays.length
-    const prompt_count = dayEssays.filter(e => e.prompt_id !== null).length
+    const prompt_count = dayEssays.filter(e => e.prompt_id !== null && (e.writing_prompts as { status?: string } | null)?.status === 'approved').length
     essaysOverTime.push({ date: dateStr, count, prompt_count })
   }
 
-  const essaysFromPrompts = essaysWithPromptId.length
+  const essaysFromPrompts = essaysWithPromptId.filter(e => (e.writing_prompts as { status?: string } | null)?.status === 'approved').length
   const essaysFromExternal = totalEssays - essaysFromPrompts
 
   // Written essay distribution — bucket users by how many essays they've written
