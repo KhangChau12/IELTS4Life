@@ -18,7 +18,7 @@ export default async function HomePage() {
     '@type': 'WebApplication',
     name: 'IELTS for Life',
     alternateName: 'IELTS 4 Life',
-    url: 'https://ielts4life.com',
+    url: 'https://www.ielts4life.com',
     description: 'Free AI-powered IELTS writing scorer and feedback tool. Get instant band scores, detailed feedback, and vocabulary enhancement for IELTS Writing Task 2.',
     applicationCategory: 'EducationalApplication',
     offers: {
@@ -56,7 +56,7 @@ export default async function HomePage() {
     publisher: {
       '@type': 'Organization',
       name: 'IELTS4Life',
-      url: 'https://ielts4life.com',
+      url: 'https://www.ielts4life.com',
     },
   }
 

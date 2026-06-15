@@ -17,7 +17,7 @@ const shrikhand = Shrikhand({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://ielts4life.com'),
+  metadataBase: new URL('https://www.ielts4life.com'),
   title: 'IELTS4Life — AI Writing Coach',
   description: 'Free AI-powered IELTS writing scorer and feedback tool. Get instant band scores, detailed feedback, and vocabulary enhancement for IELTS Writing Task 2. Master IELTS writing with AI scoring, essay correction, and personalized tips. Perfect for IELTS preparation, band 7+ writing, and exam practice.',
   keywords: [
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://ielts4life.com',
+    url: 'https://www.ielts4life.com',
     siteName: 'IELTS for Life',
     title: 'IELTS for Life - AI IELTS Writing Scorer & Assistant',
     description: 'Free AI-powered IELTS writing scorer. Get instant band scores, detailed feedback, and vocabulary enhancement for IELTS Writing Task 2.',
@@ -93,7 +93,7 @@ export const metadata: Metadata = {
   },
   manifest: '/site.webmanifest',
   alternates: {
-    canonical: 'https://ielts4life.com',
+    canonical: 'https://www.ielts4life.com',
   },
 }
 
@@ -128,8 +128,8 @@ export default async function RootLayout({
     '@type': 'Organization',
     name: 'IELTS4Life',
     alternateName: 'IELTS for Life',
-    url: 'https://ielts4life.com',
-    logo: 'https://ielts4life.com/android-chrome-512x512.png',
+    url: 'https://www.ielts4life.com',
+    logo: 'https://www.ielts4life.com/android-chrome-512x512.png',
     description: 'Free AI-powered IELTS writing scorer and feedback tool. Get instant band scores, detailed feedback, and vocabulary enhancement for IELTS Writing Task 2.',
   }
 

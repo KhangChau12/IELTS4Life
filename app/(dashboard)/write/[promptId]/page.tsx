@@ -8,6 +8,16 @@ interface PageProps {
   params: { promptId: string }
 }
 
+const QUESTION_TYPE_LABELS: Record<string, string> = {
+  agree_disagree: 'Agree or Disagree',
+  advantages_disadvantages: 'Advantages & Disadvantages',
+  problem_solution: 'Problem & Solution',
+  two_part_question: 'Two-Part Question',
+  positive_negative: 'Positive or Negative',
+  discussion_both_views: 'Discussion (Both Views)',
+  mixed_hybrid: 'Mixed',
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const supabase = createServerClient()
   const { promptId } = params
@@ -22,28 +32,40 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: 'IELTS Writing Practice | IELTS4Life' }
   }
 
-  const shortPrompt = prompt.prompt_text.length > 120
-    ? prompt.prompt_text.slice(0, 117) + '...'
-    : prompt.prompt_text
-
   const topicName = Array.isArray(prompt.prompt_topics)
     ? (prompt.prompt_topics[0] as { name: string } | undefined)?.name
     : (prompt.prompt_topics as { name: string } | null)?.name
 
+  const questionTypeLabel = QUESTION_TYPE_LABELS[prompt.question_type] ?? 'Task 2'
+
+  // Title: topic + question type so it matches what people actually search
   const title = topicName
-    ? `IELTS Writing: ${topicName} — Practice & AI Scoring | IELTS4Life`
-    : `IELTS Writing Task 2 Practice | IELTS4Life`
+    ? `IELTS Task 2: ${topicName} (${questionTypeLabel}) — AI Scoring | IELTS4Life`
+    : `IELTS Writing Task 2 Practice — AI Scoring | IELTS4Life`
+
+  // Description: use the full prompt text (Google truncates to ~160 chars anyway)
+  const promptSnippet = prompt.prompt_text.length > 140
+    ? prompt.prompt_text.slice(0, 137) + '...'
+    : prompt.prompt_text
+
+  const description = `"${promptSnippet}" — Practice this IELTS Writing Task 2 prompt and get instant AI band score feedback, detailed corrections, and a Band 8–9 rewrite.`
+
+  const canonicalUrl = `https://www.ielts4life.com/write/${promptId}`
 
   return {
     title,
-    description: `Practice IELTS Writing Task 2: "${shortPrompt}" — Get instant AI band score feedback.`,
-    alternates: {
-      canonical: `https://ielts4life.com/write/${promptId}`,
-    },
+    description,
+    alternates: { canonical: canonicalUrl },
     openGraph: {
       title,
-      description: `Practice IELTS Writing Task 2 with AI scoring and outline suggestions.`,
-      url: `https://ielts4life.com/write/${promptId}`,
+      description,
+      url: canonicalUrl,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
     },
   }
 }
@@ -109,11 +131,11 @@ export default async function PromptWritingPage({ params }: PageProps) {
     educationalLevel: 'Advanced',
     learningResourceType: 'Practice Problem',
     inLanguage: 'en',
-    url: `https://ielts4life.com/write/${promptId}`,
+    url: `https://www.ielts4life.com/write/${promptId}`,
     provider: {
       '@type': 'Organization',
       name: 'IELTS4Life',
-      url: 'https://ielts4life.com',
+      url: 'https://www.ielts4life.com',
     },
   }
 
@@ -125,19 +147,19 @@ export default async function PromptWritingPage({ params }: PageProps) {
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: 'https://ielts4life.com',
+        item: 'https://www.ielts4life.com',
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Writing Prompts',
-        item: 'https://ielts4life.com/write',
+        item: 'https://www.ielts4life.com/write',
       },
       {
         '@type': 'ListItem',
         position: 3,
         name: topicName ? `${topicName} — Practice Prompt` : 'Write Essay',
-        item: `https://ielts4life.com/write/${promptId}`,
+        item: `https://www.ielts4life.com/write/${promptId}`,
       },
     ],
   }
