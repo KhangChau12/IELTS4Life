@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Brain, BookOpen, AlertCircle, ArrowRight, CalendarDays, ExternalLink, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import type { VocabularyItem } from '@/types/vocabulary'
@@ -46,65 +45,57 @@ function PastVocabSection({ entries }: { entries: PastVocabEntry[] }) {
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid gap-x-8 gap-y-6 md:grid-cols-2">
       {entries.map((entry) => {
         const previewItems = entry.vocabulary.slice(0, 3)
         return (
-          <div
-            key={entry.essayId}
-            className="rounded-xl border border-ocean-100 bg-white shadow-sm transition-shadow hover:shadow-md overflow-hidden"
-          >
-            <div className="p-4 md:p-5 space-y-4">
-              <div className="flex items-start justify-between gap-3">
-                <div className="space-y-1 min-w-0">
-                  <div className="flex items-center gap-1.5 text-xs font-medium text-ocean-500">
-                    <CalendarDays className="h-3.5 w-3.5 flex-shrink-0" />
-                    {formatDate(entry.createdAt)}
-                  </div>
-                  <p className="text-sm font-semibold leading-snug text-ocean-900">
-                    {truncateText(entry.prompt, 80)}
-                  </p>
+          <div key={entry.essayId} className="space-y-3">
+            {/* header — no box, just a colored left accent */}
+            <div className="flex items-start justify-between gap-3 border-l-2 border-cyan-400 pl-3">
+              <div className="min-w-0 space-y-0.5">
+                <div className="flex items-center gap-1.5 text-xs font-medium text-cyan-600">
+                  <CalendarDays className="h-3.5 w-3.5 flex-shrink-0" />
+                  {formatDate(entry.createdAt)}
+                  <span className="text-ocean-300">·</span>
+                  <span className="text-ocean-500">
+                    {entry.vocabulary.length} word{entry.vocabulary.length !== 1 ? 's' : ''}
+                  </span>
                 </div>
-                <Badge className="whitespace-nowrap flex-shrink-0 border-cyan-200 bg-cyan-100 text-cyan-800 text-xs">
-                  {entry.vocabulary.length} word{entry.vocabulary.length !== 1 ? 's' : ''}
-                </Badge>
+                <p className="text-sm font-semibold leading-snug text-ocean-900">
+                  {truncateText(entry.prompt, 80)}
+                </p>
               </div>
+            </div>
 
-              <div className="space-y-2">
-                {previewItems.map((item) => (
-                  <div
-                    key={`${entry.essayId}-${item.id}`}
-                    className="rounded-lg border border-ocean-100 bg-gradient-to-r from-ocean-50 to-white px-3 py-2.5"
-                  >
-                    <div className="flex flex-wrap items-center gap-1.5 mb-1">
-                      <Badge
-                        variant="outline"
-                        className={`text-xs py-0 ${item.vocab_type === 'paraphrase' ? 'border-ocean-200 text-ocean-700' : 'border-cyan-200 text-cyan-700'}`}
-                      >
-                        {item.vocab_type}
-                      </Badge>
-                      {item.original_word && (
-                        <span className="text-xs text-ocean-500 line-through decoration-ocean-300">
-                          {item.original_word}
-                        </span>
-                      )}
-                      <Sparkles className="h-3 w-3 text-cyan-500" />
-                      <span className="text-xs font-semibold text-ocean-900">{item.suggested_word}</span>
-                    </div>
-                    <p className="text-xs leading-5 text-ocean-600">{item.definition}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex justify-end pt-0.5">
-                <Link
-                  href={`/history/${entry.essayId}/vocabulary`}
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-700 transition-colors hover:text-cyan-800"
+            {/* word previews — flat rows, tinted background only */}
+            <div className="space-y-1.5 pl-3">
+              {previewItems.map((item) => (
+                <div
+                  key={`${entry.essayId}-${item.id}`}
+                  className="rounded-lg bg-ocean-50/70 px-3 py-2"
                 >
-                  Open full vocab
-                  <ExternalLink className="h-3 w-3" />
-                </Link>
-              </div>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {item.original_word && (
+                      <span className="text-xs text-ocean-400 line-through decoration-ocean-300">
+                        {item.original_word}
+                      </span>
+                    )}
+                    <Sparkles className="h-3 w-3 text-cyan-500" />
+                    <span className="text-sm font-semibold text-ocean-900">{item.suggested_word}</span>
+                  </div>
+                  <p className="mt-0.5 text-xs leading-5 text-ocean-600">{item.definition}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="pl-3">
+              <Link
+                href={`/history/${entry.essayId}/vocabulary`}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-700 transition-colors hover:text-cyan-800"
+              >
+                Open full vocab
+                <ExternalLink className="h-3 w-3" />
+              </Link>
             </div>
           </div>
         )
@@ -115,9 +106,9 @@ function PastVocabSection({ entries }: { entries: PastVocabEntry[] }) {
 
 function PastVocabSkeleton() {
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid gap-x-8 gap-y-6 md:grid-cols-2">
       {[0, 1].map((i) => (
-        <div key={i} className="rounded-xl border border-ocean-100 bg-white p-4 md:p-5">
+        <div key={i} className="space-y-3 border-l-2 border-ocean-100 pl-3">
           <div className="animate-pulse space-y-3">
             <div className="h-3 w-24 rounded bg-ocean-100" />
             <div className="h-4 w-4/5 rounded bg-ocean-100" />
@@ -194,42 +185,43 @@ export function VocabularyProgress({
   }
 
   return (
-    <Card className="border-0 shadow-lg overflow-hidden relative">
-      {/* Watermark */}
-      <Brain className="absolute right-2 top-2 h-48 w-48 text-cyan-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(6,182,212,0.35))]" />
+    <Card className="border-ocean-100 shadow-sm overflow-hidden relative">
+      {/* Watermark — kept subtle as a mid-page visual rest */}
+      <Brain className="absolute right-2 top-2 h-40 w-40 text-cyan-300 opacity-15 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(6,182,212,0.3))]" />
 
-      <CardHeader className="relative z-10 pb-4">
-        <CardTitle className="text-ocean-900">Vocabulary &amp; Quizzes</CardTitle>
+      <CardHeader className="relative z-10 pb-3">
+        <CardTitle className="text-lg font-bold text-ocean-900">Vocabulary &amp; Quizzes</CardTitle>
       </CardHeader>
 
       <CardContent className="relative z-10 space-y-6">
-        {/* ── Stats row ── */}
-        <div className="grid grid-cols-3 gap-3 sm:gap-4">
+        {/* ── Stats row — no boxes, divider-separated ── */}
+        <div className="grid grid-cols-3 divide-x divide-ocean-100">
           {/* Words learned */}
-          <div className="rounded-xl border border-ocean-100 bg-gradient-to-br from-ocean-50 to-white p-3 sm:p-4 text-center">
-            <p className="text-2xl sm:text-3xl font-bold text-ocean-900">{totalWords}</p>
+          <div className="px-3 first:pl-0 text-center">
+            <p className="text-3xl font-extrabold text-ocean-900">{totalWords}</p>
             <p className="text-xs text-ocean-600 font-medium mt-0.5">Words Learned</p>
           </div>
 
           {/* Quizzes done */}
-          <div className="rounded-xl border border-ocean-100 bg-gradient-to-br from-ocean-50 to-white p-3 sm:p-4 text-center">
-            <p className="text-2xl sm:text-3xl font-bold text-ocean-900">{totalAttempts}</p>
+          <div className="px-3 text-center">
+            <p className="text-3xl font-extrabold text-ocean-900">{totalAttempts}</p>
             <p className="text-xs text-ocean-600 font-medium mt-0.5">Quizzes Done</p>
           </div>
 
           {/* Accuracy — embedded CTA if no quiz yet */}
           {totalQuestions > 0 ? (
-            <div className="rounded-xl border border-ocean-100 bg-gradient-to-br from-ocean-50 to-white p-3 sm:p-4 text-center">
-              <p className="text-2xl sm:text-3xl font-bold text-ocean-900">{quizScore.toFixed(0)}%</p>
-              <p className="text-xs text-ocean-600 font-medium mt-0.5">Accuracy</p>
-              <p className="text-xs text-ocean-500 mt-0.5">{totalCorrect}/{totalQuestions}</p>
+            <div className="px-3 text-center">
+              <p className="text-3xl font-extrabold text-ocean-900">{quizScore.toFixed(0)}%</p>
+              <p className="text-xs text-ocean-600 font-medium mt-0.5">
+                Accuracy <span className="text-ocean-400">· {totalCorrect}/{totalQuestions}</span>
+              </p>
             </div>
           ) : (
             <Link
               href="/history"
-              className="rounded-xl border border-dashed border-cyan-200 bg-gradient-to-br from-cyan-50 to-white p-3 sm:p-4 text-center flex flex-col items-center justify-center gap-1 hover:border-cyan-300 hover:bg-cyan-50 transition-colors group"
+              className="group px-3 text-center"
             >
-              <p className="text-2xl sm:text-3xl font-bold text-ocean-300">—</p>
+              <p className="text-3xl font-extrabold text-ocean-200 group-hover:text-cyan-300 transition-colors">—</p>
               <p className="text-xs text-cyan-700 font-semibold mt-0.5 group-hover:text-cyan-800">
                 Start a quiz
                 <ArrowRight className="inline h-3 w-3 ml-0.5 -mt-0.5" />
@@ -238,9 +230,9 @@ export function VocabularyProgress({
           )}
         </div>
 
-        {/* ── Alert: essays pending vocab (below stats, non-intrusive) ── */}
+        {/* ── Alert: essays pending vocab (subtle tint, no border) ── */}
         {essaysWithoutVocab > 0 && (
-          <div className="flex items-center gap-2 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2">
+          <div className="flex items-center gap-2 rounded-lg bg-amber-50 px-3 py-2">
             <AlertCircle className="h-3.5 w-3.5 text-amber-500 flex-shrink-0" />
             <p className="text-xs text-amber-800">
               {essaysWithoutVocab} essay{essaysWithoutVocab > 1 ? 's' : ''} without vocab yet —{' '}
@@ -253,7 +245,7 @@ export function VocabularyProgress({
         <div className="border-t border-ocean-100" />
 
         {/* ── Past Vocab section ── */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           <h3 className="text-sm font-semibold text-ocean-800 flex items-center gap-2">
             <BookOpen className="h-4 w-4 text-cyan-600" />
             Recent Vocabulary

@@ -277,7 +277,7 @@ export default function WritePage() {
         {/* Page header */}
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Score My Essay</h1>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900">Score My Essay</h1>
             <p className="mt-1 text-sm sm:text-base text-slate-500">AI-powered IELTS Task 2 feedback in seconds</p>
           </div>
           {!isGuest && <QuotaDisplay />}
