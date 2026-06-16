@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { BookMarked, BookOpen, Calendar, Eye, FileText, LayoutGrid, List, SlidersHorizontal, Sparkles } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { getScoreTone } from '@/lib/utils/score'
 
 interface EssayRow {
   id: string
@@ -61,27 +62,6 @@ const formatDate = (dateString: string): string =>
     day: 'numeric',
   })
 
-function getScoreBg(score: number | null): string {
-  if (score === null) return 'bg-slate-400'
-  if (score >= 8) return 'bg-gradient-to-br from-violet-500 to-purple-500'
-  if (score >= 7) return 'bg-gradient-to-br from-teal-500 to-cyan-600'
-  if (score >= 6) return 'bg-gradient-to-br from-sky-500 to-sky-600'
-  if (score >= 5) return 'bg-gradient-to-br from-orange-400 to-orange-500'
-  return 'bg-gradient-to-br from-red-500 to-rose-600'
-}
-
-// Colored drop-shadow + top inner highlight — gives depth without extra markup
-function getScoreStyle(score: number | null): React.CSSProperties {
-  const glow = (r: number, g: number, b: number) => ({
-    boxShadow: `0 4px 14px rgba(${r},${g},${b},0.55), inset 0 1px 0 rgba(255,255,255,0.25)`,
-  })
-  if (score === null) return glow(148, 163, 184)  // slate
-  if (score >= 8) return glow(139, 92,  246)       // violet
-  if (score >= 7) return glow(20,  184, 166)        // teal
-  if (score >= 6) return glow(14,  165, 233)        // sky
-  if (score >= 5) return glow(249, 115, 22)         // orange
-  return glow(239, 68,  68)                         // red
-}
 
 function getScoreLabel(score: number | null): string {
   if (score === null) return 'Pending'
@@ -263,8 +243,7 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
               <div className="flex items-center gap-3 px-4 py-3">
                 {/* Score badge — small inline */}
                 <Badge
-                  className={cn('text-sm font-bold text-white flex-shrink-0 px-2.5 py-0.5 rounded-lg border-0', getScoreBg(essay.overall_score))}
-                  style={getScoreStyle(essay.overall_score)}
+                  className={cn('text-sm font-bold flex-shrink-0 px-2.5 py-0.5 rounded-lg border-0', getScoreTone(essay.overall_score).bg, getScoreTone(essay.overall_score).text)}
                 >
                   {essay.overall_score?.toFixed(1) ?? '—'}
                 </Badge>
@@ -337,10 +316,10 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
                     <div className="flex items-center sm:flex-col sm:justify-center sm:w-[72px] gap-2 sm:gap-1.5 flex-shrink-0">
                       <div
                         className={cn(
-                          'h-12 w-12 sm:h-16 sm:w-16 rounded-xl sm:rounded-2xl flex items-center justify-center font-bold text-white flex-shrink-0',
-                          getScoreBg(essay.overall_score)
+                          'h-12 w-12 sm:h-16 sm:w-16 rounded-xl sm:rounded-2xl flex items-center justify-center font-bold flex-shrink-0',
+                          getScoreTone(essay.overall_score).bg,
+                          getScoreTone(essay.overall_score).text,
                         )}
-                        style={getScoreStyle(essay.overall_score)}
                       >
                         <span className="text-lg sm:text-2xl leading-none">
                           {essay.overall_score?.toFixed(1) ?? '?'}

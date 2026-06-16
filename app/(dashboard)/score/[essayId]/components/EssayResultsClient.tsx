@@ -27,6 +27,7 @@ import { VocabGenerateButtons } from './VocabGenerateButtons'
 import { DetailedGuidance } from './DetailedGuidance'
 import { PromptContextZone } from './PromptContextZone'
 import { GuestBanner } from '@/components/guest/GuestBanner'
+import { getScoreTone } from '@/lib/utils/score'
 import type { Essay } from '@/types/essay'
 
 interface CriterionData {
@@ -53,22 +54,22 @@ interface EssayResultsClientProps {
   initialTopicName: string | null
 }
 
-function getScoreColor(score: number | null): string {
-  if (score === null) return 'bg-gray-500'
-  if (score >= 8) return 'bg-gradient-to-r from-violet-500 to-purple-500'
-  if (score >= 7) return 'bg-gradient-to-r from-teal-500 to-cyan-600'
-  if (score >= 6) return 'bg-gradient-to-r from-sky-500 to-sky-600'
-  if (score >= 5) return 'bg-gradient-to-r from-orange-400 to-orange-500'
-  return 'bg-gradient-to-r from-red-500 to-rose-600'
+function getScoreBarColor(score: number | null): string {
+  if (score === null) return 'bg-slate-200'
+  if (score >= 8) return 'bg-violet-400'
+  if (score >= 7) return 'bg-teal-400'
+  if (score >= 6) return 'bg-sky-400'
+  if (score >= 5) return 'bg-orange-400'
+  return 'bg-rose-400'
 }
 
-function getScoreBarColor(score: number | null): string {
-  if (score === null) return 'bg-gray-300'
-  if (score >= 8) return 'bg-gradient-to-r from-violet-400 to-purple-400'
-  if (score >= 7) return 'bg-gradient-to-r from-teal-400 to-cyan-500'
-  if (score >= 6) return 'bg-gradient-to-r from-sky-400 to-sky-500'
-  if (score >= 5) return 'bg-gradient-to-r from-orange-300 to-orange-400'
-  return 'bg-gradient-to-r from-red-400 to-rose-500'
+function getScoreHeaderTone(score: number | null): { bg: string; text: string; sub: string; infoBg: string; infoBorder: string; infoText: string; infoIcon: string } {
+  if (score === null) return { bg: 'bg-slate-100', text: 'text-slate-700', sub: 'text-slate-500', infoBg: 'bg-slate-50', infoBorder: 'border-slate-200', infoText: 'text-slate-700', infoIcon: 'text-slate-500' }
+  if (score >= 8) return { bg: 'bg-violet-100', text: 'text-violet-800', sub: 'text-violet-500', infoBg: 'bg-violet-50', infoBorder: 'border-violet-200', infoText: 'text-violet-800', infoIcon: 'text-violet-500' }
+  if (score >= 7) return { bg: 'bg-teal-100',   text: 'text-teal-800',   sub: 'text-teal-500',   infoBg: 'bg-teal-50',   infoBorder: 'border-teal-200',   infoText: 'text-teal-800',   infoIcon: 'text-teal-500'   }
+  if (score >= 6) return { bg: 'bg-sky-100',     text: 'text-sky-800',     sub: 'text-sky-500',     infoBg: 'bg-sky-50',     infoBorder: 'border-sky-200',     infoText: 'text-sky-800',     infoIcon: 'text-sky-500'     }
+  if (score >= 5) return { bg: 'bg-orange-100', text: 'text-orange-800', sub: 'text-orange-500', infoBg: 'bg-orange-50', infoBorder: 'border-orange-200', infoText: 'text-orange-800', infoIcon: 'text-orange-500' }
+  return                  { bg: 'bg-rose-100',   text: 'text-rose-800',   sub: 'text-rose-500',   infoBg: 'bg-rose-50',   infoBorder: 'border-rose-200',   infoText: 'text-rose-800',   infoIcon: 'text-rose-500'   }
 }
 
 function formatCriterionScore(score: number | null, overallScore: number | null): string {
@@ -163,7 +164,7 @@ function CriterionRow({
           </div>
         </div>
 
-        <Badge className={`${getScoreColor(score)} text-white font-bold px-2.5 sm:px-3 py-1 text-sm sm:text-base flex-shrink-0 min-w-[2.5rem] text-center justify-center`}>
+        <Badge className={`${getScoreTone(score).bg} ${getScoreTone(score).text} font-bold px-2.5 sm:px-3 py-1 text-sm sm:text-base flex-shrink-0 min-w-[2.5rem] text-center justify-center`}>
           {formatCriterionScore(score, overallScore)}
         </Badge>
 
@@ -393,34 +394,37 @@ export function EssayResultsClient({
             {/* Left column — sticky on desktop */}
             <div className="md:w-2/5 space-y-3 sm:space-y-4 md:sticky md:top-36 md:self-start">
               {/* Overall Score Card */}
-              <Card className="border-ocean-300 shadow-lg overflow-hidden">
-                <div className={`${essay.overall_score !== null && essay.overall_score >= 8.0
-                  ? 'bg-amber-700'
-                  : 'bg-ocean-700'} text-white p-4 sm:p-6`}>
-                  <div className="text-center">
-                    <h2 className="text-sm sm:text-base font-semibold mb-1 opacity-90">Overall Band Score</h2>
-                    <div className="text-4xl sm:text-5xl font-bold mb-1">
-                      {essay.overall_score !== null
-                        ? (essay.overall_score >= 8.0
-                            ? `${Math.floor(essay.overall_score)}+`
-                            : essay.overall_score.toFixed(1))
-                        : 'N/A'}
+              {(() => {
+                const ht = getScoreHeaderTone(essay.overall_score)
+                return (
+                  <Card className="border-ocean-300 shadow-lg overflow-hidden">
+                    <div className={`${ht.bg} p-4 sm:p-6`}>
+                      <div className="text-center">
+                        <h2 className={`text-sm sm:text-base font-semibold mb-1 ${ht.sub}`}>Overall Band Score</h2>
+                        <div className={`text-4xl sm:text-5xl font-bold mb-1 ${ht.text}`}>
+                          {essay.overall_score !== null
+                            ? (essay.overall_score >= 8.0
+                                ? `${Math.floor(essay.overall_score)}+`
+                                : essay.overall_score.toFixed(1))
+                            : 'N/A'}
+                        </div>
+                        <p className={`text-xs ${ht.sub}`}>IELTS Writing Task 2</p>
+                      </div>
                     </div>
-                    <p className="text-white/80 text-xs">IELTS Writing Task 2</p>
-                  </div>
-                </div>
 
-                {essay.overall_score !== null && essay.overall_score >= 8.0 && (
-                  <div className="bg-amber-50 border-t border-amber-200 p-3">
-                    <div className="flex items-start gap-2">
-                      <Info className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
-                      <p className="text-xs text-amber-800 leading-relaxed">
-                        At this level, scores often depend on examiner perception. Exceptional standard achieved.
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </Card>
+                    {essay.overall_score !== null && essay.overall_score >= 8.0 && (
+                      <div className={`${ht.infoBg} border-t ${ht.infoBorder} p-3`}>
+                        <div className="flex items-start gap-2">
+                          <Info className={`h-4 w-4 mt-0.5 flex-shrink-0 ${ht.infoIcon}`} />
+                          <p className={`text-xs leading-relaxed ${ht.infoText}`}>
+                            At this level, scores often depend on examiner perception. Exceptional standard achieved.
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </Card>
+                )
+              })()}
 
               {/* Radar chart — horizontal 2-col layout on mobile */}
               <div className="flex flex-col sm:flex-col md:flex-col gap-3 sm:gap-4">

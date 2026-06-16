@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { ProgressSummary } from '@/app/(dashboard)/dashboard/components/ProgressSummary'
 import { ScoreChart } from '@/app/(dashboard)/dashboard/components/ScoreChart'
 import { AdminEssayDetailSheet } from './AdminEssayDetailSheet'
+import { getScoreTone } from '@/lib/utils/score'
 import { format } from 'date-fns'
 import {
   User,
@@ -97,15 +98,6 @@ function getTierLabel(profile: UserProfile): { label: string; className: string 
     return { label: 'PTNK', className: 'bg-violet-100 text-violet-700 border-violet-300' }
   }
   return { label: 'Free', className: 'bg-ocean-100 text-ocean-700 border-ocean-300' }
-}
-
-function getScoreColor(score: number | null): string {
-  if (score === null) return 'bg-gray-500'
-  if (score >= 8) return 'bg-gradient-to-r from-violet-500 to-purple-600'
-  if (score >= 7) return 'bg-gradient-to-r from-emerald-500 to-green-600'
-  if (score >= 6) return 'bg-gradient-to-r from-ocean-500 to-blue-600'
-  if (score >= 5) return 'bg-gradient-to-r from-amber-500 to-orange-500'
-  return 'bg-gradient-to-r from-red-500 to-rose-600'
 }
 
 function SkeletonBlock({ className }: { className?: string }) {
@@ -352,7 +344,7 @@ export function UserDashboardSheet({ user, onClose }: UserDashboardSheetProps) {
                           key={essay.id}
                           className="flex items-center gap-2 sm:gap-3 p-2.5 border border-ocean-200 rounded-lg hover:bg-ocean-50 transition-colors"
                         >
-                          <Badge className={`${getScoreColor(essay.overall_score)} text-white font-bold shrink-0 text-xs px-2 py-0.5`}>
+                          <Badge className={`${getScoreTone(essay.overall_score).bg} ${getScoreTone(essay.overall_score).text} font-bold shrink-0 text-xs px-2 py-0.5`}>
                             {essay.overall_score?.toFixed(1) ?? 'N/A'}
                           </Badge>
                           <p className="flex-1 text-sm text-ocean-700 line-clamp-1 min-w-0">

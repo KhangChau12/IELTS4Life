@@ -12,6 +12,7 @@ import {
 } from 'recharts'
 import { format } from 'date-fns'
 import { AlertCircle, CheckCircle2, ChevronDown, FileText, BarChart2 } from 'lucide-react'
+import { getScoreTone } from '@/lib/utils/score'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -54,23 +55,6 @@ interface AdminEssayDetailSheetProps {
 
 // ── Score helpers (mirrors EssayResultsClient) ────────────────────────────────
 
-function getScoreColor(score: number | null): string {
-  if (score === null) return 'bg-gray-500'
-  if (score >= 8) return 'bg-gradient-to-r from-violet-500 to-purple-500'
-  if (score >= 7) return 'bg-gradient-to-r from-teal-500 to-cyan-600'
-  if (score >= 6) return 'bg-gradient-to-r from-sky-500 to-sky-600'
-  if (score >= 5) return 'bg-gradient-to-r from-orange-400 to-orange-500'
-  return 'bg-gradient-to-r from-red-500 to-rose-600'
-}
-
-function getScoreBarColor(score: number | null): string {
-  if (score === null) return 'bg-gray-300'
-  if (score >= 8) return 'bg-gradient-to-r from-violet-400 to-purple-400'
-  if (score >= 7) return 'bg-gradient-to-r from-teal-400 to-cyan-500'
-  if (score >= 6) return 'bg-gradient-to-r from-sky-400 to-sky-500'
-  if (score >= 5) return 'bg-gradient-to-r from-orange-300 to-orange-400'
-  return 'bg-gradient-to-r from-red-400 to-rose-500'
-}
 
 function formatCriterionScore(score: number | null, overallScore: number | null): string {
   if (score === null) return 'N/A'
@@ -139,7 +123,7 @@ function CriterionRow({
           <div className="mt-1.5 flex items-center gap-2">
             <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
               <div
-                className={`h-full rounded-full transition-all duration-500 ${getScoreBarColor(score)}`}
+                className={`h-full rounded-full transition-all duration-500 ${getScoreTone(score).bg}`}
                 style={{ width: `${barPercent}%` }}
               />
             </div>
@@ -149,7 +133,7 @@ function CriterionRow({
           </div>
         </div>
 
-        <Badge className={`${getScoreColor(score)} text-white font-bold px-2.5 py-0.5 text-sm flex-shrink-0`}>
+        <Badge className={`${getScoreTone(score).bg} ${getScoreTone(score).text} font-bold px-2.5 py-0.5 text-sm flex-shrink-0`}>
           {formatCriterionScore(score, overallScore)}
         </Badge>
 
@@ -320,7 +304,7 @@ export function AdminEssayDetailSheet({ essayId, onClose }: AdminEssayDetailShee
               </SheetTitle>
               {data && (
                 <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                  <Badge className={`${getScoreColor(data.overall_score)} text-white font-bold text-sm px-2.5 py-0.5`}>
+                  <Badge className={`${getScoreTone(data.overall_score).bg} ${getScoreTone(data.overall_score).text} font-bold text-sm px-2.5 py-0.5`}>
                     Band {data.overall_score?.toFixed(1) ?? 'N/A'}
                   </Badge>
                   <span className="text-xs text-ocean-500">
@@ -407,11 +391,11 @@ export function AdminEssayDetailSheet({ essayId, onClose }: AdminEssayDetailShee
                     <p className="text-xs font-medium text-ocean-700 w-28 shrink-0 leading-tight">{c.name}</p>
                     <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
                       <div
-                        className={`h-full rounded-full ${getScoreBarColor(c.score)}`}
+                        className={`h-full rounded-full ${getScoreTone(c.score).bg}`}
                         style={{ width: c.score !== null ? `${(c.score / 9) * 100}%` : '0%' }}
                       />
                     </div>
-                    <Badge className={`${getScoreColor(c.score)} text-white text-xs font-bold px-2 py-0.5 shrink-0`}>
+                    <Badge className={`${getScoreTone(c.score).bg} ${getScoreTone(c.score).text} text-xs font-bold px-2 py-0.5 shrink-0`}>
                       {formatCriterionScore(c.score, data.overall_score)}
                     </Badge>
                   </div>

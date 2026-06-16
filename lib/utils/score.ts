@@ -16,11 +16,21 @@ export function calculateOverallScore(scores: {
 }
 
 export function getScoreColor(score: number): string {
-  if (score >= 8) return 'text-violet-600'
-  if (score >= 7) return 'text-teal-600'
-  if (score >= 6) return 'text-sky-600'
-  if (score >= 5) return 'text-orange-500'
-  return 'text-red-600'
+  if (score >= 8) return 'text-violet-700'
+  if (score >= 7) return 'text-teal-700'
+  if (score >= 6) return 'text-sky-700'
+  if (score >= 5) return 'text-orange-700'
+  return 'text-rose-700'
+}
+
+/** Returns both text + bg classes — the single source of truth for score colours. */
+export function getScoreTone(score: number | null): { text: string; bg: string } {
+  if (score === null) return { text: 'text-slate-400', bg: 'bg-slate-100' }
+  if (score >= 8) return { text: 'text-violet-700', bg: 'bg-violet-100' }
+  if (score >= 7) return { text: 'text-teal-700',   bg: 'bg-teal-100'   }
+  if (score >= 6) return { text: 'text-sky-700',    bg: 'bg-sky-100'    }
+  if (score >= 5) return { text: 'text-orange-700', bg: 'bg-orange-100' }
+  return { text: 'text-rose-700', bg: 'bg-rose-100' }
 }
 
 export function getScoreBadgeVariant(score: number): 'default' | 'secondary' | 'destructive' {
