@@ -43,11 +43,11 @@ export function ScoreChart({ data, criteriaOverTime }: ScoreChartProps) {
   })
 
   const seriesMeta = [
-    { key: 'overall' as const, label: 'Overall', color: '#06b6d4', bgClass: 'bg-cyan-100 text-cyan-700 ring-cyan-300' },
-    { key: 'taskResponse' as const, label: 'Task Response', color: '#3b82f6', bgClass: 'bg-blue-100 text-blue-700 ring-blue-300' },
-    { key: 'coherence' as const, label: 'Coherence', color: '#10b981', bgClass: 'bg-green-100 text-green-700 ring-green-300' },
-    { key: 'vocabulary' as const, label: 'Vocabulary', color: '#f59e0b', bgClass: 'bg-amber-100 text-amber-700 ring-amber-300' },
-    { key: 'grammar' as const, label: 'Grammar', color: '#ec4899', bgClass: 'bg-pink-100 text-pink-700 ring-pink-300' },
+    { key: 'overall' as const, label: 'Overall', color: '#06b6d4', bgClass: 'bg-cyan-100 text-cyan-700' },
+    { key: 'taskResponse' as const, label: 'Task Response', color: '#3b82f6', bgClass: 'bg-blue-100 text-blue-700' },
+    { key: 'coherence' as const, label: 'Coherence', color: '#10b981', bgClass: 'bg-green-100 text-green-700' },
+    { key: 'vocabulary' as const, label: 'Vocabulary', color: '#f59e0b', bgClass: 'bg-amber-100 text-amber-700' },
+    { key: 'grammar' as const, label: 'Grammar', color: '#ec4899', bgClass: 'bg-pink-100 text-pink-700' },
   ]
 
   const criteriaByEssay = new Map<number, CriteriaPoint>()
@@ -85,7 +85,7 @@ export function ScoreChart({ data, criteriaOverTime }: ScoreChartProps) {
             type="button"
             onClick={() => toggleSeries(series.key)}
             className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all cursor-pointer ${
-              visibleSeries[series.key] ? `${series.bgClass} ring-2` : 'bg-gray-100 text-gray-500 opacity-50'
+              visibleSeries[series.key] ? series.bgClass : 'bg-gray-100 text-gray-500 opacity-50'
             }`}
           >
             <span
@@ -97,6 +97,9 @@ export function ScoreChart({ data, criteriaOverTime }: ScoreChartProps) {
         ))}
       </div>
 
+      <div className="flex items-center justify-between mb-1">
+        <span className="text-xs font-medium text-ocean-500">Band Score</span>
+      </div>
       <div className="w-full h-[240px] sm:h-[300px] md:h-[360px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={formattedData} margin={{ top: 12, right: 28, left: 0, bottom: 8 }}>
@@ -123,19 +126,18 @@ export function ScoreChart({ data, criteriaOverTime }: ScoreChartProps) {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#e0f2fe" />
-            <XAxis dataKey="essay" stroke="#0c4a6e" tick={{ fill: '#0c4a6e', fontSize: 12 }} />
+            <XAxis
+              dataKey="essay"
+              stroke="#0c4a6e"
+              tick={{ fill: '#0c4a6e', fontSize: 12 }}
+              interval={formattedData.length <= 10 ? 0 : Math.floor(formattedData.length / 7)}
+            />
             <YAxis
               domain={[4, 9]}
               ticks={[4, 5, 6, 7, 8, 9]}
               stroke="#0c4a6e"
               tick={{ fill: '#0c4a6e', fontSize: 12 }}
               tickFormatter={(value) => (value === 8 ? '8-9' : value.toString())}
-              label={{
-                value: 'Band Score',
-                angle: -90,
-                position: 'insideLeft',
-                style: { fill: '#0c4a6e', fontSize: 14, fontWeight: 500 },
-              }}
             />
             <Tooltip content={<ScoreProgressTooltip />} />
 
@@ -147,7 +149,7 @@ export function ScoreChart({ data, criteriaOverTime }: ScoreChartProps) {
                 stroke="#06b6d4"
                 strokeWidth={3}
                 fill="url(#overallFill)"
-                dot={{ fill: '#06b6d4', strokeWidth: 2, r: 5, stroke: '#ffffff' }}
+                dot={{ fill: '#06b6d4', strokeWidth: 2, r: formattedData.length > 20 ? 3 : 5, stroke: '#ffffff' }}
                 activeDot={{ fill: '#0891b2', strokeWidth: 2, r: 7, stroke: '#ffffff' }}
                 connectNulls
               />
@@ -160,7 +162,7 @@ export function ScoreChart({ data, criteriaOverTime }: ScoreChartProps) {
                 stroke="#3b82f6"
                 strokeWidth={2.6}
                 fill="url(#taskResponseFill)"
-                dot={{ fill: '#3b82f6', strokeWidth: 2, r: 5, stroke: '#ffffff' }}
+                dot={{ fill: '#3b82f6', strokeWidth: 2, r: formattedData.length > 20 ? 3 : 5, stroke: '#ffffff' }}
                 activeDot={{ fill: '#2563eb', strokeWidth: 2, r: 7, stroke: '#ffffff' }}
                 connectNulls
               />
@@ -173,7 +175,7 @@ export function ScoreChart({ data, criteriaOverTime }: ScoreChartProps) {
                 stroke="#10b981"
                 strokeWidth={2.6}
                 fill="url(#coherenceFill)"
-                dot={{ fill: '#10b981', strokeWidth: 2, r: 5, stroke: '#ffffff' }}
+                dot={{ fill: '#10b981', strokeWidth: 2, r: formattedData.length > 20 ? 3 : 5, stroke: '#ffffff' }}
                 activeDot={{ fill: '#059669', strokeWidth: 2, r: 7, stroke: '#ffffff' }}
                 connectNulls
               />
@@ -186,7 +188,7 @@ export function ScoreChart({ data, criteriaOverTime }: ScoreChartProps) {
                 stroke="#f59e0b"
                 strokeWidth={2.6}
                 fill="url(#vocabularyFill)"
-                dot={{ fill: '#f59e0b', strokeWidth: 2, r: 5, stroke: '#ffffff' }}
+                dot={{ fill: '#f59e0b', strokeWidth: 2, r: formattedData.length > 20 ? 3 : 5, stroke: '#ffffff' }}
                 activeDot={{ fill: '#d97706', strokeWidth: 2, r: 7, stroke: '#ffffff' }}
                 connectNulls
               />
@@ -199,7 +201,7 @@ export function ScoreChart({ data, criteriaOverTime }: ScoreChartProps) {
                 stroke="#ec4899"
                 strokeWidth={2.6}
                 fill="url(#grammarFill)"
-                dot={{ fill: '#ec4899', strokeWidth: 2, r: 5, stroke: '#ffffff' }}
+                dot={{ fill: '#ec4899', strokeWidth: 2, r: formattedData.length > 20 ? 3 : 5, stroke: '#ffffff' }}
                 activeDot={{ fill: '#db2777', strokeWidth: 2, r: 7, stroke: '#ffffff' }}
                 connectNulls
               />
