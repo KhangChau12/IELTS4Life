@@ -14,7 +14,6 @@ const QUESTION_TYPE_COLORS: Record<string, { dot: string; active: string }> = {
   two_part_question:        { dot: 'bg-sky-400',     active: 'bg-sky-50 text-sky-800 border-sky-200' },
   positive_negative:        { dot: 'bg-emerald-400', active: 'bg-emerald-50 text-emerald-800 border-emerald-200' },
   discussion_both_views:    { dot: 'bg-violet-400',  active: 'bg-violet-50 text-violet-800 border-violet-200' },
-  mixed_hybrid:             { dot: 'bg-slate-400',   active: 'bg-slate-50 text-slate-700 border-slate-200' },
 }
 
 interface PromptSidebarProps {

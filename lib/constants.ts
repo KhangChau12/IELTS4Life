@@ -80,5 +80,4 @@ export const QUESTION_TYPES_DISPLAY: Record<string, string> = {
   two_part_question: 'Two-part Question',
   positive_negative: 'Positive & Negative',
   discussion_both_views: 'Discussion (Both Views)',
-  mixed_hybrid: 'Mixed / Hybrid',
 }

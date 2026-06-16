@@ -19,7 +19,6 @@ const MOBILE_TYPE_COLORS: Record<string, { dot: string; active: string; inactive
   two_part_question:        { dot: 'bg-sky-400',     active: 'bg-sky-100 text-sky-800 border-sky-300',       inactive: 'bg-white text-slate-600 border-slate-200' },
   positive_negative:        { dot: 'bg-emerald-400', active: 'bg-emerald-100 text-emerald-800 border-emerald-300', inactive: 'bg-white text-slate-600 border-slate-200' },
   discussion_both_views:    { dot: 'bg-violet-400',  active: 'bg-violet-100 text-violet-800 border-violet-300',    inactive: 'bg-white text-slate-600 border-slate-200' },
-  mixed_hybrid:             { dot: 'bg-slate-400',   active: 'bg-slate-100 text-slate-700 border-slate-300', inactive: 'bg-white text-slate-600 border-slate-200' },
 }
 
 const INITIAL_VISIBLE = 12

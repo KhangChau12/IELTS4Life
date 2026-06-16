@@ -5,7 +5,6 @@ export const QUESTION_TYPES = {
   two_part_question: 'Two-part Question',
   positive_negative: 'Positive & Negative',
   discussion_both_views: 'Discussion (Both Views)',
-  mixed_hybrid: 'Mixed / Hybrid',
 } as const
 
 export type QuestionType = keyof typeof QUESTION_TYPES

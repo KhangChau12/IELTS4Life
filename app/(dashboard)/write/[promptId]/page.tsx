@@ -15,7 +15,6 @@ const QUESTION_TYPE_LABELS: Record<string, string> = {
   two_part_question: 'Two-Part Question',
   positive_negative: 'Positive or Negative',
   discussion_both_views: 'Discussion (Both Views)',
-  mixed_hybrid: 'Mixed',
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

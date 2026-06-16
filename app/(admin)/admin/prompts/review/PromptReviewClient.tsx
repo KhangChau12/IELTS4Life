@@ -40,7 +40,6 @@ const QUESTION_TYPE_COLORS: Record<QuestionType, string> = {
   two_part_question: 'bg-sky-200 text-sky-800 border-sky-300',
   positive_negative: 'bg-emerald-200 text-emerald-800 border-emerald-300',
   discussion_both_views: 'bg-violet-200 text-violet-800 border-violet-300',
-  mixed_hybrid: 'bg-slate-200 text-slate-700 border-slate-300',
 }
 
 export function PromptReviewClient() {

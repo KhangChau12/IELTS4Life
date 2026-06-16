@@ -292,7 +292,7 @@ export interface Database {
         Row: {
           id: string
           prompt_text: string
-          question_type: 'agree_disagree' | 'advantages_disadvantages' | 'problem_solution' | 'two_part_question' | 'positive_negative' | 'discussion_both_views' | 'mixed_hybrid'
+          question_type: 'agree_disagree' | 'advantages_disadvantages' | 'problem_solution' | 'two_part_question' | 'positive_negative' | 'discussion_both_views'
           topic_id: string
           created_by: string
           created_at: string
@@ -301,7 +301,7 @@ export interface Database {
         Insert: {
           id?: string
           prompt_text: string
-          question_type: 'agree_disagree' | 'advantages_disadvantages' | 'problem_solution' | 'two_part_question' | 'positive_negative' | 'discussion_both_views' | 'mixed_hybrid'
+          question_type: 'agree_disagree' | 'advantages_disadvantages' | 'problem_solution' | 'two_part_question' | 'positive_negative' | 'discussion_both_views'
           topic_id: string
           created_by: string
           created_at?: string
@@ -310,7 +310,7 @@ export interface Database {
         Update: {
           id?: string
           prompt_text?: string
-          question_type?: 'agree_disagree' | 'advantages_disadvantages' | 'problem_solution' | 'two_part_question' | 'positive_negative' | 'discussion_both_views' | 'mixed_hybrid'
+          question_type?: 'agree_disagree' | 'advantages_disadvantages' | 'problem_solution' | 'two_part_question' | 'positive_negative' | 'discussion_both_views'
           topic_id?: string
           created_by?: string
           created_at?: string

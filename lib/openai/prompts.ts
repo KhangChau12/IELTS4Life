@@ -745,7 +745,6 @@ STANCE DIFFERENCES by question type:
 - problem_solution: Outline 1 focuses on individual/economic solutions; Outline 2 focuses on government/social policy solutions
 - two_part_question: Outline 1 answers Question 1 fully in BP1 and Question 2 in BP2; Outline 2 integrates both questions by theme across both body paragraphs
 - positive_negative: Outline 1 concludes the overall impact is positive; Outline 2 concludes the overall impact is negative
-- mixed_hybrid: Outline 1 addresses each part of the question sequentially; Outline 2 groups ideas thematically across paragraphs
 
 For EACH outline, provide:
 1. approach: 1 sentence describing the stance/structure strategy
