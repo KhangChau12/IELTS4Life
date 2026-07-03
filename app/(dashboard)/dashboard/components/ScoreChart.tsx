@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import {
   AreaChart,
@@ -41,6 +41,14 @@ export function ScoreChart({ data, criteriaOverTime }: ScoreChartProps) {
     vocabulary: false,
     grammar: false,
   })
+  const [isNarrow, setIsNarrow] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsNarrow(window.innerWidth < 640)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   const seriesMeta = [
     { key: 'overall' as const, label: 'Overall', color: '#06b6d4', bgClass: 'bg-cyan-100 text-cyan-700' },
@@ -130,7 +138,11 @@ export function ScoreChart({ data, criteriaOverTime }: ScoreChartProps) {
               dataKey="essay"
               stroke="#0c4a6e"
               tick={{ fill: '#0c4a6e', fontSize: 12 }}
-              interval={formattedData.length <= 10 ? 0 : Math.floor(formattedData.length / 7)}
+              interval={
+                formattedData.length <= 10
+                  ? 0
+                  : Math.floor(formattedData.length / (isNarrow ? 4 : 7))
+              }
             />
             <YAxis
               domain={[4, 9]}
