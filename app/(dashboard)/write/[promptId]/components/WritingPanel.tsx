@@ -226,7 +226,7 @@ export default function WritingPanel({
             onChange={(e) => setEssay(e.target.value)}
             disabled={isSubmitting}
             placeholder="Start writing your essay here..."
-            className="flex-1 min-h-[240px] sm:min-h-[300px] resize-none text-sm leading-relaxed disabled:opacity-60 disabled:cursor-not-allowed"
+            className="flex-1 min-h-[240px] sm:min-h-[300px] lg:min-h-[420px] resize-none text-sm leading-relaxed disabled:opacity-60 disabled:cursor-not-allowed"
           />
 
           <div className="flex items-center justify-between">
