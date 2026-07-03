@@ -126,10 +126,10 @@ export default function LoginClient() {
       </div>
 
       {/* Right side - Form section */}
-      <div className="w-full lg:w-1/2 flex items-start justify-center px-4 md:px-8 py-8 md:py-20 bg-gray-50">
+      <div className="w-full lg:w-1/2 flex items-start justify-center px-4 md:px-8 py-4 sm:py-8 md:py-20 [@media(max-height:450px)]:py-2 bg-gray-50">
         <div className="w-full max-w-md">
-          {/* Mobile logo (hidden on desktop) */}
-          <div className="lg:hidden text-center mb-6 md:mb-8">
+          {/* Mobile logo (hidden on desktop, hidden on short landscape) */}
+          <div className="lg:hidden [@media(max-height:450px)]:hidden text-center mb-4 sm:mb-6 md:mb-8">
             <span className="text-2xl md:text-3xl font-[family-name:var(--font-shrikhand)]">
               <span className="text-cyan-500">IELTS</span>
               <span className="text-ocean-800">4Life</span>
@@ -137,14 +137,14 @@ export default function LoginClient() {
           </div>
 
           {/* Form card */}
-          <div className="bg-white rounded-2xl shadow-xl p-5 md:p-8">
-            <div className="mb-5 md:mb-6">
-              <h2 className="text-2xl md:text-3xl font-bold text-ocean-800 mb-2">Sign in</h2>
-              <p className="text-sm md:text-base text-ocean-600">Continue your IELTS journey</p>
+          <div className="bg-white rounded-2xl shadow-xl p-5 md:p-8 [@media(max-height:450px)]:p-4">
+            <div className="mb-5 md:mb-6 [@media(max-height:450px)]:mb-3">
+              <h2 className="text-2xl md:text-3xl font-bold text-ocean-800 mb-2 [@media(max-height:450px)]:text-xl [@media(max-height:450px)]:mb-1">Sign in</h2>
+              <p className="text-sm md:text-base text-ocean-600 [@media(max-height:450px)]:hidden">Continue your IELTS journey</p>
             </div>
 
             {/* Quick sign-in options */}
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 [@media(max-height:450px)]:gap-2">
               <GoogleAuthButton label="Sign in with Google" />
 
               <Link href="/score" className="block">
@@ -158,7 +158,7 @@ export default function LoginClient() {
             </div>
 
             {/* Divider */}
-            <div className="relative my-5">
+            <div className="relative my-5 [@media(max-height:450px)]:my-2">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-ocean-100"></div>
               </div>
@@ -167,7 +167,7 @@ export default function LoginClient() {
               </div>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 [@media(max-height:450px)]:space-y-2">
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
                   {error}

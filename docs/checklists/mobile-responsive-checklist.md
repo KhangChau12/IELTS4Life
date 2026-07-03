@@ -22,7 +22,7 @@ Status values: `todo` | `in-progress` | `done` | `skip (reason)`
 | # | Route | Status | Notes |
 |---|-------|--------|-------|
 | 1 | `/` (home) | done | Fixed doc-level overflow-x at 844 landscape / 768 iPad: added `overflow-hidden` to Band 8-9 section wrapper to clip unclipped `scale-110` glow backdrop |
-| 2 | `/login` | todo | |
+| 2 | `/login` | done | At 844x390 landscape, redundant mobile logo + generous padding pushed Password/Sign-In below the fold; added `[@media(max-height:450px)]` overrides in `LoginClient.tsx` to hide the duplicate logo, tighten card padding/gaps, and shrink the heading — page remains scrollable as a fallback so nothing is unreachable |
 | 3 | `/register` | todo | |
 | 4 | `/forgot-password` | todo | |
 | 5 | `/reset-password` | todo | |
