@@ -204,7 +204,7 @@ export function NotificationsManagementClient() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-7 w-7 text-slate-400 hover:text-red-600 shrink-0"
+                    className="h-11 w-11 sm:h-7 sm:w-7 text-slate-400 hover:text-red-600 shrink-0"
                     onClick={() => handleDelete(notification.id)}
                     disabled={deletingId === notification.id}
                   >

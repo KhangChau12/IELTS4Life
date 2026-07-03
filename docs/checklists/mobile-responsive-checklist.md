@@ -43,7 +43,7 @@ Status values: `todo` | `in-progress` | `done` | `skip (reason)`
 | 20 | `/admin/statistics` | done | Verified with real platform data (355 users, 1150 essays). All charts (donut, bar, area, satisfaction) render with legible axis/legend labels at 375 and 844 landscape — no overlap. `EnhancedUsersTable` already has a dedicated `md:hidden` mobile card view (whole-card tap target, no cramped table). "2 errors" red toast is the known Next.js dev-mode diagnostic overlay, already documented as a non-issue in the iPad pass. No code changes needed |
 | 21 | `/admin/prompts` | done | Search/filter toolbar and prompt list already wrap cleanly at 375. Real issue: per-card Edit/Delete icon buttons were `h-7 w-7` (28px) — a destructive delete action at a genuinely error-prone size on touch. Raised to `h-11 w-11` below `sm:` in `PromptsManagementClient.tsx`, desktop's tighter `h-7` density unchanged |
 | 22 | `/admin/prompts/review` | done | Verified with real pending submissions (39 queued). Edit/similar 2-column layout stacks cleanly at 375, splits nicely at 844 landscape. Approve/Reject use default-size (`h-10`) full-width flex buttons — comfortable tap targets, not small icon buttons. Keyboard shortcut hints (A/R) are informational-only and harmless on touch. No code changes needed |
-| 23 | `/admin/notifications` | todo | |
+| 23 | `/admin/notifications` | done | Form (title/message/audience) and notification list render cleanly at 375/844. Same destructive-delete sub-44px issue as `/admin/prompts`: per-notification delete icon was `h-7 w-7` — raised to `h-11 w-11` below `sm:` in `NotificationsManagementClient.tsx`, desktop density unchanged |
 
 ## Per-page workflow (one page per loop iteration)
 
