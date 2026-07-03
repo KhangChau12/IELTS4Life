@@ -279,7 +279,7 @@ export default function PromptsListClient({ prompts, topics, isAuthenticated }: 
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 ipad-lg:grid-cols-2 gap-4">
               {filtered.slice(0, visibleCount).map((prompt) => (
                 <PromptCard key={prompt.id} prompt={prompt} isAuthenticated={isAuthenticated} />
               ))}
