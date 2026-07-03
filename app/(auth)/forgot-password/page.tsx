@@ -97,37 +97,37 @@ export default function ForgotPasswordPage() {
         </div>
 
         {/* Right side - Success message */}
-        <div className="w-full lg:w-1/2 flex items-start justify-center px-4 md:px-8 py-8 md:py-20 bg-gray-50">
+        <div className="w-full lg:w-1/2 flex items-start justify-center px-4 md:px-8 py-8 md:py-20 [@media(max-height:450px)]:py-2 bg-gray-50">
           <div className="w-full max-w-md">
             {/* Mobile logo */}
-            <div className="lg:hidden text-center mb-6 md:mb-8">
+            <div className="lg:hidden [@media(max-height:450px)]:hidden text-center mb-6 md:mb-8">
               <div className="inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-ocean-600 rounded-xl mb-3 md:mb-4">
                 <Waves className="w-6 h-6 md:w-7 md:h-7 text-white" />
               </div>
               <h1 className="text-xl md:text-2xl font-bold text-ocean-800">IELTS4Life</h1>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-xl p-5 md:p-8">
+            <div className="bg-white rounded-2xl shadow-xl p-5 md:p-8 [@media(max-height:450px)]:p-4">
               <div className="text-center">
-                <div className="mx-auto w-16 h-16 bg-ocean-100 rounded-full flex items-center justify-center mb-4">
-                  <Mail className="w-8 h-8 text-ocean-600" />
+                <div className="mx-auto w-16 h-16 bg-ocean-100 rounded-full flex items-center justify-center mb-4 [@media(max-height:450px)]:w-10 [@media(max-height:450px)]:h-10 [@media(max-height:450px)]:mb-2">
+                  <Mail className="w-8 h-8 text-ocean-600 [@media(max-height:450px)]:w-5 [@media(max-height:450px)]:h-5" />
                 </div>
-                <h2 className="text-2xl md:text-3xl font-bold text-ocean-800 mb-2">Email Sent!</h2>
-                <p className="text-ocean-600 mb-2">We've sent a password reset link to</p>
+                <h2 className="text-2xl md:text-3xl font-bold text-ocean-800 mb-2 [@media(max-height:450px)]:text-xl">Email Sent!</h2>
+                <p className="text-ocean-600 mb-2 [@media(max-height:450px)]:hidden">We've sent a password reset link to</p>
                 <p className="text-lg font-semibold text-ocean-700 break-all">{userEmail}</p>
               </div>
 
-              <div className="bg-ocean-50 border border-ocean-200 rounded-lg p-4 mt-6 mb-6">
-                <div className="flex items-center justify-center gap-2 text-ocean-700 mb-2">
+              <div className="bg-ocean-50 border border-ocean-200 rounded-lg p-4 mt-6 mb-6 [@media(max-height:450px)]:mt-3 [@media(max-height:450px)]:mb-3 [@media(max-height:450px)]:p-2">
+                <div className="flex items-center justify-center gap-2 text-ocean-700 mb-2 [@media(max-height:450px)]:mb-0">
                   <CheckCircle2 className="w-5 h-5" />
                   <span className="font-medium">Check your inbox</span>
                 </div>
-                <p className="text-sm text-ocean-600 text-center">
+                <p className="text-sm text-ocean-600 text-center [@media(max-height:450px)]:hidden">
                   Click the link in the email to reset your password. The link expires in 1 hour.
                 </p>
               </div>
 
-              <div className="space-y-2 text-sm text-ocean-600 mb-6">
+              <div className="space-y-2 text-sm text-ocean-600 mb-6 [@media(max-height:450px)]:hidden">
                 <p className="font-medium text-center">Didn't receive the email?</p>
                 <ul className="list-disc list-inside space-y-1 text-ocean-500 pl-4">
                   <li>Check your spam/junk folder</li>
@@ -222,10 +222,10 @@ export default function ForgotPasswordPage() {
       </div>
 
       {/* Right side - Form section */}
-      <div className="w-full lg:w-1/2 flex items-start justify-center px-4 md:px-8 py-8 md:py-20 bg-gray-50">
+      <div className="w-full lg:w-1/2 flex items-start justify-center px-4 md:px-8 py-8 md:py-20 [@media(max-height:450px)]:py-2 bg-gray-50">
         <div className="w-full max-w-md">
           {/* Mobile logo */}
-          <div className="lg:hidden text-center mb-6 md:mb-8">
+          <div className="lg:hidden [@media(max-height:450px)]:hidden text-center mb-6 md:mb-8">
             <div className="inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-ocean-600 rounded-xl mb-3 md:mb-4">
               <Waves className="w-6 h-6 md:w-7 md:h-7 text-white" />
             </div>
@@ -233,27 +233,27 @@ export default function ForgotPasswordPage() {
           </div>
 
           {/* Form card */}
-          <div className="bg-white rounded-2xl shadow-xl p-5 md:p-8">
+          <div className="bg-white rounded-2xl shadow-xl p-5 md:p-8 [@media(max-height:450px)]:p-4">
             {/* Back button */}
             <Link
               href="/login"
-              className="inline-flex items-center gap-2 text-sm text-ocean-600 hover:text-ocean-700 mb-6"
+              className="inline-flex items-center gap-2 text-sm text-ocean-600 hover:text-ocean-700 mb-6 [@media(max-height:450px)]:mb-2"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to login
             </Link>
 
-            <div className="mb-6 md:mb-8">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-ocean-100 rounded-xl mb-4">
+            <div className="mb-6 md:mb-8 [@media(max-height:450px)]:mb-3">
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-ocean-100 rounded-xl mb-4 [@media(max-height:450px)]:hidden">
                 <KeyRound className="w-6 h-6 text-ocean-600" />
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold text-ocean-800 mb-2">Forgot password?</h2>
-              <p className="text-sm md:text-base text-ocean-600">
+              <h2 className="text-2xl md:text-3xl font-bold text-ocean-800 mb-2 [@media(max-height:450px)]:text-xl [@media(max-height:450px)]:mb-1">Forgot password?</h2>
+              <p className="text-sm md:text-base text-ocean-600 [@media(max-height:450px)]:hidden">
                 No worries, we'll send you reset instructions.
               </p>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 [@media(max-height:450px)]:space-y-2">
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
                   {error}
