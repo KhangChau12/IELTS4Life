@@ -563,7 +563,7 @@ export default async function HomePage() {
       </section>
 
       {/* Band 8–9 Rewrite Section */}
-      <section className="bg-gradient-to-br from-slate-50 to-violet-50/30 py-10 md:py-24">
+      <section className="overflow-hidden bg-gradient-to-br from-slate-50 to-violet-50/30 py-10 md:py-24">
         <div className="container mx-auto px-5 sm:px-8 lg:px-6">
           <div className="mx-auto max-w-7xl">
             <div className="grid grid-cols-1 ipad-lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16 items-center">

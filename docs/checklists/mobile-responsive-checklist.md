@@ -21,7 +21,7 @@ Status values: `todo` | `in-progress` | `done` | `skip (reason)`
 
 | # | Route | Status | Notes |
 |---|-------|--------|-------|
-| 1 | `/` (home) | todo | |
+| 1 | `/` (home) | done | Fixed doc-level overflow-x at 844 landscape / 768 iPad: added `overflow-hidden` to Band 8-9 section wrapper to clip unclipped `scale-110` glow backdrop |
 | 2 | `/login` | todo | |
 | 3 | `/register` | todo | |
 | 4 | `/forgot-password` | todo | |
