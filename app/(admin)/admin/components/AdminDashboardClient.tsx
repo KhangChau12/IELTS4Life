@@ -191,7 +191,7 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
       </Card>
 
       {/* Main Charts — 2 column */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 ipad:grid-cols-2 gap-6">
         {/* User Distribution Donut */}
         <Card className="overflow-hidden border-ocean-200 shadow-lg transition-shadow hover:shadow-xl relative">
           <Users className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
@@ -280,7 +280,7 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
       </div>
 
       {/* Activity Charts — side by side on large screens */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 ipad:grid-cols-2 gap-6">
         {/* Daily Essay Activity */}
         <Card className="overflow-hidden border-ocean-200 shadow-lg transition-shadow hover:shadow-xl relative">
           <FileText className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
