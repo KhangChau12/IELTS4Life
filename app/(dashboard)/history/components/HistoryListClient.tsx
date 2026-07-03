@@ -295,43 +295,43 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
         /* ══════════════════════════════
            DETAILED MODE — 3-zone cards
            ══════════════════════════════ */
-        <div className="space-y-3 md:space-y-4">
+        <div className="space-y-3 md:space-y-4 ipad-lg:space-y-0 ipad-lg:grid ipad-lg:grid-cols-2 ipad-lg:items-start ipad-lg:gap-4 xl:block xl:space-y-4">
           {filteredEssays.map(essay => (
             <Card
               key={essay.id}
-              className="border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-r from-white to-ocean-50/40 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
+              className="border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-r from-white to-ocean-50/40 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 xl:mb-0"
             >
               {/* Watermark icon */}
               <BookOpen className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-[0.07] rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
 
               <div className="relative z-10 p-3 sm:p-4 md:p-5">
-                {/* Mobile: score badge + actions on same row; content below */}
-                {/* Desktop (sm+): all 3 zones in a single row */}
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
+                {/* Mobile & 2-col ipad-lg grid: score badge + actions on same row; content below */}
+                {/* Wide single column (sm to <ipad-lg, and xl+): all 3 zones in a single row */}
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5 ipad-lg:flex-col ipad-lg:items-stretch ipad-lg:gap-3 xl:flex-row xl:items-center xl:gap-5">
 
-                  {/* ── Zone 1+3 combined on mobile: score left, actions right ── */}
-                  {/* On sm+: Zone 1 is its own column */}
-                  <div className="flex items-center justify-between sm:contents">
+                  {/* ── Zone 1+3 combined on mobile & ipad-lg: score left, actions right ── */}
+                  {/* On sm-to-<ipad-lg and xl+: Zone 1 is its own column */}
+                  <div className="flex items-center justify-between sm:contents ipad-lg:flex ipad-lg:justify-between xl:contents">
                     {/* Zone 1: Score badge */}
-                    <div className="flex items-center sm:flex-col sm:justify-center sm:w-[72px] gap-2 sm:gap-1.5 flex-shrink-0">
+                    <div className="flex items-center sm:flex-col sm:justify-center sm:w-[72px] gap-2 sm:gap-1.5 flex-shrink-0 ipad-lg:flex-row ipad-lg:w-auto xl:flex-col xl:w-[72px]">
                       <div
                         className={cn(
-                          'h-12 w-12 sm:h-16 sm:w-16 rounded-xl sm:rounded-2xl flex items-center justify-center font-bold flex-shrink-0',
+                          'h-12 w-12 sm:h-16 sm:w-16 rounded-xl sm:rounded-2xl flex items-center justify-center font-bold flex-shrink-0 ipad-lg:h-12 ipad-lg:w-12 ipad-lg:rounded-xl xl:h-16 xl:w-16 xl:rounded-2xl',
                           getScoreTone(essay.overall_score).bg,
                           getScoreTone(essay.overall_score).text,
                         )}
                       >
-                        <span className="text-lg sm:text-2xl leading-none">
+                        <span className="text-lg sm:text-2xl leading-none ipad-lg:text-lg xl:text-2xl">
                           {essay.overall_score?.toFixed(1) ?? '?'}
                         </span>
                       </div>
-                      <span className="text-[10px] text-ocean-500 font-semibold uppercase tracking-wide sm:text-center">
+                      <span className="text-[10px] text-ocean-500 font-semibold uppercase tracking-wide sm:text-center ipad-lg:text-left xl:text-center">
                         {getScoreLabel(essay.overall_score)}
                       </span>
                     </div>
 
-                    {/* Zone 3: Actions — only visible on mobile here (hidden sm+) */}
-                    <div className="flex gap-2 flex-shrink-0 sm:hidden">
+                    {/* Zone 3: Actions — visible on mobile & ipad-lg (hidden sm-to-<ipad-lg and xl+) */}
+                    <div className="flex gap-2 flex-shrink-0 sm:hidden ipad-lg:flex xl:hidden">
                       <Link href={`/score/${essay.id}`}>
                         <Button
                           size="sm"
@@ -400,8 +400,8 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
                     )}
                   </div>
 
-                  {/* ── Zone 3: Actions — desktop only (hidden on mobile, shown above) ── */}
-                  <div className="hidden sm:flex sm:flex-col gap-2 flex-shrink-0 sm:w-[130px] sm:pl-4 sm:border-l sm:border-ocean-100">
+                  {/* ── Zone 3: Actions — wide row only (hidden on mobile & ipad-lg 2-col grid, shown above there) ── */}
+                  <div className="hidden sm:flex sm:flex-col gap-2 flex-shrink-0 sm:w-[130px] sm:pl-4 sm:border-l sm:border-ocean-100 ipad-lg:hidden xl:flex">
                     <Link href={`/score/${essay.id}`}>
                       <Button
                         size="sm"
