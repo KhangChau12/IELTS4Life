@@ -223,9 +223,9 @@ export default async function HomePage() {
                 )}
               </div>
 
-              {/* Mobile-only: screenshot, clean — no floating badges */}
-              <div className="block md:hidden">
-                <div className="relative mx-auto max-w-[320px]">
+              {/* Mobile + iPad: screenshot, clean — no floating badges (collage below needs desktop-width room) */}
+              <div className="block lg:hidden">
+                <div className="relative mx-auto max-w-[320px] ipad:max-w-[420px]">
                   <div className="absolute inset-0 -z-10 bg-gradient-to-br from-cyan-200/50 to-blue-300/30 rounded-3xl blur-2xl scale-105" />
                   <div className="rounded-2xl shadow-xl overflow-hidden border-2 border-white/80 animate-float">
                     <Image
@@ -241,8 +241,8 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              {/* Desktop-only: Screenshot Collage */}
-              <div className="relative h-[450px] sm:h-[500px] md:h-[600px] lg:h-[700px] hidden md:block lg:-ml-12">
+              {/* Desktop-only: Screenshot Collage (needs wide viewport for absolute-positioned satellite images) */}
+              <div className="relative h-[700px] hidden lg:block lg:-ml-12">
 
                 {/* 1. Main Dashboard - Center Hub */}
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[48%] z-30">
@@ -361,11 +361,11 @@ export default async function HomePage() {
             </p>
           </div>
 
-          {/* Mobile: Video first, then 2×2 grid. Desktop: Feature cards 35% + Video 65% */}
-          <div className="flex flex-col lg:grid lg:gap-8 lg:grid-cols-[35%_65%] lg:items-start gap-6">
+          {/* Mobile/portrait iPad: Video first, then 2×2 grid. Landscape iPad+: Feature cards 35% + Video 65% */}
+          <div className="flex flex-col ipad-lg:grid ipad-lg:gap-8 ipad-lg:grid-cols-[35%_65%] ipad-lg:items-start gap-6">
 
             {/* Video - shown first on mobile via order, sticky on desktop */}
-            <div className="order-first lg:order-last lg:sticky lg:top-8">
+            <div className="order-first ipad-lg:order-last ipad-lg:sticky ipad-lg:top-8">
               <div className="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-2xl p-4 md:p-6 border-2 border-cyan-200">
                 <h3 className="text-base md:text-lg font-bold text-slate-900 mb-3 md:mb-4">See It In Action</h3>
 
@@ -389,8 +389,8 @@ export default async function HomePage() {
               </div>
             </div>
 
-            {/* Feature Cards - 2×2 grid on mobile, vertical stack on desktop */}
-            <div className="order-last lg:order-first grid grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4 lg:gap-6">
+            {/* Feature Cards - 2×2 grid on mobile/portrait iPad, vertical stack from landscape iPad up */}
+            <div className="order-last ipad-lg:order-first grid grid-cols-2 ipad-lg:grid-cols-1 gap-3 sm:gap-4 lg:gap-6">
               {/* Feature 1 */}
               <Card className="group border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-br from-white to-cyan-50/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
                 <FileText className="absolute right-2 top-2 h-36 w-36 lg:h-48 lg:w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
@@ -456,7 +456,7 @@ export default async function HomePage() {
       <section className="bg-gradient-to-br from-slate-50 to-cyan-50/30 py-10 md:py-24">
         <div className="container mx-auto px-5 sm:px-8 lg:px-6">
           <div className="mx-auto max-w-7xl">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
+            <div className="grid grid-cols-1 ipad-lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
 
               {/* Left Column: Text */}
               <div className="space-y-5 md:space-y-8">
@@ -566,7 +566,7 @@ export default async function HomePage() {
       <section className="bg-gradient-to-br from-slate-50 to-violet-50/30 py-10 md:py-24">
         <div className="container mx-auto px-5 sm:px-8 lg:px-6">
           <div className="mx-auto max-w-7xl">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16 items-center">
+            <div className="grid grid-cols-1 ipad-lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16 items-center">
 
               {/* Left Column: Before / After Mock */}
               <div className="relative lg:order-first order-last min-w-0">

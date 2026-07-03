@@ -51,3 +51,6 @@ CLAUDE.md
 
 # OS
 Thumbs.db
+
+# Claude Code — local scratch scripts, do not commit
+.claude-tmp/

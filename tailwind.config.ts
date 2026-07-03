@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss"
+import defaultTheme from "tailwindcss/defaultTheme"
 
 const config: Config = {
   darkMode: ["class"],
@@ -8,6 +9,11 @@ const config: Config = {
     "./app/**/*.{ts,tsx}",
   ],
   theme: {
+    screens: {
+      ...defaultTheme.screens,
+      ipad: "768px",
+      "ipad-lg": "1194px",
+    },
     container: {
       center: true,
       padding: "2rem",
