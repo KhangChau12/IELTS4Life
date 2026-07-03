@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ChevronDown, Lightbulb } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
@@ -25,6 +25,13 @@ export default function PromptWritingClient({
 }: PromptWritingClientProps) {
   const router = useRouter()
   const [outlineOpen, setOutlineOpen] = useState(false)
+  const [promptOpen, setPromptOpen] = useState(true)
+
+  // Default the prompt card to collapsed on short viewports (landscape phone) so the
+  // writing area is immediately usable instead of pushed below the fold.
+  useEffect(() => {
+    if (window.innerHeight < 450) setPromptOpen(false)
+  }, [])
 
   const handleSubmitSuccess = (essayId: string) => {
     router.push(`/score/${essayId}`)
@@ -50,23 +57,36 @@ export default function PromptWritingClient({
         </div>
       </div>
 
-      {/* Mobile: prompt card first, writing panel, then collapsible outlines */}
+      {/* Mobile: collapsible prompt card first, writing panel, then collapsible outlines */}
       <div className="lg:hidden flex flex-col gap-4">
-        {/* Prompt card — always visible on mobile */}
-        <Card className="border-ocean-100">
-          <CardContent className="px-4 py-3">
-            <div className="flex flex-wrap gap-1.5 mb-2">
-              <Badge variant="outline" className="text-[11px] bg-teal-50 text-teal-800 border-teal-200">
+        {/* Prompt card — collapsible so short/landscape viewports can prioritize the writing area */}
+        <Card className="border-ocean-100 py-0 overflow-hidden">
+          <button
+            onClick={() => setPromptOpen((prev) => !prev)}
+            className="w-full flex items-center justify-between gap-2 px-4 py-3 text-left"
+          >
+            <span className="flex flex-wrap items-center gap-1.5 min-w-0">
+              <Badge variant="outline" className="text-[11px] bg-teal-50 text-teal-800 border-teal-200 shrink-0">
                 {typeName}
               </Badge>
               {prompt.prompt_topics?.name && (
-                <Badge variant="outline" className="text-[11px] bg-orange-50 text-orange-700 border-orange-200">
+                <Badge variant="outline" className="text-[11px] bg-orange-50 text-orange-700 border-orange-200 shrink-0">
                   {prompt.prompt_topics.name}
                 </Badge>
               )}
-            </div>
-            <p className="text-xs text-gray-700 leading-relaxed">{prompt.prompt_text}</p>
-          </CardContent>
+              {!promptOpen && (
+                <span className="text-xs text-gray-500 truncate">{prompt.prompt_text}</span>
+              )}
+            </span>
+            <ChevronDown
+              className={`h-4 w-4 shrink-0 text-gray-400 transition-transform duration-200 ${promptOpen ? 'rotate-180' : ''}`}
+            />
+          </button>
+          {promptOpen && (
+            <CardContent className="px-4 pb-3 pt-0">
+              <p className="text-xs text-gray-700 leading-relaxed">{prompt.prompt_text}</p>
+            </CardContent>
+          )}
         </Card>
 
         <WritingPanel
