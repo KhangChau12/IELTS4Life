@@ -34,17 +34,15 @@ export function InviteCard({ inviteCode }: InviteCardProps) {
       <CardContent>
         <div className="space-y-4">
           {/* Code Display */}
-          <div className="relative">
-            <div className="bg-gradient-to-r from-ocean-50 to-cyan-50 rounded-lg p-6 border-2 border-ocean-200">
-              <p className="text-3xl font-bold text-ocean-800 text-center tracking-wider">
-                {formatInviteCode(inviteCode)}
-              </p>
-            </div>
+          <div className="bg-gradient-to-r from-ocean-50 to-cyan-50 rounded-lg p-4 sm:p-6 border-2 border-ocean-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p className="text-2xl sm:text-3xl font-bold text-ocean-800 text-center tracking-wider break-all">
+              {formatInviteCode(inviteCode)}
+            </p>
             <Button
               onClick={handleCopy}
               variant="outline"
               size="sm"
-              className="absolute top-2 right-2 border-ocean-300 hover:bg-ocean-50"
+              className="border-ocean-300 hover:bg-ocean-50 flex-shrink-0"
             >
               {copied ? (
                 <>

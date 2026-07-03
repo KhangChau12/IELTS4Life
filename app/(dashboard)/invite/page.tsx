@@ -68,7 +68,7 @@ export default async function InvitePage() {
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 ipad-lg:grid-cols-2">
         {/* Invite Code Card */}
         <InviteCard inviteCode={inviteData.inviteCode} />
 
