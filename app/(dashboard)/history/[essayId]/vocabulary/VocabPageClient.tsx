@@ -287,13 +287,15 @@ export default function VocabularyDetailPage({ params }: VocabularyPageProps) {
                       <CardTitle className="text-sm text-ocean-800">Your Essay</CardTitle>
                     </div>
                     <p className="text-xs text-ocean-500 mt-1">
-                      Hover{' '}
+                      <span className="hidden sm:inline">Hover</span>
+                      <span className="sm:hidden">Tap</span>
+                      {' '}
                       <mark className="bg-yellow-200 px-0.5 rounded font-medium not-italic">highlighted</mark>
                       {' '}words to see the matching card
                     </p>
                   </CardHeader>
                   <CardContent className="p-0">
-                    {/* Event delegation: mouseover reads data-word from <mark> elements */}
+                    {/* Event delegation: mouseover reads data-word from <mark> elements; tap/click provides touch-device parity */}
                     <div
                       ref={essayContainerRef}
                       className="max-h-[50vh] lg:max-h-[65vh] overflow-y-auto p-4"
@@ -303,6 +305,11 @@ export default function VocabularyDetailPage({ params }: VocabularyPageProps) {
                         setHoveredWord(word)
                       }}
                       onMouseLeave={() => setHoveredWord(null)}
+                      onClick={(e) => {
+                        const mark = (e.target as HTMLElement).closest('mark')
+                        const word = mark?.dataset.word ?? null
+                        setHoveredWord((prev) => (word && prev === word ? null : word))
+                      }}
                     >
                       <div
                         className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap"
