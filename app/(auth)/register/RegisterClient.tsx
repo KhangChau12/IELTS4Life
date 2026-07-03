@@ -114,19 +114,19 @@ export default function RegisterClient() {
         </div>
 
         {/* Right side - Verification message */}
-        <div className="w-full lg:w-1/2 flex items-start justify-center px-8 py-20 bg-gray-50">
+        <div className="w-full lg:w-1/2 flex items-start justify-center px-8 py-20 [@media(max-height:450px)]:py-4 bg-gray-50">
           <div className="w-full max-w-md">
-            <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="bg-white rounded-2xl shadow-xl p-8 [@media(max-height:450px)]:p-4">
               <div className="text-center">
-                <div className="mx-auto w-16 h-16 bg-ocean-100 rounded-full flex items-center justify-center mb-4">
-                  <Mail className="w-8 h-8 text-ocean-600" />
+                <div className="mx-auto w-16 h-16 bg-ocean-100 rounded-full flex items-center justify-center mb-4 [@media(max-height:450px)]:w-10 [@media(max-height:450px)]:h-10 [@media(max-height:450px)]:mb-2">
+                  <Mail className="w-8 h-8 text-ocean-600 [@media(max-height:450px)]:w-5 [@media(max-height:450px)]:h-5" />
                 </div>
                 <h2 className="text-2xl font-bold text-ocean-800 mb-2">Verify Your Email</h2>
                 <p className="text-ocean-600 mb-2">We&apos;ve sent a verification link to</p>
                 <p className="text-lg font-semibold text-ocean-700">{userEmail}</p>
               </div>
 
-              <div className="bg-ocean-50 border border-ocean-200 rounded-lg p-4 mt-6 mb-6">
+              <div className="bg-ocean-50 border border-ocean-200 rounded-lg p-4 mt-6 mb-6 [@media(max-height:450px)]:hidden">
                 <div className="flex items-center justify-center gap-2 text-ocean-700 mb-2">
                   <CheckCircle className="w-5 h-5" />
                   <span className="font-medium">Important: Click link in THIS browser</span>
@@ -231,23 +231,23 @@ export default function RegisterClient() {
       </div>
 
       {/* Right side - Form section */}
-      <div className="w-full lg:w-1/2 flex items-start justify-center px-4 md:px-8 py-8 md:py-20 bg-gray-50">
+      <div className="w-full lg:w-1/2 flex items-start justify-center px-4 md:px-8 py-8 md:py-20 [@media(max-height:450px)]:py-2 bg-gray-50">
         <div className="w-full max-w-md">
-          <div className="lg:hidden text-center mb-6 md:mb-8">
+          <div className="lg:hidden [@media(max-height:450px)]:hidden text-center mb-6 md:mb-8">
             <span className="text-2xl md:text-3xl font-[family-name:var(--font-shrikhand)]">
               <span className="text-cyan-500">IELTS</span>
               <span className="text-ocean-800">4Life</span>
             </span>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-xl p-5 md:p-8">
-            <div className="mb-5 md:mb-6">
-              <h2 className="text-2xl md:text-3xl font-bold text-ocean-800 mb-2">Create account</h2>
-              <p className="text-sm md:text-base text-ocean-600">Start improving your IELTS writing today</p>
+          <div className="bg-white rounded-2xl shadow-xl p-5 md:p-8 [@media(max-height:450px)]:p-4">
+            <div className="mb-5 md:mb-6 [@media(max-height:450px)]:mb-3">
+              <h2 className="text-2xl md:text-3xl font-bold text-ocean-800 mb-2 [@media(max-height:450px)]:text-xl [@media(max-height:450px)]:mb-1">Create account</h2>
+              <p className="text-sm md:text-base text-ocean-600 [@media(max-height:450px)]:hidden">Start improving your IELTS writing today</p>
             </div>
 
             {/* Quick sign-up options */}
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 [@media(max-height:450px)]:gap-2">
               <GoogleAuthButton label="Sign up with Google" />
 
               <Link href="/score" className="block">
@@ -258,7 +258,7 @@ export default function RegisterClient() {
             </div>
 
             {/* Divider */}
-            <div className="relative my-5">
+            <div className="relative my-5 [@media(max-height:450px)]:my-2">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-ocean-100"></div>
               </div>
@@ -267,7 +267,7 @@ export default function RegisterClient() {
               </div>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 [@media(max-height:450px)]:space-y-2">
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
                   {error}
@@ -310,7 +310,7 @@ export default function RegisterClient() {
                 )}
               </div>
 
-              <div className="bg-ocean-50/50 border border-ocean-200 rounded-lg p-3">
+              <div className="bg-ocean-50/50 border border-ocean-200 rounded-lg p-3 [@media(max-height:450px)]:p-2">
                 <Label htmlFor="inviteCode" className="text-ocean-700 text-sm flex items-center gap-2">
                   <Gift className="w-4 h-4 text-ocean-600" />
                   Invite or Promo Code (Optional)
@@ -326,7 +326,7 @@ export default function RegisterClient() {
                     e.target.value = e.target.value.toUpperCase()
                   }}
                 />
-                <p className="text-xs text-ocean-500 mt-1">Use a promo code for bonus essays, or a friend&apos;s invite code</p>
+                <p className="text-xs text-ocean-500 mt-1 [@media(max-height:450px)]:hidden">Use a promo code for bonus essays, or a friend&apos;s invite code</p>
               </div>
 
               <div className="space-y-2">
