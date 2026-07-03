@@ -113,14 +113,14 @@ export default function FeaturedPrompt({ prompts, isAuthenticated }: FeaturedPro
 
         {/* CTA */}
         <div className="flex items-center gap-2 sm:gap-3">
-          <Button asChild size="sm" className="bg-white text-ocean-700 hover:bg-ocean-50 font-semibold shadow-sm h-8 sm:h-9 text-xs sm:text-sm px-3 sm:px-4">
+          <Button asChild size="sm" className="bg-white text-ocean-700 hover:bg-ocean-50 font-semibold shadow-sm h-11 sm:h-9 text-xs sm:text-sm px-3 sm:px-4">
             <Link href={isAuthenticated ? `/write/${featured.id}` : `/login?redirect=/write/${featured.id}`}>
               <PenTool className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-1.5" />
               {isAuthenticated ? 'Start Writing' : 'Sign in to Write'}
             </Link>
           </Button>
           {suggestedPool.length > 1 && (
-            <Button variant="ghost" size="sm" onClick={handleAnother} className="text-white/70 hover:text-white hover:bg-white/10 gap-1 sm:gap-1.5 h-8 sm:h-9 text-xs sm:text-sm px-2 sm:px-3">
+            <Button variant="ghost" size="sm" onClick={handleAnother} className="text-white/70 hover:text-white hover:bg-white/10 gap-1 sm:gap-1.5 h-11 sm:h-9 text-xs sm:text-sm px-2 sm:px-3">
               <RefreshCw className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
               Another
             </Button>

@@ -80,8 +80,8 @@ export default function PromptCard({ prompt, isAuthenticated }: PromptCardProps)
               /* Completed: show "View result" on left, "Write again →" on right */
               <>
                 <span
-                  onClick={(e) => { e.preventDefault(); if (resultHref) window.location.href = resultHref }}
-                  className="inline-flex items-center gap-1 text-xs text-slate-400 group-hover:text-ocean-500 transition-colors duration-200 cursor-pointer"
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (resultHref) window.location.href = resultHref }}
+                  className="inline-flex items-center gap-1 text-xs text-slate-400 group-hover:text-ocean-500 transition-colors duration-200 cursor-pointer py-2 -my-2"
                 >
                   <Eye className="h-3.5 w-3.5" />
                   View result
