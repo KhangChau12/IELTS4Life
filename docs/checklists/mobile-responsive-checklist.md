@@ -35,7 +35,7 @@ Status values: `todo` | `in-progress` | `done` | `skip (reason)`
 | 12 | `/history/[essayId]/vocabulary/flashcards` | done | Already well-built for touch from the iPad pass (real swipe gesture via touch events, dot navigation, mobile-only swipe hint, desktop-only keyboard hint). Only gap: Prev/Flip/Next buttons were `h-10` (40px) below `sm:` — bumped to a uniform `h-11` (44px) at all sizes, no visual regression at desktop/iPad |
 | 13 | `/history/[essayId]/vocabulary/quiz` | done | Completed a full 16-question quiz at 375 and 844 landscape. Question view (answer options, progress bar) and results/review screen (score card + single-column review list) both render cleanly with large tappable options and no overflow. Results list stays single-column below `ipad-lg` per the existing iPad-pass fix — long scroll is expected for a static review feed, not a bug. No code changes needed |
 | 14 | `/invite` | done | Verified the iPad-pass overlap fix (flex-col code+button layout) holds cleanly at 375, 430, and 844 landscape — no regression, no overlap. No code changes needed |
-| 15 | `/notifications` | todo | |
+| 15 | `/notifications` | done | Single-column long-form text feed already reads cleanly at 375/430/844 landscape — comfortable line lengths, no overflow, All/Unread toggle buttons well-sized. No code changes needed |
 | 16 | `/subscription` | todo | plan cards, QR modal — QR image must stay legible/scannable at 375 width |
 | 17 | `/privacy` | todo | |
 | 18 | `/terms` | todo | |
