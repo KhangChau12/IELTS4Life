@@ -290,7 +290,7 @@ export default function FlashcardsPage({ params }: { params: { essayId: string }
           onClick={() => navigate('prev')}
           disabled={isFirst}
           variant="outline"
-          className="flex-1 h-10 sm:h-11 border-ocean-200 text-ocean-600
+          className="flex-1 h-11 border-ocean-200 text-ocean-600
             hover:bg-ocean-50 hover:border-ocean-300 disabled:opacity-25
             rounded-xl gap-1 sm:gap-1.5 text-sm"
         >
@@ -300,7 +300,7 @@ export default function FlashcardsPage({ params }: { params: { essayId: string }
 
         <Button
           onClick={handleFlip}
-          className="flex-[2] h-10 sm:h-11 bg-gradient-to-r from-ocean-600 to-cyan-600
+          className="flex-[2] h-11 bg-gradient-to-r from-ocean-600 to-cyan-600
             hover:from-ocean-700 hover:to-cyan-700 text-white shadow-md
             rounded-xl gap-2 font-semibold text-sm"
         >
@@ -312,7 +312,7 @@ export default function FlashcardsPage({ params }: { params: { essayId: string }
           onClick={() => navigate('next')}
           disabled={isLast}
           variant="outline"
-          className="flex-1 h-10 sm:h-11 border-ocean-200 text-ocean-600
+          className="flex-1 h-11 border-ocean-200 text-ocean-600
             hover:bg-ocean-50 hover:border-ocean-300 disabled:opacity-25
             rounded-xl gap-1 sm:gap-1.5 text-sm"
         >
