@@ -390,9 +390,9 @@ export function EssayResultsClient({
 
         {/* ── Score tab ── */}
         <TabsContent value="score" className="mt-4 sm:mt-6">
-          <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
+          <div className="flex flex-col ipad-lg:flex-row gap-4 sm:gap-6">
             {/* Left column — sticky on desktop */}
-            <div className="md:w-2/5 space-y-3 sm:space-y-4 md:sticky md:top-36 md:self-start">
+            <div className="ipad-lg:w-2/5 space-y-3 sm:space-y-4 ipad-lg:sticky ipad-lg:top-36 ipad-lg:self-start">
               {/* Overall Score Card */}
               {(() => {
                 const ht = getScoreHeaderTone(essay.overall_score)
@@ -426,9 +426,9 @@ export function EssayResultsClient({
                 )
               })()}
 
-              {/* Radar chart — horizontal 2-col layout on mobile */}
-              <div className="flex flex-col sm:flex-col md:flex-col gap-3 sm:gap-4">
-                <Card className="border-ocean-200 shadow-sm">
+              {/* Radar chart — horizontal 2-col layout on tablet portrait */}
+              <div className="flex flex-col sm:flex-row ipad-lg:flex-col gap-3 sm:gap-4">
+                <Card className="border-ocean-200 shadow-sm sm:flex-1 ipad-lg:flex-none">
                   <CardHeader className="pb-2 pt-3 sm:pt-4 px-3 sm:px-4">
                     <CardTitle className="text-sm text-ocean-800">Criteria Breakdown</CardTitle>
                   </CardHeader>
@@ -454,9 +454,9 @@ export function EssayResultsClient({
                 </Card>
 
                 {/* Score Legend */}
-                <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-ocean-700">
+                <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-ocean-700 sm:flex-1 ipad-lg:flex-none">
                   <p className="font-semibold text-ocean-800 text-sm mb-2">Score Guide</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-1 gap-1.5">
+                  <div className="grid grid-cols-1 gap-1.5">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full bg-violet-500 flex-shrink-0" />
                       <span><strong>8.0+:</strong> Very Good to Expert</span>
@@ -483,7 +483,7 @@ export function EssayResultsClient({
             </div>
 
             {/* Right column — essay response */}
-            <div className="md:w-3/5">
+            <div className="ipad-lg:w-3/5">
               <Card className="border-ocean-200 shadow-lg overflow-hidden relative">
                 <FileText className="absolute right-2 top-2 h-48 w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
                 <CardHeader className="border-b border-slate-100 relative z-10 px-4 py-3 sm:px-6 sm:py-4">
@@ -509,7 +509,7 @@ export function EssayResultsClient({
         </TabsContent>
 
         {/* ── Criteria tab ── */}
-        <TabsContent value="criteria" className="space-y-3 mt-4 sm:mt-6">
+        <TabsContent value="criteria" className="space-y-3 mt-4 sm:mt-6 ipad-lg:max-w-4xl ipad-lg:mx-auto">
           <h2 className="text-xl sm:text-2xl font-bold text-ocean-800">Detailed Criteria Scores</h2>
           {criteria.map((criterion) => (
             <CriterionRow
