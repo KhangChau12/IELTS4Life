@@ -136,10 +136,10 @@ export default function ResetPasswordPage() {
         </div>
 
         {/* Right side - Success message */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center px-4 md:px-8 py-8 md:py-20 bg-gray-50">
+        <div className="w-full lg:w-1/2 flex items-center justify-center px-4 md:px-8 py-8 md:py-20 [@media(max-height:450px)]:py-2 bg-gray-50">
           <div className="w-full max-w-md">
-            <div className="bg-white rounded-2xl shadow-xl p-5 md:p-8 text-center">
-              <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+            <div className="bg-white rounded-2xl shadow-xl p-5 md:p-8 [@media(max-height:450px)]:p-4 text-center">
+              <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4 [@media(max-height:450px)]:w-10 [@media(max-height:450px)]:h-10 [@media(max-height:450px)]:mb-2">
                 <CheckCircle className="w-8 h-8 text-green-600" />
               </div>
               <h2 className="text-2xl md:text-3xl font-bold text-ocean-800 mb-2">All Set!</h2>
@@ -222,10 +222,10 @@ export default function ResetPasswordPage() {
       </div>
 
       {/* Right side - Form section */}
-      <div className="w-full lg:w-1/2 flex items-start justify-center px-4 md:px-8 py-8 md:py-20 bg-gray-50">
+      <div className="w-full lg:w-1/2 flex items-start justify-center px-4 md:px-8 py-8 md:py-20 [@media(max-height:450px)]:py-2 bg-gray-50">
         <div className="w-full max-w-md">
           {/* Mobile logo */}
-          <div className="lg:hidden text-center mb-6 md:mb-8">
+          <div className="lg:hidden [@media(max-height:450px)]:hidden text-center mb-6 md:mb-8">
             <div className="inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-ocean-600 rounded-xl mb-3 md:mb-4">
               <Waves className="w-6 h-6 md:w-7 md:h-7 text-white" />
             </div>
@@ -233,13 +233,13 @@ export default function ResetPasswordPage() {
           </div>
 
           {/* Form card */}
-          <div className="bg-white rounded-2xl shadow-xl p-5 md:p-8">
-            <div className="mb-6 md:mb-8">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-ocean-100 rounded-xl mb-4">
+          <div className="bg-white rounded-2xl shadow-xl p-5 md:p-8 [@media(max-height:450px)]:p-4">
+            <div className="mb-6 md:mb-8 [@media(max-height:450px)]:mb-3">
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-ocean-100 rounded-xl mb-4 [@media(max-height:450px)]:hidden">
                 <ShieldCheck className="w-6 h-6 text-ocean-600" />
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold text-ocean-800 mb-2">Create new password</h2>
-              <p className="text-sm md:text-base text-ocean-600">
+              <h2 className="text-2xl md:text-3xl font-bold text-ocean-800 mb-2 [@media(max-height:450px)]:text-xl [@media(max-height:450px)]:mb-1">Create new password</h2>
+              <p className="text-sm md:text-base text-ocean-600 [@media(max-height:450px)]:hidden">
                 Your new password must be different from previous passwords.
               </p>
             </div>
@@ -264,7 +264,7 @@ export default function ResetPasswordPage() {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 [@media(max-height:450px)]:space-y-2">
                 {error && (
                   <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
                     {error}

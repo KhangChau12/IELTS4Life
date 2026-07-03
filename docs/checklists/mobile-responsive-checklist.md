@@ -25,7 +25,7 @@ Status values: `todo` | `in-progress` | `done` | `skip (reason)`
 | 2 | `/login` | done | At 844x390 landscape, redundant mobile logo + generous padding pushed Password/Sign-In below the fold; added `[@media(max-height:450px)]` overrides in `LoginClient.tsx` to hide the duplicate logo, tighten card padding/gaps, and shrink the heading — page remains scrollable as a fallback so nothing is unreachable |
 | 3 | `/register` | done | Same short-landscape fold issue as `/login` but worse (6-field form incl. optional invite code box + "Check Your Email" success state); applied the same `[@media(max-height:450px)]` compaction pattern to `RegisterClient.tsx` across both the form and success states |
 | 4 | `/forgot-password` | done | Applied the same `[@media(max-height:450px)]` compaction pattern as `/login` to both the form and "Email Sent" success state in `page.tsx` — landscape 844x390 now shows the full form with no scroll needed |
-| 5 | `/reset-password` | todo | |
+| 5 | `/reset-password` | done | Same `[@media(max-height:450px)]` compaction pattern applied to `page.tsx` (form, invalid-token, and success states) — verified invalid-token state (what unauthenticated visitors see) fits fully in landscape 844x390 with no scroll needed |
 | 6 | `/dashboard` | todo | |
 | 7 | `/write` (prompt library) | todo | |
 | 8 | `/write/[promptId]` (writing page) | todo | timer + textarea, touch keyboard overlap risk |
