@@ -95,7 +95,7 @@ export function Header({ user }: HeaderProps) {
 
         {/* Navigation - Desktop */}
         <TooltipProvider>
-          <nav className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center space-x-1">
+          <nav className="absolute left-1/2 -translate-x-1/2 hidden ipad-lg:flex items-center space-x-1">
             {user ? (
               <Link href="/dashboard" className={`relative flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors rounded-md hover:bg-ocean-50 hover:text-ocean-700 ${isActive('/dashboard') ? 'text-ocean-700' : 'text-slate-600'} group`}>
                 <Home className="h-4 w-4" />
@@ -163,7 +163,7 @@ export function Header({ user }: HeaderProps) {
         </TooltipProvider>
 
         {/* Mobile Menu */}
-        <div className="md:hidden">
+        <div className="ipad-lg:hidden">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="text-slate-600 hover:bg-ocean-50">
@@ -309,7 +309,7 @@ export function Header({ user }: HeaderProps) {
         </div>
 
         {/* User Menu or Auth Buttons - Desktop */}
-        <div className="hidden md:flex items-center space-x-2">
+        <div className="hidden ipad-lg:flex items-center space-x-2">
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
