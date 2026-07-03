@@ -183,7 +183,7 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
   const correctCount = userAnswers.filter((ans, i) => ans === questions[i]?.correctAnswer).length
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6">
+    <div className={`mx-auto px-4 sm:px-6 ${showResults ? 'max-w-2xl ipad-lg:max-w-4xl' : 'max-w-2xl'}`}>
       {/* Header */}
       <div className="mb-4 sm:mb-6">
         <Link href={`/history/${params.essayId}/vocabulary`}>
@@ -271,7 +271,7 @@ export default function QuizPage({ params }: { params: { essayId: string } }) {
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-5">
-              <div className="space-y-3">
+              <div className="space-y-3 ipad-lg:space-y-0 ipad-lg:grid ipad-lg:grid-cols-2 ipad-lg:gap-3 ipad-lg:items-start">
                 {questions.map((question, index) => {
                   const userAnswer = userAnswers[index]
                   const isCorrect = userAnswer === question.correctAnswer
