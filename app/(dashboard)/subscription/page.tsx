@@ -232,7 +232,7 @@ export default async function SubscriptionPage() {
       )}
 
       {/* Plans */}
-      <div className="grid md:grid-cols-3 gap-6 mb-8">
+      <div className="grid ipad-lg:grid-cols-3 gap-6 mb-8">
         {/* Free Plan */}
         <Card className="border-ocean-200 shadow-lg">
           <CardHeader className="bg-gradient-to-br from-ocean-50 to-cyan-50 border-b border-ocean-200">
