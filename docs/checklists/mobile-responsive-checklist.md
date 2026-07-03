@@ -36,7 +36,7 @@ Status values: `todo` | `in-progress` | `done` | `skip (reason)`
 | 13 | `/history/[essayId]/vocabulary/quiz` | done | Completed a full 16-question quiz at 375 and 844 landscape. Question view (answer options, progress bar) and results/review screen (score card + single-column review list) both render cleanly with large tappable options and no overflow. Results list stays single-column below `ipad-lg` per the existing iPad-pass fix — long scroll is expected for a static review feed, not a bug. No code changes needed |
 | 14 | `/invite` | done | Verified the iPad-pass overlap fix (flex-col code+button layout) holds cleanly at 375, 430, and 844 landscape — no regression, no overlap. No code changes needed |
 | 15 | `/notifications` | done | Single-column long-form text feed already reads cleanly at 375/430/844 landscape — comfortable line lengths, no overflow, All/Unread toggle buttons well-sized. No code changes needed |
-| 16 | `/subscription` | todo | plan cards, QR modal — QR image must stay legible/scannable at 375 width |
+| 16 | `/subscription` | done | Plan cards already render cleanly at all phone widths (verified as Pro test account). Triggered the real "Buy Pack" QR modal — legible/scannable at 375 portrait, but at 844 landscape the un-clamped shadcn `DialogContent` centered vertically and clipped the title bar + close button off the top of the viewport with no way to scroll up to it. Added `max-h-[90vh] overflow-y-auto` to this modal's `DialogContent` in `UpgradeButton.tsx` (scoped to this usage, not the shared primitive) — header now stays visible and the rest scrolls internally |
 | 17 | `/privacy` | todo | |
 | 18 | `/terms` | todo | |
 | 19 | `/admin` (hub) | todo | |
