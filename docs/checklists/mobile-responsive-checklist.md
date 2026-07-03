@@ -38,7 +38,7 @@ Status values: `todo` | `in-progress` | `done` | `skip (reason)`
 | 15 | `/notifications` | done | Single-column long-form text feed already reads cleanly at 375/430/844 landscape — comfortable line lengths, no overflow, All/Unread toggle buttons well-sized. No code changes needed |
 | 16 | `/subscription` | done | Plan cards already render cleanly at all phone widths (verified as Pro test account). Triggered the real "Buy Pack" QR modal — legible/scannable at 375 portrait, but at 844 landscape the un-clamped shadcn `DialogContent` centered vertically and clipped the title bar + close button off the top of the viewport with no way to scroll up to it. Added `max-h-[90vh] overflow-y-auto` to this modal's `DialogContent` in `UpgradeButton.tsx` (scoped to this usage, not the shared primitive) — header now stays visible and the rest scrolls internally |
 | 17 | `/privacy` | done | Single-column `max-w-3xl` legal text with a data table (already `overflow-x-auto` wrapped) — table content fits within 375 width with no scroll needed. No code changes needed |
-| 18 | `/terms` | todo | |
+| 18 | `/terms` | done | Same pattern as `/privacy` — single-column `max-w-3xl` legal text, 3-column pricing table (already `overflow-x-auto` wrapped) fits cleanly at 375. No code changes needed |
 | 19 | `/admin` (hub) | todo | |
 | 20 | `/admin/statistics` | todo | charts grid — heaviest layout, priority for chart legibility at 375 |
 | 21 | `/admin/prompts` | todo | |
