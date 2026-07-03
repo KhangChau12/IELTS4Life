@@ -264,7 +264,7 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="h-8 w-8 p-0 border-ocean-200 hover:bg-ocean-50 text-ocean-600"
+                      className="h-11 w-11 sm:h-8 sm:w-8 p-0 border-ocean-200 hover:bg-ocean-50 text-ocean-600"
                       title="View Details"
                     >
                       <Eye className="h-3.5 w-3.5" />
@@ -274,7 +274,7 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
                     <Button
                       size="sm"
                       className={cn(
-                        'h-8 w-8 p-0',
+                        'h-11 w-11 sm:h-8 sm:w-8 p-0',
                         essay.has_vocab
                           ? 'bg-cyan-600 hover:bg-cyan-700 text-white'
                           : 'bg-violet-600 hover:bg-violet-700 text-white'
@@ -336,7 +336,7 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="h-8 w-8 p-0 border-ocean-200 text-ocean-700 hover:bg-ocean-50"
+                          className="h-11 w-11 ipad-lg:h-8 ipad-lg:w-8 p-0 border-ocean-200 text-ocean-700 hover:bg-ocean-50"
                           title="View Score"
                         >
                           <Eye className="h-3.5 w-3.5" />
@@ -346,7 +346,7 @@ export function HistoryListClient({ essays }: HistoryListClientProps) {
                         <Button
                           size="sm"
                           className={cn(
-                            'h-8 px-3 text-xs font-medium',
+                            'h-11 ipad-lg:h-8 px-3 text-xs font-medium',
                             essay.has_vocab
                               ? 'bg-gradient-to-r from-cyan-500 to-ocean-600 text-white'
                               : 'bg-gradient-to-r from-violet-500 to-purple-600 text-white'
