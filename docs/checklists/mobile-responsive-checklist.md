@@ -41,7 +41,7 @@ Status values: `todo` | `in-progress` | `done` | `skip (reason)`
 | 18 | `/terms` | done | Same pattern as `/privacy` — single-column `max-w-3xl` legal text, 3-column pricing table (already `overflow-x-auto` wrapped) fits cleanly at 375. No code changes needed |
 | 19 | `/admin` (hub) | done | Test account has dev role — verified. 3 nav cards stack cleanly at 375/430 portrait and stay 3-column at 844 landscape with no cramping, matching the iPad pass's finding. No code changes needed |
 | 20 | `/admin/statistics` | done | Verified with real platform data (355 users, 1150 essays). All charts (donut, bar, area, satisfaction) render with legible axis/legend labels at 375 and 844 landscape — no overlap. `EnhancedUsersTable` already has a dedicated `md:hidden` mobile card view (whole-card tap target, no cramped table). "2 errors" red toast is the known Next.js dev-mode diagnostic overlay, already documented as a non-issue in the iPad pass. No code changes needed |
-| 21 | `/admin/prompts` | todo | |
+| 21 | `/admin/prompts` | done | Search/filter toolbar and prompt list already wrap cleanly at 375. Real issue: per-card Edit/Delete icon buttons were `h-7 w-7` (28px) — a destructive delete action at a genuinely error-prone size on touch. Raised to `h-11 w-11` below `sm:` in `PromptsManagementClient.tsx`, desktop's tighter `h-7` density unchanged |
 | 22 | `/admin/prompts/review` | todo | |
 | 23 | `/admin/notifications` | todo | |
 

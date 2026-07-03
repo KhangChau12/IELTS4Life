@@ -319,7 +319,7 @@ export function PromptsManagementClient() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-7 w-7 text-slate-500 hover:text-cyan-700"
+                        className="h-11 w-11 sm:h-7 sm:w-7 text-slate-500 hover:text-cyan-700"
                         onClick={() => setEditingPrompt(prompt)}
                         title="Edit prompt"
                       >
@@ -328,7 +328,7 @@ export function PromptsManagementClient() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-7 w-7 text-slate-500 hover:text-red-600"
+                        className="h-11 w-11 sm:h-7 sm:w-7 text-slate-500 hover:text-red-600"
                         onClick={() => handleDelete(prompt.id)}
                         disabled={deletingId === prompt.id}
                         title="Delete prompt"
