@@ -132,7 +132,7 @@ export default function FlashcardsPage({ params }: { params: { essayId: string }
   const slideDuration = slideState === 'visible' ? 'duration-300' : 'duration-0'
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-12 select-none">
+    <div className="max-w-3xl ipad:max-w-2xl ipad-lg:max-w-3xl mx-auto px-4 sm:px-6 pb-12 select-none">
 
       {/* ── Top bar ── */}
       <div className="flex items-center justify-between pt-4 pb-5">
@@ -200,14 +200,10 @@ export default function FlashcardsPage({ params }: { params: { essayId: string }
         onTouchEnd={onTouchEnd}
       >
         <div
-          className="relative w-full transition-transform duration-500 ease-out cursor-pointer"
+          className="relative w-full transition-transform duration-500 ease-out cursor-pointer aspect-[5/3] min-h-[200px] max-h-[340px] ipad:aspect-[16/9] ipad:max-h-[420px]"
           style={{
             transformStyle: 'preserve-3d',
             transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-            // aspect-ratio ensures correct height on every screen size
-            aspectRatio: '5 / 3',
-            minHeight: '200px',
-            maxHeight: '340px',
           }}
           onClick={handleFlip}
         >
