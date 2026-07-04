@@ -29,6 +29,8 @@ export interface Database {
           quiz_total_questions: number
           satisfaction_rating: number | null
           satisfaction_rated_at: string | null
+          weekly_report_enabled: boolean
+          last_report_sent_at: string | null
           created_at: string
           updated_at: string
         }
@@ -51,6 +53,8 @@ export interface Database {
           quiz_total_questions?: number
           satisfaction_rating?: number | null
           satisfaction_rated_at?: string | null
+          weekly_report_enabled?: boolean
+          last_report_sent_at?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -73,6 +77,8 @@ export interface Database {
           quiz_total_questions?: number
           satisfaction_rating?: number | null
           satisfaction_rated_at?: string | null
+          weekly_report_enabled?: boolean
+          last_report_sent_at?: string | null
           created_at?: string
           updated_at?: string
         }
