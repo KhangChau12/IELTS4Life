@@ -27,6 +27,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import { NotificationsModal } from '@/components/layout/NotificationsModal'
 
 interface HeaderProps {
   user?: {
@@ -42,6 +43,7 @@ export function Header({ user }: HeaderProps) {
   const supabaseRef = useRef(createClient())
   const [isOpen, setIsOpen] = useState(false)
   const [unreadCount, setUnreadCount] = useState(0)
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
 
   useEffect(() => {
     if (!user) {
@@ -250,17 +252,22 @@ export function Header({ user }: HeaderProps) {
                         Subscription
                       </Button>
                     </Link>
-                    <Link href="/notifications" onClick={() => setIsOpen(false)}>
-                      <Button variant="ghost" className="w-full justify-start text-slate-600 hover:text-ocean-700 hover:bg-ocean-50">
-                        <div className="flex items-center w-full">
-                          <Bell className="mr-2 h-4 w-4" />
-                          Notifications
-                          {unreadCount > 0 && (
-                            <span className="ml-2 flex h-2 w-2 rounded-full bg-red-500" />
-                          )}
-                        </div>
-                      </Button>
-                    </Link>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start text-slate-600 hover:text-ocean-700 hover:bg-ocean-50"
+                      onClick={() => {
+                        setIsOpen(false)
+                        setIsNotificationsOpen(true)
+                      }}
+                    >
+                      <div className="flex items-center w-full">
+                        <Bell className="mr-2 h-4 w-4" />
+                        Notifications
+                        {unreadCount > 0 && (
+                          <span className="ml-2 flex h-2 w-2 rounded-full bg-red-500" />
+                        )}
+                      </div>
+                    </Button>
                     {user && !isPro && (
                       <Link href="/invite" onClick={() => setIsOpen(false)}>
                         <Button variant="ghost" className="w-full justify-start text-slate-600 hover:text-ocean-700 hover:bg-ocean-50">
@@ -311,7 +318,19 @@ export function Header({ user }: HeaderProps) {
         {/* User Menu or Auth Buttons - Desktop */}
         <div className="hidden ipad-lg:flex items-center space-x-2">
           {user ? (
-            <DropdownMenu>
+            <>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative text-slate-600 hover:text-ocean-700 hover:bg-ocean-50"
+                onClick={() => setIsNotificationsOpen(true)}
+              >
+                <Bell className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-red-500 border-2 border-white" />
+                )}
+              </Button>
+              <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="text-slate-600 hover:text-ocean-700 hover:bg-ocean-50 relative flex items-center gap-2 px-2">
                   <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-cyan-500 text-white text-xs font-semibold shrink-0 select-none">
@@ -341,17 +360,6 @@ export function Header({ user }: HeaderProps) {
                     Subscription
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/notifications" className="cursor-pointer">
-                    <div className="flex items-center w-full">
-                      <Bell className="mr-2 h-4 w-4" />
-                      Notifications
-                      {unreadCount > 0 && (
-                        <span className="ml-auto flex h-2 w-2 rounded-full bg-red-500" />
-                      )}
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
                 {(user && !isPro) || (user?.role === 'admin' || user?.role === 'dev') ? (
                   <DropdownMenuSeparator />
                 ) : null}
@@ -377,7 +385,8 @@ export function Header({ user }: HeaderProps) {
                   Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+              </DropdownMenu>
+            </>
           ) : (
             <>
               <Link href="/login">
@@ -394,6 +403,11 @@ export function Header({ user }: HeaderProps) {
           )}
         </div>
       </div>
+      <NotificationsModal
+        open={isNotificationsOpen}
+        onOpenChange={setIsNotificationsOpen}
+        onMarkedRead={() => setUnreadCount(0)}
+      />
     </header>
   )
 }
