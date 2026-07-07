@@ -26,14 +26,11 @@ export function NotificationsModal({ open, onOpenChange, onMarkedRead }: Notific
   const [totalPages, setTotalPages] = useState(1)
   const [showUnreadOnly, setShowUnreadOnly] = useState(false)
 
-  // Reset to page 1 and mark all as read each time the modal opens
+  // Reset to page 1 each time the modal opens
   useEffect(() => {
     if (!open) return
     setCurrentPage(1)
-    fetch('/api/notifications/mark-read', { method: 'POST' }).then(res => {
-      if (res.ok) onMarkedRead?.()
-    })
-  }, [open, onMarkedRead])
+  }, [open])
 
   useEffect(() => {
     if (!open) return
@@ -41,18 +38,20 @@ export function NotificationsModal({ open, onOpenChange, onMarkedRead }: Notific
       setIsLoading(true)
       try {
         const params = new URLSearchParams({ page: String(currentPage) })
+        if (currentPage === 1) params.set('mark_read', 'true')
         const res = await fetch(`/api/notifications?${params}`)
         if (res.ok) {
           const data = await res.json()
           setNotifications(data.notifications || [])
           setTotalPages(data.totalPages || 1)
+          if (currentPage === 1) onMarkedRead?.()
         }
       } finally {
         setIsLoading(false)
       }
     }
     fetchNotifications()
-  }, [open, currentPage])
+  }, [open, currentPage, onMarkedRead])
 
   const displayed = showUnreadOnly
     ? notifications.filter(n => !n.is_read)

@@ -31,6 +31,7 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url)
     const unreadOnly = searchParams.get('unread_only') === 'true'
+    const shouldMarkRead = searchParams.get('mark_read') === 'true'
 
     const { data: reads } = await supabase
       .from('notification_reads')
@@ -68,6 +69,32 @@ export async function GET(request: Request) {
       ...n,
       is_read: readIds.has(n.id),
     })) || []
+
+    // Mark all applicable notifications as read, reusing the ids/reads already
+    // fetched above instead of issuing separate queries (avoids a second
+    // round-trip pair when the caller wants list + mark-read together).
+    if (shouldMarkRead) {
+      const { data: allNotifications } = await supabase
+        .from('notifications')
+        .select('id')
+        .in('target_audience', applicableAudiences)
+
+      const unreadIds = (allNotifications || [])
+        .map(n => n.id)
+        .filter(id => !readIds.has(id))
+
+      if (unreadIds.length > 0) {
+        await supabase
+          .from('notification_reads')
+          .upsert(
+            unreadIds.map(notification_id => ({ notification_id, user_id: user.id })),
+            { ignoreDuplicates: true }
+          )
+        for (const n of notificationsWithReadStatus) {
+          if (unreadIds.includes(n.id)) n.is_read = true
+        }
+      }
+    }
 
     return NextResponse.json({
       notifications: notificationsWithReadStatus,
