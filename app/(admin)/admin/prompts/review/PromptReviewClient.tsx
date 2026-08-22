@@ -1,9 +1,6 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import {
   Select,
@@ -34,13 +31,14 @@ interface SimilarApprovedPrompt {
 }
 
 const QUESTION_TYPE_COLORS: Record<QuestionType, string> = {
-  agree_disagree: 'bg-cyan-200 text-cyan-800 border-cyan-300',
-  advantages_disadvantages: 'bg-teal-200 text-teal-800 border-teal-300',
-  problem_solution: 'bg-blue-200 text-blue-800 border-blue-300',
-  two_part_question: 'bg-sky-200 text-sky-800 border-sky-300',
-  positive_negative: 'bg-emerald-200 text-emerald-800 border-emerald-300',
-  discussion_both_views: 'bg-violet-200 text-violet-800 border-violet-300',
+  agree_disagree: 'bg-cyan-50 text-cyan-700',
+  advantages_disadvantages: 'bg-teal-50 text-teal-700',
+  problem_solution: 'bg-blue-50 text-blue-700',
+  two_part_question: 'bg-sky-50 text-sky-700',
+  positive_negative: 'bg-emerald-50 text-emerald-700',
+  discussion_both_views: 'bg-violet-50 text-violet-700',
 }
+const TOPIC_TAG_COLOR = 'bg-amber-50 text-amber-700'
 
 export function PromptReviewClient() {
   const [prompts, setPrompts] = useState<PendingPrompt[]>([])
@@ -191,19 +189,19 @@ export function PromptReviewClient() {
 
   if (remaining <= 0) {
     return (
-      <Card className="border-ocean-200 shadow-lg">
-        <CardContent className="py-16 flex flex-col items-center gap-4 text-center">
-          <div className="h-16 w-16 rounded-full bg-green-100 flex items-center justify-center">
-            <CheckCircle2 className="h-8 w-8 text-green-600" />
+      <div className="rounded-2xl border border-ocean-100 bg-white p-5 shadow-sm">
+        <div className="flex flex-col items-center gap-4 py-12 text-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50">
+            <CheckCircle2 className="h-7 w-7 text-emerald-600" />
           </div>
           <div>
-            <p className="text-lg font-semibold text-ocean-800">All caught up!</p>
-            <p className="text-ocean-500 text-sm mt-1">
+            <p className="text-[15px] font-extrabold text-slate-900">All caught up!</p>
+            <p className="mt-1 text-sm text-slate-400">
               {reviewedCount > 0 ? `You reviewed ${reviewedCount} prompt${reviewedCount > 1 ? 's' : ''} this session.` : 'No pending prompts to review.'}
             </p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     )
   }
 
@@ -214,178 +212,169 @@ export function PromptReviewClient() {
   return (
     <div className="space-y-4">
       {/* Queue status bar */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 text-sm text-ocean-600">
-            <Inbox className="h-4 w-4" />
-            <span className="font-semibold text-ocean-800">{remaining}</span> remaining
-          </div>
+      <div className="flex flex-col gap-2 rounded-xl border border-ocean-100 bg-white px-4 py-3 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap items-center gap-4">
+          <span className="text-[13px] text-slate-700">
+            <span className="font-extrabold text-slate-900">{remaining}</span> remaining
+          </span>
           {reviewedCount > 0 && (
-            <div className="flex items-center gap-1.5 text-sm text-ocean-500">
-              <CheckCircle2 className="h-3.5 w-3.5" />
-              {reviewedCount} reviewed this session
-            </div>
+            <span className="text-xs text-slate-400">{reviewedCount} reviewed this session</span>
           )}
           {currentPrompt?.submitted_count > 1 && (
-            <div className="flex items-center gap-1.5 text-xs text-ocean-500 bg-ocean-100 rounded-full px-2 py-0.5">
+            <span className="flex items-center gap-1.5 rounded-full bg-violet-50 px-2.5 py-1 text-[11px] font-bold text-violet-700">
               <Users className="h-3 w-3" />
               {currentPrompt.submitted_count} users submitted this
-            </div>
+            </span>
           )}
         </div>
-        <p className="text-xs text-ocean-400">
-          Press <kbd className="font-mono bg-slate-100 border border-slate-200 rounded px-1.5 py-0.5">A</kbd> approve,{' '}
-          <kbd className="font-mono bg-slate-100 border border-slate-200 rounded px-1.5 py-0.5">R</kbd> reject
+        <p className="hidden text-[11.5px] text-slate-400 sm:block">
+          Press <span className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-slate-500">A</span> approve,{' '}
+          <span className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-mono text-slate-500">R</span> reject
         </p>
       </div>
 
       {/* 2-column layout */}
-      <div className={`grid grid-cols-1 lg:grid-cols-2 gap-4 transition-all duration-300 ${actionResult === 'approved' ? 'ring-2 ring-green-400 rounded-xl' : actionResult === 'rejected' ? 'ring-2 ring-red-300 rounded-xl' : ''}`}>
+      <div className={`grid grid-cols-1 gap-4 transition-all duration-300 lg:grid-cols-2 ${actionResult === 'approved' ? 'ring-2 ring-emerald-400 rounded-2xl' : actionResult === 'rejected' ? 'ring-2 ring-red-300 rounded-2xl' : ''}`}>
 
         {/* LEFT — edit panel */}
-        <Card className="border-ocean-200 shadow-lg">
-          <CardContent className="p-5 space-y-4">
-            <p className="text-xs font-semibold text-ocean-500 uppercase tracking-wider">Pending Prompt</p>
+        <div className="flex flex-col gap-4 rounded-2xl border border-ocean-100 bg-white p-5 shadow-sm">
+          <span className="text-[11px] font-bold uppercase tracking-wide text-slate-400">Pending Prompt</span>
 
-            {/* AI classification badges */}
-            <div className="flex gap-2 flex-wrap">
-              <Badge variant="outline" className={`${qTypeColor} font-medium text-xs`}>{qTypeLabel}</Badge>
-              <Badge variant="outline" className="bg-orange-100 text-orange-800 border-orange-300 font-medium text-xs">
-                {currentPrompt?.prompt_topics?.name ?? 'Unknown topic'}
-              </Badge>
-            </div>
+          {/* AI classification badges */}
+          <div className="flex flex-wrap gap-1.5">
+            <span className={`rounded-[5px] px-2 py-1 text-[11px] font-bold ${qTypeColor}`}>{qTypeLabel}</span>
+            <span className={`rounded-[5px] px-2 py-1 text-[11px] font-bold ${TOPIC_TAG_COLOR}`}>
+              {currentPrompt?.prompt_topics?.name ?? 'Unknown topic'}
+            </span>
+          </div>
 
-            {/* Editable prompt text */}
-            <div className="space-y-1">
-              <label className="text-xs text-ocean-600 font-medium">Prompt text</label>
-              <Textarea
-                value={editPromptText}
-                onChange={e => setEditPromptText(e.target.value)}
-                className="text-sm text-ocean-800 leading-relaxed resize-none border-ocean-200 focus-visible:ring-ocean-400 min-h-[120px]"
-                rows={5}
-              />
-            </div>
+          {/* Editable prompt text */}
+          <div>
+            <label className="mb-1.5 block text-xs font-semibold text-slate-500">Prompt text</label>
+            <Textarea
+              value={editPromptText}
+              onChange={e => setEditPromptText(e.target.value)}
+              className="min-h-[120px] resize-none border-slate-200 text-sm leading-relaxed text-slate-800 focus-visible:ring-ocean-400"
+              rows={5}
+            />
+          </div>
 
-            {/* Edit classification */}
-            <div className="rounded-xl border border-dashed border-ocean-300 bg-ocean-50/50 p-3.5 space-y-3">
-              <p className="text-xs font-semibold text-ocean-500 uppercase tracking-wide">Classification</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="space-y-1">
-                  <label className="text-xs text-ocean-600 font-medium">Topic</label>
-                  <Select value={editTopicId} onValueChange={setEditTopicId}>
-                    <SelectTrigger className="h-8 text-sm border-ocean-200">
-                      <SelectValue placeholder="Select topic" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {topics.map(t => (
-                        <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-1">
-                  <label className="text-xs text-ocean-600 font-medium">Question Type</label>
-                  <Select value={editQuestionType} onValueChange={v => setEditQuestionType(v as QuestionType)}>
-                    <SelectTrigger className="h-8 text-sm border-ocean-200">
-                      <SelectValue placeholder="Select type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(QUESTION_TYPES).map(([key, label]) => (
-                        <SelectItem key={key} value={key}>{label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+          {/* Edit classification */}
+          <div className="space-y-3 rounded-xl border border-dashed border-slate-200 bg-slate-50 p-3.5">
+            <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Classification</p>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-slate-500">Topic</label>
+                <Select value={editTopicId} onValueChange={setEditTopicId}>
+                  <SelectTrigger className="h-8 border-slate-200 bg-white text-sm">
+                    <SelectValue placeholder="Select topic" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {topics.map(t => (
+                      <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-              {/* Live preview of edited classification */}
-              {(editTopicId !== currentPrompt?.topic_id || editQuestionType !== currentPrompt?.question_type) && (
-                <div className="flex gap-1.5 flex-wrap pt-0.5">
-                  <span className="text-xs text-ocean-400">After edit:</span>
-                  <Badge variant="outline" className={`${editQTypeColor} font-medium text-xs`}>
-                    {QUESTION_TYPES[(editQuestionType as QuestionType)] ?? editQuestionType}
-                  </Badge>
-                  <Badge variant="outline" className="bg-orange-100 text-orange-800 border-orange-300 font-medium text-xs">
-                    {topics.find(t => t.id === editTopicId)?.name ?? editTopicId}
-                  </Badge>
-                </div>
-              )}
-            </div>
-
-            {/* Action buttons */}
-            <div className="flex gap-3 pt-1">
-              <Button
-                variant="outline"
-                className="flex-1 border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
-                onClick={handleReject}
-                disabled={isActing || !!actionResult}
-              >
-                {isActing && actionResult === null ? (
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                ) : (
-                  <XCircle className="h-4 w-4 mr-2" />
-                )}
-                Reject <span className="ml-1.5 text-xs opacity-60">(R)</span>
-              </Button>
-              <Button
-                className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-                onClick={handleApprove}
-                disabled={isActing || !!actionResult}
-              >
-                {isActing && actionResult === null ? (
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                ) : (
-                  <CheckCircle2 className="h-4 w-4 mr-2" />
-                )}
-                Approve <span className="ml-1.5 text-xs opacity-60">(A)</span>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* RIGHT — similar approved prompts (same topic AND same type) */}
-        <Card className="border-ocean-200 shadow-lg">
-          <CardContent className="p-5 space-y-3">
-            <div className="flex items-center justify-between">
-              <p className="text-xs font-semibold text-ocean-500 uppercase tracking-wider">
-                Approved — same topic &amp; type
-              </p>
-              {isSimilarLoading && <Loader2 className="h-3.5 w-3.5 animate-spin text-ocean-400" />}
-            </div>
-
-            {isSimilarLoading ? (
-              <div className="space-y-2">
-                {[1, 2, 3].map(i => (
-                  <div key={i} className="rounded-lg border border-ocean-100 bg-ocean-50/40 p-3 animate-pulse">
-                    <div className="h-3 bg-ocean-100 rounded w-3/4 mb-2" />
-                    <div className="h-3 bg-ocean-100 rounded w-1/2" />
-                  </div>
-                ))}
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-slate-500">Question Type</label>
+                <Select value={editQuestionType} onValueChange={v => setEditQuestionType(v as QuestionType)}>
+                  <SelectTrigger className="h-8 border-slate-200 bg-white text-sm">
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(QUESTION_TYPES).map(([key, label]) => (
+                      <SelectItem key={key} value={key}>{label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-            ) : similarPrompts.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-10 text-center gap-2">
-                <CheckCircle2 className="h-8 w-8 text-green-400" />
-                <p className="text-sm text-ocean-500 font-medium">No duplicates found</p>
-                <p className="text-xs text-ocean-400">No approved prompts share both this topic and question type.</p>
-              </div>
-            ) : (
-              <div className="space-y-2 overflow-y-auto max-h-[480px] pr-0.5">
-                {similarPrompts.map(p => (
-                  <div key={p.id} className="rounded-lg border border-ocean-200 bg-ocean-50/40 p-3">
-                    <p className="text-sm text-ocean-800 leading-relaxed">{p.prompt_text}</p>
-                    <div className="flex gap-1.5 mt-2 flex-wrap">
-                      <Badge variant="outline" className={`text-xs font-medium ${QUESTION_TYPE_COLORS[p.question_type]}`}>
-                        {QUESTION_TYPES[p.question_type]}
-                      </Badge>
-                      <Badge variant="outline" className="text-xs bg-orange-100 text-orange-800 border-orange-300 font-medium">
-                        {p.prompt_topics?.name}
-                      </Badge>
-                    </div>
-                  </div>
-                ))}
+            </div>
+            {/* Live preview of edited classification */}
+            {(editTopicId !== currentPrompt?.topic_id || editQuestionType !== currentPrompt?.question_type) && (
+              <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                <span className="text-xs text-slate-400">After edit:</span>
+                <span className={`rounded-[5px] px-2 py-1 text-[11px] font-bold ${editQTypeColor}`}>
+                  {QUESTION_TYPES[(editQuestionType as QuestionType)] ?? editQuestionType}
+                </span>
+                <span className={`rounded-[5px] px-2 py-1 text-[11px] font-bold ${TOPIC_TAG_COLOR}`}>
+                  {topics.find(t => t.id === editTopicId)?.name ?? editTopicId}
+                </span>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex gap-3 pt-1">
+            <button
+              onClick={handleReject}
+              disabled={isActing || !!actionResult}
+              className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-red-200 py-3 text-[13px] font-bold text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50 sm:py-2.5"
+            >
+              {isActing && actionResult === null ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <XCircle className="h-4 w-4" />
+              )}
+              Reject <span className="hidden text-xs font-semibold opacity-60 sm:inline">(R)</span>
+            </button>
+            <button
+              onClick={handleApprove}
+              disabled={isActing || !!actionResult}
+              className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-emerald-600 py-3 text-[13px] font-bold text-white transition-colors hover:bg-emerald-700 disabled:opacity-50 sm:py-2.5"
+            >
+              {isActing && actionResult === null ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <CheckCircle2 className="h-4 w-4" />
+              )}
+              Approve <span className="hidden text-xs font-semibold opacity-70 sm:inline">(A)</span>
+            </button>
+          </div>
+        </div>
+
+        {/* RIGHT — similar approved prompts (same topic AND same type) */}
+        <div className="flex flex-col gap-3 rounded-2xl border border-ocean-100 bg-white p-5 shadow-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-wide text-slate-400">
+              Approved — same topic &amp; type
+            </span>
+            {isSimilarLoading && <Loader2 className="h-3.5 w-3.5 animate-spin text-slate-300" />}
+          </div>
+
+          {isSimilarLoading ? (
+            <div className="space-y-2">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="animate-pulse rounded-lg border border-slate-100 bg-slate-50 p-3">
+                  <div className="mb-2 h-3 w-3/4 rounded bg-slate-200" />
+                  <div className="h-3 w-1/2 rounded bg-slate-200" />
+                </div>
+              ))}
+            </div>
+          ) : similarPrompts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
+              <CheckCircle2 className="h-7 w-7 text-emerald-300" />
+              <p className="text-sm font-semibold text-slate-500">No duplicates found</p>
+              <p className="text-xs text-slate-400">No approved prompts share both this topic and question type.</p>
+            </div>
+          ) : (
+            <div className="max-h-[480px] space-y-2 overflow-y-auto pr-0.5">
+              {similarPrompts.map(p => (
+                <div key={p.id} className="rounded-lg border border-slate-100 bg-slate-50 p-3">
+                  <p className="text-[12.5px] leading-relaxed text-slate-700">{p.prompt_text}</p>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    <span className={`rounded-[5px] px-2 py-0.5 text-[10.5px] font-bold ${QUESTION_TYPE_COLORS[p.question_type]}`}>
+                      {QUESTION_TYPES[p.question_type]}
+                    </span>
+                    <span className={`rounded-[5px] px-2 py-0.5 text-[10.5px] font-bold ${TOPIC_TAG_COLOR}`}>
+                      {p.prompt_topics?.name}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

@@ -1,9 +1,22 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { BarChart3, FileText, Bell, Lock, LayoutDashboard, ShieldCheck, ChevronRight } from 'lucide-react'
+import { BarChart3, FileText, Bell, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { getAdminUser } from '@/lib/admin/auth'
+import { fetchAdminStats } from '@/lib/admin/stats'
 import { redirect } from 'next/navigation'
+
+function formatVND(amount: number): string {
+  if (amount >= 1_000_000) {
+    return `${(amount / 1_000_000).toFixed(1)}M₫`
+  }
+  if (amount >= 1_000) {
+    return `${(amount / 1_000).toFixed(0)}K₫`
+  }
+  return `${amount}₫`
+}
+
+function formatNumber(num: number): string {
+  return num.toLocaleString('en-US')
+}
 
 export default async function AdminPage() {
   const adminUser = await getAdminUser()
@@ -14,142 +27,135 @@ export default async function AdminPage() {
   const displayName = adminUser.profile?.full_name || adminUser.user.email?.split('@')[0] || 'Admin'
   const isDev = role === 'dev'
 
-  const shortcutCards = [
-    {
-      href: '/admin/statistics',
-      title: 'Statistics',
-      description: 'View platform analytics and user data',
-      detail: 'Charts · User analytics · Essay data',
-      icon: BarChart3,
-      cardBg: 'bg-white/90 border-ocean-100',
-      iconColor: 'text-cyan-600',
-      titleColor: 'text-ocean-900',
-      descColor: 'text-ocean-500',
-      detailColor: 'text-ocean-400',
-      dividerColor: 'border-ocean-100',
-      activeBadge: 'border-cyan-200 bg-cyan-50 text-cyan-700',
-      locked: false,
-    },
-    {
-      href: '/admin/prompts',
-      title: 'Writing Prompts',
-      description: 'Manage IELTS writing prompts and topics',
-      detail: 'Create · Edit · Organize topics',
-      icon: FileText,
-      cardBg: 'bg-white/90 border-teal-100',
-      iconColor: 'text-teal-600',
-      titleColor: 'text-ocean-900',
-      descColor: 'text-ocean-500',
-      detailColor: 'text-ocean-400',
-      dividerColor: 'border-teal-100',
-      activeBadge: 'border-teal-200 bg-teal-50 text-teal-700',
-      locked: false,
-    },
-    {
-      href: '/admin/notifications',
-      title: 'Notifications',
-      description: 'Send announcements to users',
-      detail: isDev ? 'Dev access' : 'Dev only feature',
-      icon: Bell,
-      cardBg: 'bg-white/90 border-purple-100',
-      iconColor: 'text-purple-600',
-      titleColor: 'text-ocean-900',
-      descColor: 'text-ocean-500',
-      detailColor: 'text-ocean-400',
-      dividerColor: 'border-purple-100',
-      activeBadge: 'border-purple-200 bg-purple-50 text-purple-700',
-      locked: !isDev,
-    },
-  ]
+  const stats = await fetchAdminStats()
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 px-4 py-6">
-      <Card className="overflow-hidden border-ocean-200 shadow-lg bg-gradient-to-br from-ocean-600 to-cyan-600 text-white relative">
-        <LayoutDashboard className="absolute right-2 top-2 h-52 w-52 text-white opacity-10 rotate-[-12deg] pointer-events-none select-none" />
-        <CardContent className="relative z-10 p-6 md:p-8 lg:p-10">
+    <div className="mx-auto max-w-5xl space-y-5 px-4">
+      {/* TOP BAR */}
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-[22px] font-extrabold tracking-tight text-ocean-900">Admin</h1>
+            <span className={`rounded-[5px] px-2 py-0.5 text-[11px] font-bold ${isDev ? 'bg-violet-50 text-violet-700' : 'bg-cyan-50 text-cyan-700'}`}>
+              {isDev ? 'DEVELOPER' : 'ADMINISTRATOR'}
+            </span>
+          </div>
+          <p className="text-xs text-slate-500">Welcome back, {displayName}</p>
+        </div>
+        <Link
+          href="/dashboard"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:bg-slate-50 sm:h-auto sm:w-auto sm:gap-2 sm:px-3.5 sm:py-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m12 19-7-7 7-7" />
+            <path d="M19 12H5" />
+          </svg>
+          <span className="hidden text-[12.5px] font-bold sm:inline">Back to platform</span>
+        </Link>
+      </div>
 
-          <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-2xl space-y-4">
-              <div className="space-y-3">
-                <div className="flex flex-wrap items-center gap-3">
-                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
-                    Admin Dashboard
-                  </h1>
-                  <Badge className="rounded-full px-3 py-1 text-white/90 border border-white/30 bg-white/15 font-medium shadow-none">
-                    {isDev ? 'Developer' : 'Administrator'}
-                  </Badge>
-                </div>
-                <p className="max-w-xl text-sm md:text-base text-white/80 leading-relaxed">
-                  Welcome, <span className="font-semibold text-white">{displayName}</span>. Manage the IELTS4Life platform from a cleaner, faster command center.
-                </p>
-              </div>
+      {/* NAV CARDS */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <Link
+          href="/admin/statistics"
+          className="flex flex-col rounded-2xl border border-ocean-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+        >
+          <div className="mb-4 flex items-center justify-between">
+            <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-cyan-50">
+              <BarChart3 className="h-[18px] w-[18px] text-cyan-600" />
             </div>
-
-            <Link
-              href="/dashboard"
-              className="inline-flex items-center gap-2 self-start rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 text-sm font-medium text-white shadow-lg backdrop-blur-sm transition-all hover:bg-white/15"
-            >
-              <LayoutDashboard className="h-4 w-4" />
-              Back to Platform
-            </Link>
+            <ChevronRight className="h-4 w-4 text-slate-300" />
           </div>
-
-          <div className="relative mt-6 grid gap-3 sm:grid-cols-3">
-            {shortcutCards.map((card) => {
-              const Icon = card.icon
-              const inner = (
-                <div className={`relative flex flex-col h-full overflow-hidden rounded-2xl border p-5 shadow-md transition-all duration-200 ${card.cardBg} ${
-                  card.locked
-                    ? 'cursor-not-allowed opacity-50'
-                    : 'group-hover:-translate-y-1 group-hover:shadow-xl'
-                }`}>
-                  {/* Watermark icon */}
-                  <Icon className={`absolute right-2 top-2 h-32 w-32 opacity-[0.07] rotate-[-12deg] pointer-events-none select-none ${card.iconColor}`} />
-
-                  {/* Chevron */}
-                  <div className="relative flex items-start justify-end mb-4">
-                    {!card.locked && (
-                      <ChevronRight className={`h-4 w-4 opacity-30 transition-transform group-hover:translate-x-1 group-hover:opacity-80 mt-1 ${card.iconColor}`} />
-                    )}
-                  </div>
-
-                  {/* Title + description — grows to fill space */}
-                  <div className="relative flex-1 space-y-1.5 mb-4">
-                    <h2 className={`text-lg font-semibold leading-snug ${card.titleColor}`}>
-                      {card.title}
-                    </h2>
-                    <p className={`text-sm leading-relaxed ${card.descColor}`}>{card.description}</p>
-                  </div>
-
-                  {/* Divider */}
-                  <div className={`relative border-t pt-3 flex items-center justify-between gap-3 ${card.dividerColor}`}>
-                    <span className={`text-xs ${card.detailColor}`}>{card.detail}</span>
-                    {card.locked ? (
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-[11px] text-slate-400">
-                        <Lock className="h-3 w-3" />
-                        Locked
-                      </span>
-                    ) : (
-                      <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] ${card.activeBadge}`}>
-                        <ShieldCheck className="h-3 w-3" />
-                        Active
-                      </span>
-                    )}
-                  </div>
-                </div>
-              )
-
-              return card.locked ? (
-                <div key={card.href} className="h-full">{inner}</div>
-              ) : (
-                <Link key={card.href} href={card.href} className="group block">
-                  {inner}
-                </Link>
-              )
-            })}
+          <h3 className="mb-1 text-[15px] font-extrabold text-slate-900">Statistics</h3>
+          <p className="mb-4 text-xs leading-relaxed text-slate-400">Platform analytics, revenue, and user activity</p>
+          <div className="mt-auto border-t border-slate-100 pt-3">
+            <span className="text-[11.5px] text-slate-400">Charts · Users · Revenue</span>
           </div>
-        </CardContent>
-      </Card>
+        </Link>
+
+        <Link
+          href="/admin/prompts"
+          className="relative flex flex-col rounded-2xl border border-ocean-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+        >
+          <div className="mb-4 flex items-center justify-between">
+            <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-teal-50">
+              <FileText className="h-[18px] w-[18px] text-teal-600" />
+            </div>
+            {stats.pendingPromptsCount > 0 ? (
+              <span className="flex items-center gap-1 rounded-full bg-red-600 px-2 py-0.5 text-[10.5px] font-bold text-white">
+                {stats.pendingPromptsCount} pending
+              </span>
+            ) : (
+              <ChevronRight className="h-4 w-4 text-slate-300" />
+            )}
+          </div>
+          <h3 className="mb-1 text-[15px] font-extrabold text-slate-900">Writing Prompts</h3>
+          <p className="mb-4 text-xs leading-relaxed text-slate-400">Manage IELTS Task 2 prompts and topics</p>
+          <div className="mt-auto border-t border-slate-100 pt-3">
+            <span className="text-[11.5px] text-slate-400">
+              {formatNumber(stats.totalPrompts)} live · {formatNumber(stats.promptsWithOutlines)} with outlines
+            </span>
+          </div>
+        </Link>
+
+        {isDev ? (
+          <Link
+            href="/admin/notifications"
+            className="flex flex-col rounded-2xl border border-ocean-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-violet-50">
+                <Bell className="h-[18px] w-[18px] text-violet-600" />
+              </div>
+              <ChevronRight className="h-4 w-4 text-slate-300" />
+            </div>
+            <h3 className="mb-1 text-[15px] font-extrabold text-slate-900">Notifications</h3>
+            <p className="mb-4 text-xs leading-relaxed text-slate-400">Send announcements to users</p>
+            <div className="mt-auto border-t border-slate-100 pt-3">
+              <span className="text-[11.5px] text-slate-400">Dev access</span>
+            </div>
+          </Link>
+        ) : (
+          <div className="flex cursor-not-allowed flex-col rounded-2xl border border-ocean-100 bg-white p-5 opacity-50 shadow-sm">
+            <div className="mb-4 flex items-center justify-between">
+              <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-violet-50">
+                <Bell className="h-[18px] w-[18px] text-violet-600" />
+              </div>
+              <span className="rounded-full border border-slate-200 bg-slate-100 px-2.5 py-0.5 text-[10.5px] text-slate-400">Locked</span>
+            </div>
+            <h3 className="mb-1 text-[15px] font-extrabold text-slate-900">Notifications</h3>
+            <p className="mb-4 text-xs leading-relaxed text-slate-400">Send announcements to users</p>
+            <div className="mt-auto border-t border-slate-100 pt-3">
+              <span className="text-[11.5px] text-slate-400">Dev only feature</span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* QUICK GLANCE STRIP */}
+      <div className="relative overflow-hidden rounded-2xl bg-ocean-900 px-2 py-5">
+        <div className="pointer-events-none absolute -right-10 -top-16 h-56 w-56 rounded-full bg-white/[0.08] blur-2xl" />
+        <div className="relative z-10 grid grid-cols-2 gap-y-4 sm:grid-cols-4">
+          <div className="flex flex-col gap-1.5 border-r border-white/10 px-5">
+            <span className="text-[10.5px] font-bold uppercase tracking-wide text-white/55">Total Users</span>
+            <span className="text-[19px] font-extrabold leading-none text-white tabular-nums sm:text-[22px]">{formatNumber(stats.totalUsers)}</span>
+          </div>
+          <div className="flex flex-col gap-1.5 px-5 sm:border-r sm:border-white/10">
+            <span className="text-[10.5px] font-bold uppercase tracking-wide text-white/55">Total Essays</span>
+            <span className="text-[19px] font-extrabold leading-none text-white tabular-nums sm:text-[22px]">{formatNumber(stats.totalEssays)}</span>
+          </div>
+          <div className="flex flex-col gap-1.5 border-r border-white/10 px-5">
+            <span className="text-[10.5px] font-bold uppercase tracking-wide text-white/55">Revenue</span>
+            <span className="text-[19px] font-extrabold leading-none text-white tabular-nums sm:text-[22px]">{formatVND(stats.totalRevenue)}</span>
+          </div>
+          <div className="flex flex-col gap-1.5 px-5">
+            <span className="text-[10.5px] font-bold uppercase tracking-wide text-white/55">Pending Review</span>
+            <span className={`text-[19px] font-extrabold leading-none tabular-nums sm:text-[22px] ${stats.pendingPromptsCount > 0 ? 'text-red-300' : 'text-white'}`}>
+              {formatNumber(stats.pendingPromptsCount)}
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

@@ -26,7 +26,7 @@ function formatNumber(num: number): string {
   return num.toLocaleString('en-US')
 }
 
-/** Flat metric cell for the dark status strip — no inner box, divider-separated. */
+/** Flat metric cell for the dark status strip — no inner box, divider-separated (dividers from md: up only, where the grid is a single row). */
 function MetricCell({
   label,
   value,
@@ -39,12 +39,10 @@ function MetricCell({
   last?: boolean
 }) {
   return (
-    <div
-      className={`relative flex flex-col gap-1.5 px-5 ${!last ? 'border-r border-white/10' : ''}`}
-    >
-      <span className="text-[10.5px] font-bold uppercase tracking-wide text-white/55">{label}</span>
-      <span className="text-[28px] font-extrabold leading-none text-white tabular-nums">{value}</span>
-      {hint && <span className="text-[11px] text-white/50">{hint}</span>}
+    <div className={`relative flex flex-col gap-1.5 px-5 ${!last ? 'md:border-r md:border-white/10' : ''}`}>
+      <span className="text-[10px] font-bold uppercase tracking-wide text-white/55 sm:text-[10.5px]">{label}</span>
+      <span className="text-[18px] font-extrabold leading-none text-white tabular-nums sm:text-[28px]">{value}</span>
+      {hint && <span className="hidden text-[11px] text-white/50 sm:block">{hint}</span>}
     </div>
   )
 }
@@ -416,10 +414,10 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
           <h3 className="text-sm font-extrabold text-slate-900">Essays Written per User</h3>
           <p className="mb-5 text-xs text-slate-400">Distribution across all users</p>
 
-          <div className="flex h-[130px] items-end gap-4">
+          <div className="flex h-[130px] items-end gap-2 sm:gap-4">
             {distBuckets.map((b, i) => (
-              <div key={b.label} className="flex h-full flex-1 flex-col items-center justify-end gap-2">
-                <span className="text-[11.5px] font-bold text-slate-500 tabular-nums">{formatNumber(b.value)}</span>
+              <div key={b.label} className="flex h-full flex-1 flex-col items-center justify-end gap-1.5 sm:gap-2">
+                <span className="text-[10px] font-bold text-slate-500 tabular-nums sm:text-[11.5px]">{formatNumber(b.value)}</span>
                 <div
                   className="w-full rounded-t-[5px]"
                   style={{
@@ -427,124 +425,118 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
                     backgroundColor: barColors[i],
                   }}
                 />
-                <span className="text-[11px] font-semibold text-slate-400">{b.label}</span>
+                <span className="text-[9.5px] font-semibold text-slate-400 sm:text-[11px]">{b.label}</span>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* ============ COMPACT DATA GRID ============ */}
-      <div className="overflow-hidden rounded-2xl border border-ocean-100 bg-white shadow-sm">
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
-          {/* Vocabulary & Quiz */}
-          <div className="border-b border-slate-100 px-5 py-4 sm:border-r xl:border-b-0">
-            <span className="mb-3.5 block text-xs font-bold text-slate-700">Vocabulary & Quiz</span>
-            <div className="flex flex-col gap-2">
-              <div className="flex justify-between">
-                <span className="text-xs text-slate-400">Words generated</span>
-                <span className="text-[12.5px] font-bold text-slate-900 tabular-nums">{formatNumber(stats.totalVocabulary)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-xs text-slate-400">Quiz attempts</span>
-                <span className="text-[12.5px] font-bold text-slate-900 tabular-nums">{formatNumber(stats.totalQuizAttempts)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-xs text-slate-400">Avg accuracy</span>
-                <span className="text-[12.5px] font-bold text-emerald-600 tabular-nums">{stats.avgQuizScore}%</span>
-              </div>
+      {/* ============ SECONDARY DATA — satisfaction (wide) + 3 compact tiles ============ */}
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.6fr_1fr]">
+        {/* User Feedback — full rating breakdown */}
+        <div className="rounded-2xl border border-ocean-100 bg-white p-5 shadow-sm">
+          <div className="mb-4 flex items-baseline justify-between">
+            <div>
+              <h3 className="text-sm font-extrabold text-slate-900">User Feedback</h3>
+              <p className="text-xs text-slate-400">Satisfaction ratings · {formatNumber(stats.satisfactionDistribution.totalRated)} responses</p>
             </div>
-          </div>
-
-          {/* Writing Prompts */}
-          <div className="border-b border-slate-100 px-5 py-4 xl:border-b-0 xl:border-r">
-            <span className="mb-3.5 block text-xs font-bold text-slate-700">Writing Prompts</span>
-            <div className="flex flex-col gap-2">
-              <div className="flex justify-between">
-                <span className="text-xs text-slate-400">Total live</span>
-                <span className="text-[12.5px] font-bold text-slate-900 tabular-nums">{formatNumber(stats.totalPrompts)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-xs text-slate-400">With outlines</span>
-                <span className="text-[12.5px] font-bold text-slate-900 tabular-nums">{formatNumber(stats.promptsWithOutlines)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-xs text-slate-400">Usage rate</span>
-                <span className="text-[12.5px] font-bold text-slate-900 tabular-nums">
-                  {stats.totalEssays > 0 ? `${Math.round((stats.essaysFromPrompts / stats.totalEssays) * 100)}%` : '—'}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Referrals */}
-          <div className="border-b border-slate-100 px-5 py-4 sm:border-r xl:border-b-0">
-            <span className="mb-3.5 block text-xs font-bold text-slate-700">Referrals</span>
-            <div className="flex flex-col gap-2">
-              <div className="flex justify-between">
-                <span className="text-xs text-slate-400">Total invited</span>
-                <span className="text-[12.5px] font-bold text-slate-900 tabular-nums">{formatNumber(stats.totalInvitedUsers)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-xs text-slate-400">Active referrers</span>
-                <span className="text-[12.5px] font-bold text-slate-900 tabular-nums">{formatNumber(stats.uniqueReferrers)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-xs text-slate-400">Conversion</span>
-                <span className="text-[12.5px] font-bold text-slate-900 tabular-nums">{stats.inviteConversionRate.toFixed(1)}%</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Satisfaction */}
-          <div className="px-5 py-4">
-            <span className="mb-3.5 block text-xs font-bold text-slate-700">
-              Satisfaction ({formatNumber(stats.satisfactionDistribution.totalRated)} rated)
-            </span>
-            {stats.satisfactionDistribution.totalRated > 0 ? (
-              <>
-                <div className="mb-2.5 flex h-2 overflow-hidden rounded-full">
-                  <div
-                    className="bg-red-300"
-                    style={{ width: `${(stats.satisfactionDistribution.terrible / stats.satisfactionDistribution.totalRated) * 100}%` }}
-                  />
-                  <div
-                    className="bg-orange-300"
-                    style={{ width: `${(stats.satisfactionDistribution.notForMe / stats.satisfactionDistribution.totalRated) * 100}%` }}
-                  />
-                  <div
-                    className="bg-green-300"
-                    style={{ width: `${(stats.satisfactionDistribution.needImprove / stats.satisfactionDistribution.totalRated) * 100}%` }}
-                  />
-                  <div
-                    className="bg-blue-300"
-                    style={{ width: `${(stats.satisfactionDistribution.allGood / stats.satisfactionDistribution.totalRated) * 100}%` }}
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex justify-between">
-                    <span className="flex items-center gap-1.5 text-[11.5px] text-slate-400">
-                      <span className="inline-block h-1.5 w-1.5 rounded-sm bg-blue-300" />
-                      All good
-                    </span>
-                    <span className="text-xs font-bold text-slate-900 tabular-nums">
-                      {Math.round((stats.satisfactionDistribution.allGood / stats.satisfactionDistribution.totalRated) * 100)}%
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="flex items-center gap-1.5 text-[11.5px] text-slate-400">
-                      <span className="inline-block h-1.5 w-1.5 rounded-sm bg-green-300" />
-                      Need improve
-                    </span>
-                    <span className="text-xs font-bold text-slate-900 tabular-nums">
-                      {Math.round((stats.satisfactionDistribution.needImprove / stats.satisfactionDistribution.totalRated) * 100)}%
-                    </span>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <p className="text-xs text-slate-300">No ratings yet</p>
+            {stats.satisfactionDistribution.totalRated > 0 && (
+              <span className="whitespace-nowrap text-[12.5px] font-bold text-emerald-600">
+                {Math.round(
+                  ((stats.satisfactionDistribution.needImprove + stats.satisfactionDistribution.allGood) /
+                    stats.satisfactionDistribution.totalRated) *
+                    100
+                )}% positive
+              </span>
             )}
+          </div>
+
+          {stats.satisfactionDistribution.totalRated > 0 ? (
+            <div className="flex flex-col gap-2.5">
+              {[
+                { label: 'All good', count: stats.satisfactionDistribution.allGood, color: 'bg-sky-300' },
+                { label: 'Useful, needs improvement', count: stats.satisfactionDistribution.needImprove, color: 'bg-emerald-300' },
+                { label: 'Not bad, not for me', count: stats.satisfactionDistribution.notForMe, color: 'bg-amber-300' },
+                { label: 'Terrible', count: stats.satisfactionDistribution.terrible, color: 'bg-red-300' },
+              ].map((row) => {
+                const pct = Math.round((row.count / stats.satisfactionDistribution.totalRated) * 100)
+                return (
+                  <div key={row.label}>
+                    <div className="mb-1 flex justify-between">
+                      <span className="text-[12.5px] font-semibold text-slate-600">{row.label}</span>
+                      <span className="text-[12.5px] font-bold text-slate-900 tabular-nums">
+                        {formatNumber(row.count)} · {pct}%
+                      </span>
+                    </div>
+                    <div className="h-[9px] overflow-hidden rounded-full bg-slate-100">
+                      <div className={`h-full rounded-full ${row.color}`} style={{ width: `${pct}%` }} />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          ) : (
+            <p className="text-xs text-slate-300">No ratings yet</p>
+          )}
+        </div>
+
+        {/* 3 compact tiles stacked */}
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3 rounded-2xl border border-ocean-100 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+            <span className="text-[12.5px] font-bold text-slate-700">Vocabulary & Quiz</span>
+            <div className="flex gap-4 sm:gap-4">
+              <div className="text-right">
+                <div className="text-sm font-extrabold text-slate-900 tabular-nums">{formatNumber(stats.totalVocabulary)}</div>
+                <div className="text-[10.5px] text-slate-400">words</div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm font-extrabold text-slate-900 tabular-nums">{formatNumber(stats.totalQuizAttempts)}</div>
+                <div className="text-[10.5px] text-slate-400">quizzes</div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm font-extrabold text-emerald-600 tabular-nums">{stats.avgQuizScore}%</div>
+                <div className="text-[10.5px] text-slate-400">accuracy</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 rounded-2xl border border-ocean-100 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+            <span className="text-[12.5px] font-bold text-slate-700">Writing Prompts</span>
+            <div className="flex gap-4">
+              <div className="text-right">
+                <div className="text-sm font-extrabold text-slate-900 tabular-nums">{formatNumber(stats.totalPrompts)}</div>
+                <div className="text-[10.5px] text-slate-400">live</div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm font-extrabold text-slate-900 tabular-nums">{formatNumber(stats.promptsWithOutlines)}</div>
+                <div className="text-[10.5px] text-slate-400">w/ outlines</div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm font-extrabold text-slate-900 tabular-nums">
+                  {stats.totalEssays > 0 ? `${Math.round((stats.essaysFromPrompts / stats.totalEssays) * 100)}%` : '—'}
+                </div>
+                <div className="text-[10.5px] text-slate-400">usage</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 rounded-2xl border border-ocean-100 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+            <span className="text-[12.5px] font-bold text-slate-700">Referrals</span>
+            <div className="flex gap-4">
+              <div className="text-right">
+                <div className="text-sm font-extrabold text-slate-900 tabular-nums">{formatNumber(stats.totalInvitedUsers)}</div>
+                <div className="text-[10.5px] text-slate-400">invited</div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm font-extrabold text-slate-900 tabular-nums">{formatNumber(stats.uniqueReferrers)}</div>
+                <div className="text-[10.5px] text-slate-400">referrers</div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm font-extrabold text-slate-900 tabular-nums">{stats.inviteConversionRate.toFixed(1)}%</div>
+                <div className="text-[10.5px] text-slate-400">conversion</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -652,7 +644,7 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
                   <button
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    className="flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 disabled:opacity-40"
+                    className="flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 disabled:opacity-40 sm:h-7 sm:w-7"
                   >
                     <ChevronLeft className="h-3.5 w-3.5" />
                   </button>
@@ -662,7 +654,7 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
                   <button
                     onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                     disabled={currentPage === totalPages}
-                    className="flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 disabled:opacity-40"
+                    className="flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 disabled:opacity-40 sm:h-7 sm:w-7"
                   >
                     <ChevronRight className="h-3.5 w-3.5" />
                   </button>
