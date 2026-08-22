@@ -37,6 +37,7 @@ export interface AdminStats {
   inviteConversionRate: number
   totalPrompts: number
   promptsWithOutlines: number
+  pendingPromptsCount: number
   essaysFromPrompts: number
   essaysFromExternal: number
   satisfactionDistribution: {

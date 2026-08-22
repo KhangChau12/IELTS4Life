@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { createServerClient } from '@/lib/supabase/server'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { FileText } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { QUESTION_TYPES_DISPLAY } from '@/lib/constants'
 
 export const metadata: Metadata = {
@@ -12,7 +11,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 import { ScoreChart } from './components/ScoreChart'
-import { VocabularyProgress } from './components/VocabularyProgress'
+import { VocabSnapshot, RecentVocabulary } from './components/VocabularyProgress'
 import { StatsStrip } from './components/StatsStrip'
 import { RecentEssaysTable } from './components/RecentEssaysTable'
 import { DashboardPollWrapper } from './components/DashboardPollWrapper'
@@ -223,43 +222,32 @@ export default async function DashboardPage() {
     }))
 
   return (
-    <div className="max-w-7xl mx-auto space-y-7 md:space-y-9 px-4 py-6">
+    <div className="max-w-6xl mx-auto space-y-5 px-4 py-6">
       <DashboardPollWrapper shouldShow={stats.totalEssays >= 1 && !hasRated} />
       {/* Welcome Section */}
-      <div className="mb-8 md:mb-10">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900">
-          Welcome back, {displayName}!
-        </h1>
-        <p className="mt-1 text-sm sm:text-base text-slate-500">
-          Track your progress and improve your IELTS writing skills
-        </p>
+      <div>
+        <h1 className="text-[26px] font-extrabold text-slate-900">Welcome back, {displayName}</h1>
+        <p className="text-[13.5px] text-slate-500">Here&apos;s where your writing stands today.</p>
       </div>
 
       {/* Empty State - First Time User */}
       {stats.totalEssays === 0 && (
-        <Card className="border-ocean-200 shadow-lg bg-gradient-to-br from-ocean-50 to-cyan-50 overflow-hidden relative">
-          <FileText className="absolute right-2 bottom-2 h-52 w-52 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
-          <CardContent className="py-8 md:py-12 px-4 md:px-6 relative z-10">
-            <div className="text-center">
-              <h2 className="text-xl md:text-2xl font-bold text-ocean-800 mb-2">Start Your IELTS Journey!</h2>
-              <p className="text-sm md:text-base text-ocean-600 mb-6 max-w-md mx-auto px-4">
-                Submit your first essay to get AI-powered feedback, personalized vocabulary, and track your progress
-              </p>
-              <a
-                href="/write"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-ocean-600 to-cyan-600 text-white px-5 py-2.5 md:px-6 md:py-3 rounded-lg text-sm md:text-base font-semibold hover:from-ocean-700 hover:to-cyan-700 transition-all"
-              >
-                <FileText className="h-4 w-4 md:h-5 md:w-5" />
-                Write Your First Essay
-              </a>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="rounded-2xl border border-ocean-100 bg-white p-8 text-center shadow-sm md:p-12">
+          <h2 className="mb-2 text-xl font-extrabold text-slate-900 md:text-2xl">Start Your IELTS Journey!</h2>
+          <p className="mx-auto mb-6 max-w-md px-4 text-sm text-slate-500 md:text-base">
+            Submit your first essay to get AI-powered feedback, personalized vocabulary, and track your progress
+          </p>
+          <a
+            href="/write"
+            className="inline-flex items-center gap-2 rounded-lg bg-ocean-900 px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-ocean-800 md:px-6 md:py-3 md:text-base"
+          >
+            Write Your First Essay
+            <ArrowRight className="h-4 w-4 md:h-5 md:w-5" />
+          </a>
+        </div>
       )}
 
-      {/* ── HERO ZONE: where you are + what to do next ───────────────── */}
-
-      {/* Stat strip — at-a-glance status (no boxes, one gradient band) */}
+      {/* Status strip — at-a-glance status (no boxes, one gradient band) */}
       {stats.totalEssays > 0 && (
         <StatsStrip
           totalEssays={stats.totalEssays}
@@ -268,49 +256,42 @@ export default async function DashboardPage() {
         />
       )}
 
-      {/* IELTS Coverage Map — the primary hook: question types + topics to practise */}
-      {stats.totalEssays > 0 && (
-        <CoverageMap types={coverage.types} topics={coverage.topics} />
+      {/* Coverage Map — next-action hook + question type / topic coverage */}
+      {stats.totalEssays > 0 && <CoverageMap types={coverage.types} topics={coverage.topics} />}
+
+      {/* Score progress + vocab/quiz snapshot — side by side */}
+      {(chartData.length > 0 || stats.totalEssays > 0) && (
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.6fr_1fr]">
+          {chartData.length > 0 && (
+            <div className="rounded-2xl border border-ocean-100 bg-white p-5 shadow-sm">
+              <h3 className="text-[14.5px] font-extrabold text-slate-900">Score Progress</h3>
+              <p className="mb-4 text-xs text-slate-400">Your improvement across every submitted essay</p>
+              <ScoreChart data={chartData} criteriaOverTime={userStats.criteriaOverTime} />
+            </div>
+          )}
+          {stats.totalEssays > 0 && (
+            <VocabSnapshot
+              totalWords={userStats.vocabulary.total}
+              essaysWithoutVocab={userStats.vocabulary.essaysWithoutVocab}
+              quizScore={userStats.quiz.avgScore}
+              totalCorrect={userStats.quiz.totalCorrect}
+              totalQuestions={userStats.quiz.totalQuestions}
+              totalAttempts={userStats.quiz.totalAttempts}
+            />
+          )}
+        </div>
       )}
 
-      {/* ── DETAIL ZONE: lighter cards, no watermark, recede behind the hero ── */}
-
-      {/* Score Progress Chart */}
-      {chartData.length > 0 && (
-        <Card className="border-ocean-100 shadow-sm">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg font-bold text-ocean-800">Score Progress</CardTitle>
-            <CardDescription>Your improvement across every submitted essay</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ScoreChart data={chartData} criteriaOverTime={userStats.criteriaOverTime} />
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Vocabulary Learning Progress + Past Vocab (combined) */}
-      {stats.totalEssays > 0 && (
-        <VocabularyProgress
-          totalWords={userStats.vocabulary.total}
-          essaysWithoutVocab={userStats.vocabulary.essaysWithoutVocab}
-          quizScore={userStats.quiz.avgScore}
-          totalCorrect={userStats.quiz.totalCorrect}
-          totalQuestions={userStats.quiz.totalQuestions}
-          totalAttempts={userStats.quiz.totalAttempts}
-        />
-      )}
+      {/* Recent Vocabulary */}
+      <RecentVocabulary totalWords={userStats.vocabulary.total} />
 
       {/* Recent Essays */}
       {recentEssays.length > 0 && (
-        <Card className="border-ocean-100 shadow-sm">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg font-bold text-ocean-800">Recent Essays</CardTitle>
-            <CardDescription>Your latest submissions at a glance</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <RecentEssaysTable essays={recentEssays as any} />
-          </CardContent>
-        </Card>
+        <div className="rounded-2xl border border-ocean-100 bg-white p-5 shadow-sm">
+          <h3 className="text-[14.5px] font-extrabold text-slate-900">Recent Essays</h3>
+          <p className="mb-1 text-xs text-slate-400">Your latest submissions at a glance</p>
+          <RecentEssaysTable essays={recentEssays as any} />
+        </div>
       )}
     </div>
   )

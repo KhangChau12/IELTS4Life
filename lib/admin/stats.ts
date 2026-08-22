@@ -24,6 +24,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     promptOutlineCountResult,
     essayCountResult,
     satisfactionResult,
+    pendingPromptsCountResult,
   ] = await Promise.all([
     serviceClient.from('essays').select('overall_score'),
     serviceClient.from('essays').select('created_at, prompt_id, writing_prompts(status)').gte('created_at', fourteenDaysAgoISO).order('created_at', { ascending: true }),
@@ -52,6 +53,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     serviceClient.from('writing_prompt_outlines').select('*', { count: 'exact', head: true }),
     serviceClient.from('essays').select('*', { count: 'exact', head: true }),
     serviceClient.from('profiles').select('satisfaction_rating, satisfaction_rated_at'),
+    serviceClient.from('writing_prompts').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
   ])
 
   // Separate parallel groups into named vars
@@ -69,6 +71,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
   const totalPrompts = promptCountResult.count ?? 0
   const promptsWithOutlines = promptOutlineCountResult.count ?? 0
   const totalEssays = essayCountResult.count ?? 0
+  const pendingPromptsCount = pendingPromptsCountResult.count ?? 0
 
   const satisfactionProfiles = satisfactionResult.data ?? []
   const satisfactionDistribution = {
@@ -266,5 +269,6 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     totalTransactions: completedTransactions.length,
     proSubs: proTransactions.length,
     packPurchases: packTransactions.length,
+    pendingPromptsCount,
   }
 }
