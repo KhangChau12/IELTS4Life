@@ -1,8 +1,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import Image from 'next/image'
-import { FileText, TrendingUp, BookOpen, Target, Sparkles, CheckCircle, Zap, ArrowRight, Library, Lightbulb, Timer, Wand2, GitCompare, BadgeCheck } from 'lucide-react'
+import { FileText, Target, BookOpen, TrendingUp, Sparkles, ArrowRight, Library, Lightbulb, Timer, Wand2, GitCompare, BadgeCheck } from 'lucide-react'
 import { createServerClient } from '@/lib/supabase/server'
 import { FAQSection } from '@/components/home/FAQSection'
 
@@ -163,185 +162,167 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(videoJsonLd) }}
       />
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-sky-50 via-cyan-50 to-blue-50 pt-12 pb-8 sm:py-10 md:py-12 lg:py-16">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-[200px] -right-[200px] h-[800px] w-[800px] rounded-full bg-gradient-to-br from-cyan-400/30 to-blue-500/30 blur-3xl opacity-50" />
-          <div className="absolute -bottom-[200px] -left-[200px] h-[800px] w-[800px] rounded-full bg-gradient-to-br from-sky-400/30 to-cyan-500/30 blur-3xl opacity-50" />
-          <div className="absolute top-20 left-1/4 h-4 w-4 rounded-full bg-cyan-400/40 animate-float" />
-          <div className="absolute top-40 right-1/4 h-3 w-3 rounded-full bg-blue-400/40 animate-float" style={{ animationDelay: '0.5s' }} />
-          <div className="absolute bottom-40 left-1/3 h-5 w-5 rounded-full bg-sky-400/40 animate-float" style={{ animationDelay: '1.5s' }} />
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#e0f2fe_1px,transparent_1px),linear-gradient(to_bottom,#e0f2fe_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
-        </div>
+
+      {/* ============ HERO ============ */}
+      <section className="relative overflow-hidden pt-10 pb-16 sm:pb-20 md:pb-24 lg:pb-[220px] lg:pt-20">
+        {/* one soft, purposeful accent wash — not a full-bleed gradient */}
+        <div className="pointer-events-none absolute -right-40 -top-32 hidden h-[760px] w-[760px] rounded-full bg-[radial-gradient(circle,rgba(8,145,178,0.10),transparent_68%)] lg:block" />
 
         <div className="container relative z-10 mx-auto px-4">
           <div className="mx-auto max-w-7xl">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-0 items-center">
+            <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-10">
 
-              {/* Left Column - Text */}
-              <div className="space-y-5 md:space-y-6 text-center lg:text-left z-20">
-                <h1 className="text-5xl sm:text-6xl md:text-5xl lg:text-6xl xl:text-7xl leading-none tracking-tight" style={{ fontFamily: 'var(--font-shrikhand)' }}>
-                  <span className="bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-600 bg-clip-text text-transparent">IELTS</span>
-                  <span className="text-slate-900">4LIFE</span>
+              {/* Text column */}
+              <div className="space-y-5 text-center lg:space-y-6 lg:text-left">
+                <h1 className="text-[28px] leading-[1.18] font-extrabold tracking-tight text-slate-900 sm:text-4xl md:text-[40px] lg:text-[54px] lg:leading-[1.06]">
+                  Know exactly why your essay scored what it did.
                 </h1>
-
-                <p className="max-w-md text-base sm:text-lg md:text-xl leading-relaxed text-slate-600 mx-auto lg:mx-0">
-                  AI coach for IELTS Writing Task 2 — instant band scores, detailed feedback, and vocabulary tools.
+                <p className="text-xs font-bold text-cyan-700 sm:text-sm lg:text-[13.5px]">
+                  Scored against official IELTS band descriptors — not a guess.
+                </p>
+                <p className="mx-auto max-w-md text-sm leading-relaxed text-slate-600 sm:text-base md:text-lg lg:mx-0 lg:max-w-[440px] lg:text-lg">
+                  Paste your IELTS Writing Task 2 essay and get an instant band score, sentence-level feedback, and a full Band 8–9 rewrite — the same way an examiner would grade it.
                 </p>
 
-                {/* CTA Buttons for guests */}
                 {!user && (
-                  <div className="flex flex-col items-center lg:items-start gap-3 pt-1 md:pt-2">
-                    {/* Primary CTA — inline/auto width, centered on mobile */}
-                    <Link href="/score">
+                  <div className="flex flex-col items-center gap-3 pt-1 lg:items-start lg:gap-5 lg:pt-2">
+                    <Link href="/score" className="w-full sm:w-auto">
                       <Button
                         size="default"
-                        className="group relative h-auto px-7 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-lg shadow-blue-500/20 transition-all hover:scale-[1.02] rounded-xl text-base font-bold overflow-hidden"
+                        className="h-auto w-full rounded-xl bg-gradient-to-br from-cyan-600 to-sky-700 px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-cyan-600/25 transition-all hover:scale-[1.02] hover:from-cyan-700 hover:to-sky-800 sm:w-auto"
                       >
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
-                        <span className="relative flex items-center gap-2">
-                          <Sparkles className="w-4 h-4 text-blue-100" />
+                        <span className="flex items-center justify-center gap-2">
                           Try Essay Scoring — Free
+                          <ArrowRight className="h-4 w-4" />
                         </span>
                       </Button>
                     </Link>
 
-                    {/* Secondary CTA — text link */}
                     <Link
                       href="/write"
-                      className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-cyan-600 transition-colors font-medium"
+                      className="inline-flex items-center gap-1.5 border-b border-slate-300 pb-0.5 text-sm font-medium text-slate-500 transition-colors hover:text-cyan-600"
                     >
-                      <Library className="w-3.5 h-3.5" />
+                      <Library className="h-3.5 w-3.5" />
                       Browse prompt library
-                      <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
 
-                    {/* Single clean trust line */}
                     <p className="text-xs text-slate-400">No sign-up needed · Instant results · 4 free essays</p>
                   </div>
                 )}
               </div>
 
-              {/* Mobile + iPad: screenshot, clean — no floating badges (collage below needs desktop-width room) */}
+              {/* Mobile + iPad: compact collage */}
               <div className="block lg:hidden">
-                <div className="relative mx-auto max-w-[320px] ipad:max-w-[420px]">
-                  <div className="absolute inset-0 -z-10 bg-gradient-to-br from-cyan-200/50 to-blue-300/30 rounded-3xl blur-2xl scale-105" />
-                  <div className="rounded-2xl shadow-xl overflow-hidden border-2 border-white/80 animate-float">
+                <div className="relative mx-auto max-w-[320px] px-8 pb-8 ipad:max-w-[420px]">
+                  <div className="pointer-events-none absolute -right-6 -top-10 hidden h-[280px] w-[280px] rounded-full bg-[radial-gradient(circle,rgba(8,145,178,0.10),transparent_70%)] ipad:block" />
+                  <div className="relative z-20 overflow-hidden rounded-2xl border border-slate-200 shadow-xl">
                     <Image
-                      src="/screenshots/hero-scoring.png"
-                      alt="AI-powered IELTS band scoring"
+                      src="/screenshots/hero-dashboard.png"
+                      alt="AI-powered IELTS band scoring dashboard"
                       width={1440}
                       height={900}
                       unoptimized
-                      className="w-full h-auto"
+                      className="h-auto w-full"
                       priority
                     />
                   </div>
-                </div>
-              </div>
-
-              {/* Desktop-only: Screenshot Collage (needs wide viewport for absolute-positioned satellite images) */}
-              <div className="relative h-[700px] hidden lg:block lg:-ml-12">
-
-                {/* 1. Main Dashboard - Center Hub */}
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[48%] z-30">
-                  <div className="rounded-2xl shadow-2xl overflow-hidden border-[3px] border-white animate-float">
-                    <Image
-                      src="/screenshots/hero-dashboard.png"
-                      alt="Progress tracking dashboard"
-                      width={900}
-                      height={1200}
-                      unoptimized
-                      className="w-full h-auto object-cover"
-                      priority
-                    />
-                  </div>
-                </div>
-
-                {/* 2. Top-Left: Band Scoring - Bigger & On Top */}
-                <div className="absolute top-[8%] -left-[6%] w-[50%] z-40">
-                  <div className="rounded-xl shadow-xl overflow-hidden border-2 border-white/80 animate-float" style={{ animationDelay: '1.5s' }}>
+                  {/* small collage accents — only on iPad width, mobile stays single image */}
+                  <div className="absolute -left-2 -top-7 z-30 hidden w-[44%] overflow-hidden rounded-xl border border-slate-200 shadow-lg ipad:block">
                     <Image
                       src="/screenshots/hero-scoring.png"
                       alt="AI-powered band scoring"
                       width={1440}
                       height={900}
                       unoptimized
-                      className="w-full h-auto"
+                      className="h-auto w-full"
                     />
                   </div>
-                </div>
-
-                {/* 3. Top-Right: Detailed Feedback - Smaller */}
-                <div className="absolute top-[12%] -right-[8%] w-[38%] z-20">
-                  <div className="rounded-xl shadow-xl overflow-hidden border-2 border-white/80 animate-float" style={{ animationDelay: '0.5s' }}>
-                    <Image
-                      src="/screenshots/hero-feedback.png"
-                      alt="Detailed feedback with highlights"
-                      width={1280}
-                      height={800}
-                      unoptimized
-                      className="w-full h-auto"
-                    />
-                  </div>
-                </div>
-
-                {/* 4. Bottom-Right: Vocabulary - Bigger & Below Center */}
-                <div className="absolute bottom-[10%] -right-[8%] w-[44%] z-20">
-                  <div className="rounded-xl shadow-xl overflow-hidden border-2 border-white/80 animate-float" style={{ animationDelay: '2s' }}>
+                  <div className="absolute -right-4 bottom-2 z-10 hidden w-[40%] overflow-hidden rounded-xl border border-slate-200 shadow-lg ipad:block">
                     <Image
                       src="/screenshots/hero-vocab.png"
                       alt="Vocabulary and flashcards"
                       width={1120}
                       height={700}
                       unoptimized
-                      className="w-full h-auto"
+                      className="h-auto w-full"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Desktop-only: screenshot collage (needs wide viewport for absolute-positioned satellite images) */}
+              <div className="relative hidden h-[560px] lg:block">
+                {/* Center hub */}
+                <div className="absolute left-1/2 top-1/2 z-30 w-[47%] -translate-x-1/2 -translate-y-1/2">
+                  <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-[0_20px_48px_-14px_rgba(15,23,42,0.22)]">
+                    <Image
+                      src="/screenshots/hero-dashboard.png"
+                      alt="Progress tracking dashboard"
+                      width={900}
+                      height={1200}
+                      unoptimized
+                      className="h-auto w-full object-cover"
+                      priority
                     />
                   </div>
                 </div>
 
-                {/* 5. Bottom-Left: Interactive Quiz - Smaller */}
-                <div className="absolute bottom-[8%] left-[2%] w-[32%] z-40">
-                  <div className="rounded-xl shadow-xl overflow-hidden border-2 border-white/80 animate-float" style={{ animationDelay: '1s' }}>
+                {/* Top-left: scoring */}
+                <div className="absolute -left-[6%] top-[2%] z-40 w-[48%]">
+                  <div className="overflow-hidden rounded-xl border border-slate-200 shadow-[0_14px_32px_-10px_rgba(15,23,42,0.2)]">
+                    <Image
+                      src="/screenshots/hero-scoring.png"
+                      alt="AI-powered band scoring"
+                      width={1440}
+                      height={900}
+                      unoptimized
+                      className="h-auto w-full"
+                    />
+                  </div>
+                </div>
+
+                {/* Top-right: feedback */}
+                <div className="absolute -right-[8%] top-[6%] z-20 w-[36%]">
+                  <div className="overflow-hidden rounded-xl border border-slate-200 shadow-[0_14px_32px_-10px_rgba(15,23,42,0.2)]">
+                    <Image
+                      src="/screenshots/hero-feedback.png"
+                      alt="Detailed feedback with highlights"
+                      width={1280}
+                      height={800}
+                      unoptimized
+                      className="h-auto w-full"
+                    />
+                  </div>
+                </div>
+
+                {/* Bottom-right: vocabulary */}
+                <div className="absolute -right-[7%] bottom-[4%] z-20 w-[42%]">
+                  <div className="overflow-hidden rounded-xl border border-slate-200 shadow-[0_14px_32px_-10px_rgba(15,23,42,0.2)]">
+                    <Image
+                      src="/screenshots/hero-vocab.png"
+                      alt="Vocabulary and flashcards"
+                      width={1120}
+                      height={700}
+                      unoptimized
+                      className="h-auto w-full"
+                    />
+                  </div>
+                </div>
+
+                {/* Bottom-left: quiz */}
+                <div className="absolute bottom-[2%] left-0 z-40 w-[30%]">
+                  <div className="overflow-hidden rounded-xl border border-slate-200 shadow-[0_14px_32px_-10px_rgba(15,23,42,0.2)]">
                     <Image
                       src="/screenshots/hero-quiz.png"
                       alt="Interactive vocabulary quiz"
                       width={960}
                       height={600}
                       unoptimized
-                      className="w-full h-auto"
+                      className="h-auto w-full"
                     />
                   </div>
                 </div>
 
-                {/* 6. Mid-Right: Improvement Tool - Increased size & overlap */}
-                <div className="absolute top-1/2 -translate-y-1/2 -right-[15%] w-[30%] z-10">
-                  <div className="rounded-lg shadow-lg overflow-hidden border border-white/60 animate-float" style={{ animationDelay: '2.5s' }}>
-                    <Image
-                      src="/screenshots/hero-improve.png"
-                      alt="AI essay improvement tool"
-                      width={760}
-                      height={480}
-                      unoptimized
-                      className="w-full h-auto"
-                    />
-                  </div>
-                </div>
-
-                {/* 7. Mid-Left: History - Increased size & overlap */}
-                <div className="absolute top-1/2 -translate-y-1/2 -left-[14%] w-[28%] z-10">
-                  <div className="rounded-lg shadow-lg overflow-hidden border border-white/60 animate-float" style={{ animationDelay: '3s' }}>
-                    <Image
-                      src="/screenshots/hero-history.png"
-                      alt="Essay submission history"
-                      width={640}
-                      height={400}
-                      unoptimized
-                      className="w-full h-auto"
-                    />
-                  </div>
-                </div>
               </div>
 
             </div>
@@ -349,28 +330,65 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Features Section with Video */}
-      <section className="bg-white py-10 md:py-24">
+      {/* ============ FEATURES ============ */}
+      <section className="border-y border-slate-100 bg-slate-50 py-14 md:py-24">
         <div className="container mx-auto px-4">
-          <div className="mb-6 sm:mb-10 md:mb-16 text-center space-y-2 md:space-y-4">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900">
-              Comprehensive IELTS Tools
-            </h2>
-            <p className="mx-auto max-w-2xl text-sm md:text-base lg:text-lg text-slate-600 px-4">
-              All the features you need to excel in IELTS Writing Task 2
-            </p>
-          </div>
+          <div className="mx-auto max-w-7xl">
+            <div className="mb-8 md:mb-14">
+              <span className="text-xs font-bold tracking-wide text-cyan-700 sm:text-[13px]">WHAT YOU GET</span>
+              <h2 className="mt-2.5 text-[22px] font-extrabold tracking-tight text-slate-900 sm:text-3xl md:text-4xl">
+                Comprehensive IELTS tools, not just a score
+              </h2>
+              <p className="mt-3 max-w-xl text-sm text-slate-600 sm:text-base lg:text-base">
+                Everything you need to go from guessing to understanding — in one workflow.
+              </p>
+            </div>
 
-          {/* Mobile/portrait iPad: Video first, then 2×2 grid. Landscape iPad+: Feature cards 35% + Video 65% */}
-          <div className="flex flex-col ipad-lg:grid ipad-lg:gap-8 ipad-lg:grid-cols-[35%_65%] ipad-lg:items-start gap-6">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-16 lg:grid-cols-[0.85fr_1.15fr] lg:items-start lg:gap-16">
+              {/* Feature list — bare colored icons, no container box */}
+              <div className="flex flex-col">
+                <div className="flex gap-4 border-b border-slate-200 py-5 sm:gap-[18px]">
+                  <FileText className="mt-0.5 h-6 w-6 flex-shrink-0 text-cyan-600" strokeWidth={1.9} />
+                  <div className="min-w-0">
+                    <h3 className="mb-1 text-base font-extrabold text-slate-900">AI Essay Scoring</h3>
+                    <p className="text-[13.5px] leading-relaxed text-slate-600">
+                      Band scores for all 4 IELTS criteria with authentic examiner-level assessment.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-4 border-b border-slate-200 py-5 sm:gap-[18px]">
+                  <Target className="mt-0.5 h-6 w-6 flex-shrink-0 text-blue-600" strokeWidth={1.9} />
+                  <div className="min-w-0">
+                    <h3 className="mb-1 text-base font-extrabold text-slate-900">Detailed Feedback</h3>
+                    <p className="text-[13.5px] leading-relaxed text-slate-600">
+                      Specific error identification with severity labels and rewrite suggestions.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-4 border-b border-slate-200 py-5 sm:gap-[18px]">
+                  <BookOpen className="mt-0.5 h-6 w-6 flex-shrink-0 text-purple-600" strokeWidth={1.9} />
+                  <div className="min-w-0">
+                    <h3 className="mb-1 text-base font-extrabold text-slate-900">Vocabulary Builder</h3>
+                    <p className="text-[13.5px] leading-relaxed text-slate-600">
+                      C1–C2 paraphrases and topic-specific vocabulary from your own essay.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-4 py-5 sm:gap-[18px]">
+                  <TrendingUp className="mt-0.5 h-6 w-6 flex-shrink-0 text-emerald-600" strokeWidth={1.9} />
+                  <div className="min-w-0">
+                    <h3 className="mb-1 text-base font-extrabold text-slate-900">Progress Tracking</h3>
+                    <p className="text-[13.5px] leading-relaxed text-slate-600">
+                      Charts and AI-powered insights on your writing patterns over time.
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-            {/* Video - shown first on mobile via order, sticky on desktop */}
-            <div className="order-first ipad-lg:order-last ipad-lg:sticky ipad-lg:top-8">
-              <div className="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-2xl p-4 md:p-6 border-2 border-cyan-200">
-                <h3 className="text-base md:text-lg font-bold text-slate-900 mb-3 md:mb-4">See It In Action</h3>
-
-                {/* Video Embed */}
-                <div className="relative aspect-video rounded-xl overflow-hidden shadow-2xl bg-slate-900">
+              {/* Video */}
+              <div className="relative">
+                <div className="pointer-events-none absolute -right-5 -top-5 hidden h-[220px] w-[220px] rounded-full bg-[radial-gradient(circle,rgba(8,145,178,0.14),transparent_70%)] md:block" />
+                <div className="relative aspect-video overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-sky-900 to-slate-900 shadow-[0_16px_36px_-10px_rgba(15,23,42,0.18)]">
                   <iframe
                     width="100%"
                     height="100%"
@@ -382,171 +400,59 @@ export default async function HomePage() {
                     className="absolute inset-0"
                   />
                 </div>
-
-                <p className="text-xs md:text-sm text-slate-600 mt-3 md:mt-4 text-center">
+                <p className="mt-3.5 text-center text-xs text-slate-400 sm:text-sm">
                   Watch how to submit your essay and get instant feedback in 2 minutes
                 </p>
               </div>
             </div>
-
-            {/* Feature Cards - 2×2 grid on mobile/portrait iPad, vertical stack from landscape iPad up */}
-            <div className="order-last ipad-lg:order-first grid grid-cols-2 ipad-lg:grid-cols-1 gap-3 sm:gap-4 lg:gap-6">
-              {/* Feature 1 */}
-              <Card className="group border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-br from-white to-cyan-50/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-                <FileText className="absolute right-2 top-2 h-36 w-36 lg:h-48 lg:w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
-                <CardHeader className="relative z-10 p-3 sm:p-4 md:p-6">
-                  <CardTitle className="text-sm sm:text-base lg:text-lg font-bold text-slate-900 mb-1 lg:mb-2">AI Essay Scoring</CardTitle>
-                  <CardDescription className="text-xs sm:text-sm text-slate-600 leading-relaxed hidden sm:block">
-                    Get detailed band scores for all 4 IELTS criteria with authentic examiner-level assessment
-                  </CardDescription>
-                  <CardDescription className="text-xs text-slate-600 leading-relaxed sm:hidden">
-                    Band scores for all 4 IELTS criteria
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              {/* Feature 2 */}
-              <Card className="group border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-br from-white to-blue-50/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-                <Target className="absolute right-2 top-2 h-36 w-36 lg:h-48 lg:w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
-                <CardHeader className="relative z-10 p-3 sm:p-4 md:p-6">
-                  <CardTitle className="text-sm sm:text-base lg:text-lg font-bold text-slate-900 mb-1 lg:mb-2">Detailed Feedback</CardTitle>
-                  <CardDescription className="text-xs sm:text-sm text-slate-600 leading-relaxed hidden sm:block">
-                    Receive specific error identification and actionable comments for improvement
-                  </CardDescription>
-                  <CardDescription className="text-xs text-slate-600 leading-relaxed sm:hidden">
-                    Specific errors with rewrite suggestions
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              {/* Feature 3 */}
-              <Card className="group border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-br from-white to-cyan-50/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-                <BookOpen className="absolute right-2 top-2 h-36 w-36 lg:h-48 lg:w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
-                <CardHeader className="relative z-10 p-3 sm:p-4 md:p-6">
-                  <CardTitle className="text-sm sm:text-base lg:text-lg font-bold text-slate-900 mb-1 lg:mb-2">Vocabulary Builder</CardTitle>
-                  <CardDescription className="text-xs sm:text-sm text-slate-600 leading-relaxed hidden sm:block">
-                    Generate C1-C2 paraphrases and topic-specific vocabulary suggestions
-                  </CardDescription>
-                  <CardDescription className="text-xs text-slate-600 leading-relaxed sm:hidden">
-                    C1-C2 vocab from your own essay
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              {/* Feature 4 */}
-              <Card className="group border-ocean-200 shadow-lg overflow-hidden relative bg-gradient-to-br from-white to-sky-50/30 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-                <TrendingUp className="absolute right-2 top-2 h-36 w-36 lg:h-48 lg:w-48 text-ocean-300 opacity-20 rotate-[-12deg] pointer-events-none select-none [filter:drop-shadow(0_0_16px_rgba(14,165,233,0.3))]" />
-                <CardHeader className="relative z-10 p-3 sm:p-4 md:p-6">
-                  <CardTitle className="text-sm sm:text-base lg:text-lg font-bold text-slate-900 mb-1 lg:mb-2">Progress Tracking</CardTitle>
-                  <CardDescription className="text-xs sm:text-sm text-slate-600 leading-relaxed hidden sm:block">
-                    Visualize improvement with charts and AI-powered insights on writing patterns
-                  </CardDescription>
-                  <CardDescription className="text-xs text-slate-600 leading-relaxed sm:hidden">
-                    Charts & AI insights on your writing
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </div>
-
           </div>
         </div>
       </section>
 
-      {/* Writing Prompts Library Section */}
-      <section className="bg-gradient-to-br from-slate-50 to-cyan-50/30 py-10 md:py-24">
+      {/* ============ WRITING PROMPTS LIBRARY ============ */}
+      <section className="py-14 md:py-24">
         <div className="container mx-auto px-5 sm:px-8 lg:px-6">
           <div className="mx-auto max-w-7xl">
-            <div className="grid grid-cols-1 ipad-lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
+            <div className="grid grid-cols-1 items-center gap-8 ipad-lg:grid-cols-2 ipad-lg:gap-14 lg:gap-[72px]">
 
-              {/* Left Column: Text */}
-              <div className="space-y-5 md:space-y-8">
-                <div className="space-y-3 md:space-y-4">
-
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 leading-tight">
-                    Practice with Real{' '}
-                    <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">IELTS Prompts</span>
-                  </h2>
-                  <p className="text-sm md:text-base lg:text-lg text-slate-600 leading-relaxed max-w-lg">
-                    A curated bank of Task 2 prompts — browse by topic or question type, view AI-generated outlines, and write with a built-in timer.
-                  </p>
-                </div>
-
-                {/* 3 Feature Bullets */}
-                <div className="space-y-3 sm:space-y-4">
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <div className="flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg shadow-blue-500/30">
-                      <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-slate-900 mb-0.5 text-sm sm:text-base">Prompt Bank by Topic & Question Type</p>
-                      <p className="text-xs sm:text-sm text-slate-600">7 formats including Agree/Disagree, Advantages & Disadvantages, Cause & Solution, and more — filterable by topic with your best score tracked</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <div className="flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-500 shadow-lg shadow-violet-500/30">
-                      <Lightbulb className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-slate-900 mb-0.5 text-sm sm:text-base">AI Outline Suggestions</p>
-                      <p className="text-xs sm:text-sm text-slate-600">Two AI-generated outlines per prompt to help you plan your essay structure before you start writing</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <div className="flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/30">
-                      <Timer className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-slate-900 mb-0.5 text-sm sm:text-base">Timed Writing Session</p>
-                      <p className="text-xs sm:text-sm text-slate-600">Timer starts automatically when you begin writing — drafts auto-save so you never lose your work mid-session</p>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-
-              {/* Right Column: Mock Prompt Card */}
-              <div className="flex justify-center lg:justify-end">
-                <div className="w-full max-w-md animate-float">
-                  <div className="relative rounded-2xl shadow-2xl border-2 border-cyan-200 bg-gradient-to-br from-white to-cyan-50/50 p-4 sm:p-6 space-y-3 sm:space-y-4">
-                    {/* Timer badge */}
-                    <div className="absolute top-3 right-3 sm:top-4 sm:right-4 flex items-center gap-1.5 bg-emerald-100 text-emerald-700 text-xs font-mono px-2 sm:px-2.5 py-1 rounded-full">
+              {/* Mock prompt card — shown first on iPad+ (visual before text reads better at that width), text-first only truly on mobile via order */}
+              <div className="order-first flex justify-center ipad-lg:order-last ipad-lg:justify-end">
+                <div className="w-full max-w-md">
+                  <div className="relative space-y-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_16px_40px_-12px_rgba(15,23,42,0.14)] sm:p-6">
+                    <div className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-1 font-mono text-xs text-emerald-700 sm:right-4 sm:top-4">
                       <Timer className="h-3 w-3" />
                       40:00
                     </div>
 
-                    {/* Prompt text */}
                     <div className="pr-14 sm:pr-16">
-                      <p className="text-[11px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Prompt</p>
-                      <p className="text-xs sm:text-sm md:text-base font-medium text-slate-800 leading-relaxed">
+                      <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400 sm:text-xs">Prompt</p>
+                      <p className="text-xs font-medium leading-relaxed text-slate-800 sm:text-sm md:text-base">
                         Some people think the best way to reduce crime is to give longer prison sentences. Others, however, believe there are better alternative methods.
                         <span className="text-slate-400"> Discuss both views and give your own opinion.</span>
                       </p>
                     </div>
 
-                    {/* Badges */}
                     <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                      <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-medium bg-cyan-100 text-cyan-800 border border-cyan-200">
+                      <span className="inline-flex items-center rounded-md bg-cyan-50 px-2.5 py-1 text-[11px] font-bold text-cyan-700 sm:text-xs">
                         Discussion (Both Views)
                       </span>
-                      <span className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
+                      <span className="inline-flex items-center rounded-md bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-600 sm:text-xs">
                         Society &amp; Crime
                       </span>
                     </div>
 
-                    {/* Divider */}
-                    <div className="border-t border-cyan-100" />
+                    <div className="border-t border-slate-100" />
 
-                    {/* Outline columns */}
                     <div>
-                      <p className="text-[11px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">AI Outline Suggestions</p>
+                      <p className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 sm:text-xs">AI Outline Suggestions</p>
                       <div className="grid grid-cols-2 gap-2 sm:gap-3">
                         {[1, 2].map((n) => (
-                          <div key={n} className="rounded-xl bg-gradient-to-br from-slate-50 to-blue-50/50 border border-slate-200 p-3 space-y-2">
-                            <p className="text-xs font-bold text-slate-700">Outline {n}</p>
+                          <div key={n} className="space-y-2 rounded-xl border border-slate-100 p-3">
+                            <p className="text-xs font-extrabold text-slate-700">Outline {n}</p>
                             {['Introduction', 'Body para 1', 'Body para 2', 'Conclusion'].map((item) => (
                               <div key={item} className="flex items-center gap-1.5">
-                                <div className="h-1.5 w-1.5 rounded-full bg-cyan-400 flex-shrink-0" />
-                                <div className="h-2.5 bg-slate-200 rounded flex-1" />
+                                <div className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-cyan-500" />
+                                <div className="h-2.5 flex-1 rounded bg-slate-100" />
                               </div>
                             ))}
                           </div>
@@ -557,160 +463,175 @@ export default async function HomePage() {
                 </div>
               </div>
 
+              {/* Text column */}
+              <div className="order-last space-y-5 md:space-y-8 ipad-lg:order-first">
+                <div className="space-y-3 md:space-y-4">
+                  <span className="text-xs font-bold tracking-wide text-cyan-700 sm:text-[13px]">PROMPT LIBRARY</span>
+                  <h2 className="text-2xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-3xl md:text-4xl lg:text-[34px]">
+                    Practice with real IELTS prompts
+                  </h2>
+                  <p className="max-w-lg text-sm leading-relaxed text-slate-600 md:text-base lg:text-[15.5px]">
+                    A curated bank of Task 2 prompts — browse by topic or question type, view AI-generated outlines, and write with a built-in timer.
+                  </p>
+                </div>
+
+                <div className="space-y-4 sm:space-y-[22px]">
+                  <div className="flex items-start gap-3.5 sm:gap-[14px]">
+                    <BookOpen className="mt-0.5 h-[18px] w-[18px] flex-shrink-0 text-cyan-600" strokeWidth={2.3} />
+                    <div className="min-w-0">
+                      <p className="mb-0.5 text-sm font-bold text-slate-900 sm:text-[14.5px]">Prompt bank by topic &amp; question type</p>
+                      <p className="text-xs leading-relaxed text-slate-600 sm:text-[13px]">
+                        7 formats including Agree/Disagree, Advantages &amp; Disadvantages, Cause &amp; Solution, and more.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3.5 sm:gap-[14px]">
+                    <Lightbulb className="mt-0.5 h-[18px] w-[18px] flex-shrink-0 text-cyan-600" strokeWidth={2.3} />
+                    <div className="min-w-0">
+                      <p className="mb-0.5 text-sm font-bold text-slate-900 sm:text-[14.5px]">AI outline suggestions</p>
+                      <p className="text-xs leading-relaxed text-slate-600 sm:text-[13px]">
+                        Two AI-generated outlines per prompt to help you plan your essay structure.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3.5 sm:gap-[14px]">
+                    <Timer className="mt-0.5 h-[18px] w-[18px] flex-shrink-0 text-cyan-600" strokeWidth={2.3} />
+                    <div className="min-w-0">
+                      <p className="mb-0.5 text-sm font-bold text-slate-900 sm:text-[14.5px]">Timed writing session</p>
+                      <p className="text-xs leading-relaxed text-slate-600 sm:text-[13px]">
+                        Timer starts automatically — drafts auto-save so you never lose your work.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
       </section>
 
-      {/* Band 8–9 Rewrite Section */}
-      <section className="overflow-hidden bg-gradient-to-br from-slate-50 to-violet-50/30 py-10 md:py-24">
+      {/* ============ BAND 8–9 REWRITE ============ */}
+      <section className="overflow-hidden border-y border-slate-100 bg-slate-50 py-14 md:py-24">
         <div className="container mx-auto px-5 sm:px-8 lg:px-6">
           <div className="mx-auto max-w-7xl">
-            <div className="grid grid-cols-1 ipad-lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16 items-center">
+            <div className="grid grid-cols-1 items-center gap-8 ipad-lg:grid-cols-2 ipad-lg:gap-14 lg:gap-16">
 
-              {/* Left Column: Before / After Mock */}
-              <div className="relative lg:order-first order-last min-w-0">
-                {/* Glow backdrop */}
-                <div className="absolute inset-0 -z-10 bg-gradient-to-br from-violet-100/60 via-purple-50/40 to-cyan-50/60 rounded-3xl blur-2xl scale-110" />
-
-                <div className="relative space-y-3">
+              {/* Before / After mock */}
+              <div className="order-last min-w-0 lg:order-first">
+                <div className="space-y-3">
                   {/* BEFORE card */}
-                  <div className="rounded-2xl border-2 border-red-200/80 bg-gradient-to-br from-red-50/60 to-white shadow-lg overflow-hidden">
-                    <div className="flex items-center gap-2 px-4 py-2 bg-red-50 border-b border-red-100">
+                  <div className="overflow-hidden rounded-2xl border border-red-200/80 bg-white shadow-sm">
+                    <div className="flex items-center gap-2 border-b border-red-100 bg-red-50 px-4 py-2">
                       <div className="h-2 w-2 flex-shrink-0 rounded-full bg-red-400" />
-                      <span className="text-[11px] font-semibold text-red-600 uppercase tracking-wide truncate">Your Essay — Band 6.0</span>
-                      <span className="ml-auto flex-shrink-0 text-[11px] text-red-400">Before</span>
+                      <span className="truncate text-[11px] font-semibold uppercase tracking-wide text-red-600">Your Essay — Band 6.0</span>
                     </div>
-                    <div className="px-4 py-3 space-y-2">
-                      <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-                        <span className="bg-red-100 text-red-800 line-through decoration-red-400 rounded px-0.5">Nowadays</span>
+                    <div className="space-y-2 px-4 py-3">
+                      <p className="text-xs leading-relaxed text-slate-700 sm:text-sm">
+                        <span className="rounded bg-red-100 px-0.5 text-red-800 line-through decoration-red-400">Nowadays</span>
                         {' '}many people think that{' '}
-                        <span className="bg-red-100 text-red-800 line-through decoration-red-400 rounded px-0.5">using</span>
+                        <span className="rounded bg-red-100 px-0.5 text-red-800 line-through decoration-red-400">using</span>
                         {' '}longer prison sentences is{' '}
-                        <span className="bg-red-100 text-red-800 line-through decoration-red-400 rounded px-0.5">good</span>
+                        <span className="rounded bg-red-100 px-0.5 text-red-800 line-through decoration-red-400">good</span>
                         {' '}for reducing crime.{' '}
-                        <span className="bg-red-100 text-red-800 line-through decoration-red-400 rounded px-0.5">But</span>
+                        <span className="rounded bg-red-100 px-0.5 text-red-800 line-through decoration-red-400">But</span>
                         {' '}others believe there are better ways to{' '}
-                        <span className="bg-red-100 text-red-800 line-through decoration-red-400 rounded px-0.5">deal with</span>
+                        <span className="rounded bg-red-100 px-0.5 text-red-800 line-through decoration-red-400">deal with</span>
                         {' '}this problem. In my opinion, I think both sides have valid points.
-                      </p>
-                      <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-                        The first reason why longer sentences can help is that{' '}
-                        <span className="bg-red-100 text-red-800 line-through decoration-red-400 rounded px-0.5">it stops criminals from doing crimes again</span>
-                        . When people are in prison{' '}
-                        <span className="bg-red-100 text-red-800 line-through decoration-red-400 rounded px-0.5">for a long time</span>
-                        , they cannot commit any crimes.
                       </p>
                     </div>
                   </div>
 
                   {/* Arrow connector */}
                   <div className="flex items-center justify-center py-1">
-                    <div className="flex flex-col items-center gap-1">
-                      <div className="flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-500 to-purple-600 px-4 py-1.5 shadow-lg shadow-violet-500/30">
-                        <Wand2 className="h-3.5 w-3.5 text-white" />
-                        <span className="text-xs font-bold text-white">AI Rewrite</span>
-                      </div>
-                      <div className="h-4 w-0.5 bg-gradient-to-b from-purple-400 to-cyan-400" />
+                    <div className="flex items-center gap-2 rounded-full bg-slate-900 px-4 py-1.5">
+                      <Wand2 className="h-3.5 w-3.5 text-white" />
+                      <span className="text-xs font-bold text-white">AI Rewrite</span>
                     </div>
                   </div>
 
                   {/* AFTER card */}
-                  <div className="rounded-2xl border-2 border-emerald-200/80 bg-gradient-to-br from-emerald-50/60 to-white shadow-lg overflow-hidden">
-                    <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 border-b border-emerald-100">
+                  <div className="overflow-hidden rounded-2xl border border-emerald-200/80 bg-white shadow-sm">
+                    <div className="flex items-center gap-2 border-b border-emerald-100 bg-emerald-50 px-4 py-2">
                       <div className="h-2 w-2 flex-shrink-0 rounded-full bg-emerald-500" />
-                      <span className="text-[11px] font-semibold text-emerald-700 uppercase tracking-wide truncate">AI Rewrite — Band 8.5</span>
-                      <span className="ml-auto flex-shrink-0 text-[11px] text-emerald-500">After</span>
+                      <span className="truncate text-[11px] font-semibold uppercase tracking-wide text-emerald-700">AI Rewrite — Band 8.5</span>
                     </div>
-                    <div className="px-4 py-3 space-y-2">
-                      <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-                        <span className="bg-emerald-100 text-emerald-800 font-medium rounded px-0.5">In contemporary society</span>
+                    <div className="space-y-2 px-4 py-3">
+                      <p className="text-xs leading-relaxed text-slate-700 sm:text-sm">
+                        <span className="rounded bg-emerald-100 px-0.5 font-medium text-emerald-800">In contemporary society</span>
                         {' '}there is ongoing debate regarding whether{' '}
-                        <span className="bg-emerald-100 text-emerald-800 font-medium rounded px-0.5">imposing</span>
+                        <span className="rounded bg-emerald-100 px-0.5 font-medium text-emerald-800">imposing</span>
                         {' '}lengthier custodial sentences constitutes the most{' '}
-                        <span className="bg-emerald-100 text-emerald-800 font-medium rounded px-0.5">efficacious</span>
-                        {' '}approach to curbing criminal activity.{' '}
-                        <span className="bg-emerald-100 text-emerald-800 font-medium rounded px-0.5">While proponents of this view argue for its deterrent effect,</span>
-                        {' '}others contend that rehabilitative measures yield superior outcomes.
-                      </p>
-                      <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-                        One compelling argument in favour of extended incarceration is its role in{' '}
-                        <span className="bg-emerald-100 text-emerald-800 font-medium rounded px-0.5">incapacitating repeat offenders</span>
-                        . By{' '}
-                        <span className="bg-emerald-100 text-emerald-800 font-medium rounded px-0.5">temporarily removing individuals from society</span>
-                        , the likelihood of reoffending is directly curtailed during the period of imprisonment.
+                        <span className="rounded bg-emerald-100 px-0.5 font-medium text-emerald-800">efficacious</span>
+                        {' '}approach to curbing criminal activity.
                       </p>
                     </div>
                   </div>
 
                   {/* Change log strip */}
-                  <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 sm:px-4 py-3">
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Change Log</p>
+                  <div className="rounded-xl border border-slate-200 bg-white px-3 py-3 sm:px-4">
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Change Log</p>
                     <div className="space-y-1.5">
                       {[
-                        { original: 'Nowadays', improved: 'In contemporary society', reason: 'More formal academic register' },
-                        { original: 'it stops criminals', improved: 'incapacitating repeat offenders', reason: 'Precise academic phrasing' },
-                        { original: 'But', improved: 'While proponents of this view…', reason: 'Cohesive discourse marker' },
+                        { original: 'Nowadays', improved: 'In contemporary society' },
+                        { original: 'it stops criminals', improved: 'incapacitating repeat offenders' },
                       ].map((change, i) => (
-                        <div key={i} className="flex items-start gap-2 text-xs min-w-0">
-                          <BadgeCheck className="h-3.5 w-3.5 text-emerald-500 mt-0.5 flex-shrink-0" />
+                        <div key={i} className="flex min-w-0 items-start gap-2 text-xs">
+                          <BadgeCheck className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-emerald-500" />
                           <span className="min-w-0 break-words">
-                            <span className="line-through text-red-500">{change.original}</span>
-                            <span className="text-slate-400 mx-1">→</span>
+                            <span className="text-red-500 line-through">{change.original}</span>
+                            <span className="mx-1 text-slate-400">→</span>
                             <span className="font-medium text-emerald-700">{change.improved}</span>
-                            <span className="text-slate-400 ml-1">— {change.reason}</span>
                           </span>
                         </div>
                       ))}
-                      <p className="text-xs text-slate-400 pt-1">+ 20 more changes in full rewrite</p>
+                      <p className="pt-1 text-xs text-slate-400">+ 20 more changes in full rewrite</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Right Column: Text */}
-              <div className="space-y-5 md:space-y-8 order-first lg:order-last">
+              {/* Text column */}
+              <div className="order-first space-y-5 md:space-y-8 lg:order-last">
                 <div className="space-y-3 md:space-y-4">
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 leading-tight">
-                    See Exactly How to{' '}
-                    <span className="bg-gradient-to-r from-violet-600 to-purple-500 bg-clip-text text-transparent">Write Better</span>
+                  <span className="text-xs font-bold tracking-wide text-violet-700 sm:text-[13px]">BAND 8–9 REWRITE</span>
+                  <h2 className="text-2xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-3xl md:text-4xl lg:text-[34px]">
+                    See exactly how to write better
                   </h2>
-                  <p className="text-sm md:text-base lg:text-lg text-slate-600 leading-relaxed max-w-lg">
+                  <p className="max-w-lg text-sm leading-relaxed text-slate-600 md:text-base lg:text-[15.5px]">
                     Every essay gets a full Band 8–9 rewrite — not just a score. See how an examiner-level writer would transform your exact sentences, then study the change log to understand every decision.
                   </p>
                 </div>
 
-                {/* 3 Feature Bullets */}
-                <div className="space-y-3 sm:space-y-4">
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <div className="flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-violet-500/30">
-                      <GitCompare className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-slate-900 mb-0.5 text-sm sm:text-base">Side-by-side comparison</p>
-                      <p className="text-xs sm:text-sm text-slate-600">Your original sentence next to the improved version — every substitution highlighted so you can spot the pattern</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <div className="flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg shadow-blue-500/30">
-                      <BadgeCheck className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-slate-900 mb-0.5 text-sm sm:text-base">15–30 annotated changes</p>
-                      <p className="text-xs sm:text-sm text-slate-600">Each change comes with a one-line explanation: why the original was weak and what the rewrite achieves at Band 8–9 level</p>
+                <div className="space-y-4 sm:space-y-[22px]">
+                  <div className="flex items-start gap-3.5 sm:gap-[14px]">
+                    <GitCompare className="mt-0.5 h-[18px] w-[18px] flex-shrink-0 text-violet-600" strokeWidth={2.3} />
+                    <div className="min-w-0">
+                      <p className="mb-0.5 text-sm font-bold text-slate-900 sm:text-[14.5px]">Side-by-side comparison</p>
+                      <p className="text-xs leading-relaxed text-slate-600 sm:text-[13px]">
+                        Your original sentence next to the improved version — every substitution highlighted.
+                      </p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <div className="flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/30">
-                      <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+                  <div className="flex items-start gap-3.5 sm:gap-[14px]">
+                    <BadgeCheck className="mt-0.5 h-[18px] w-[18px] flex-shrink-0 text-violet-600" strokeWidth={2.3} />
+                    <div className="min-w-0">
+                      <p className="mb-0.5 text-sm font-bold text-slate-900 sm:text-[14.5px]">15–30 annotated changes</p>
+                      <p className="text-xs leading-relaxed text-slate-600 sm:text-[13px]">
+                        Each change comes with a one-line explanation of why it improves the score.
+                      </p>
                     </div>
-                    <div>
-                      <p className="font-bold text-slate-900 mb-0.5 text-sm sm:text-base">Learn, don&apos;t just read</p>
-                      <p className="text-xs sm:text-sm text-slate-600">Vocabulary from the rewrite feeds directly into your flashcard deck — study the exact words used in a Band 8–9 context</p>
+                  </div>
+                  <div className="flex items-start gap-3.5 sm:gap-[14px]">
+                    <TrendingUp className="mt-0.5 h-[18px] w-[18px] flex-shrink-0 text-violet-600" strokeWidth={2.3} />
+                    <div className="min-w-0">
+                      <p className="mb-0.5 text-sm font-bold text-slate-900 sm:text-[14.5px]">Learn, don&apos;t just read</p>
+                      <p className="text-xs leading-relaxed text-slate-600 sm:text-[13px]">
+                        Vocabulary from the rewrite feeds directly into your flashcard deck.
+                      </p>
                     </div>
                   </div>
                 </div>
-
               </div>
 
             </div>
@@ -721,54 +642,45 @@ export default async function HomePage() {
       {/* FAQ Section */}
       <FAQSection />
 
-      {/* CTA Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-cyan-500 via-blue-500 to-cyan-600 py-12 md:py-24">
-        {/* Background decorations */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -left-20 top-20 h-96 w-96 rounded-full bg-white/10 blur-3xl animate-pulse" />
-          <div className="absolute -right-20 bottom-20 h-96 w-96 rounded-full bg-cyan-300/10 blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[32rem] w-[32rem] rounded-full bg-white/5 blur-3xl" />
-          <div className="absolute top-1/4 left-1/4 h-4 w-4 rounded-full bg-white/30 animate-float" />
-          <div className="absolute top-1/3 right-1/3 h-3 w-3 rounded-full bg-cyan-200/40 animate-float" style={{ animationDelay: '0.5s' }} />
-          <div className="absolute bottom-1/3 left-1/2 h-5 w-5 rounded-full bg-white/20 animate-float" style={{ animationDelay: '1.5s' }} />
-          <div className="absolute top-2/3 right-1/4 h-3 w-3 rounded-full bg-cyan-300/30 animate-float" style={{ animationDelay: '2s' }} />
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,#000_60%,transparent_100%)]" />
-        </div>
-
-        <div className="container relative z-10 mx-auto px-4 text-center">
-          <div className="mx-auto max-w-3xl space-y-4 md:space-y-8">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-black leading-tight text-white">
-              Ready to Achieve Your
-              <br />
-              Target Band Score?
-            </h2>
-            <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-cyan-50 px-4">
-              Start improving your IELTS writing with AI-powered feedback
-            </p>
-            <div className="pt-1 md:pt-4">
-              <Link href="/register">
+      {/* ============ CTA — asymmetric split, editorial not templated ============ */}
+      <section className="bg-sky-950">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 ipad-lg:grid-cols-[1.3fr_1fr]">
+            {/* Left: statement + action */}
+            <div className="px-5 py-14 sm:px-8 md:py-20 lg:px-8 lg:py-[88px]">
+              <h2 className="max-w-[480px] text-2xl font-extrabold leading-[1.2] tracking-tight text-white sm:text-3xl md:text-4xl lg:text-[40px] lg:leading-[1.15]">
+                Stop guessing what an examiner would say.
+              </h2>
+              <p className="mt-3 max-w-[420px] text-sm leading-relaxed text-sky-200 sm:mt-4 sm:text-base">
+                Four free essays, no card required. See your first band score in under a minute.
+              </p>
+              <Link href="/register" className="mt-6 inline-block sm:mt-10">
                 <Button
                   size="lg"
-                  className="group relative overflow-hidden bg-white text-cyan-600 hover:bg-cyan-50 hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-white/50 px-7 py-4 sm:px-8 sm:py-4 md:px-10 md:py-7 text-base sm:text-base md:text-lg font-bold rounded-2xl"
+                  className="rounded-lg bg-white px-7 py-3.5 text-sm font-bold text-sky-950 hover:bg-sky-50 sm:px-8 sm:py-4 sm:text-base"
                 >
-                  <Sparkles className="mr-2 h-4 md:h-5 w-4 md:w-5" />
-                  Get Started Free
-                  <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">→</span>
+                  <span className="flex items-center gap-2">
+                    Score my essay
+                    <Sparkles className="h-4 w-4" />
+                  </span>
                 </Button>
               </Link>
             </div>
-            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 pt-1 md:pt-4 text-white/90">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 md:h-5 w-4 md:w-5 text-cyan-200" />
-                <span className="text-sm md:text-sm font-medium">Free to start</span>
+
+            {/* Right: concrete stats, breaks the centered-button template */}
+            <div className="flex flex-col justify-center gap-6 border-t border-white/15 px-5 py-10 sm:px-8 ipad-lg:border-l ipad-lg:border-t-0 ipad-lg:py-[88px]">
+              <div>
+                <span className="text-4xl font-extrabold leading-none tracking-tight text-white lg:text-[64px]">4</span>
+                <p className="mt-2.5 max-w-[220px] text-xs leading-relaxed text-sky-200 sm:text-sm lg:text-[14px]">
+                  free essay scores when you register — no trial period, no credit card.
+                </p>
               </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 md:h-5 w-4 md:w-5 text-cyan-200" />
-                <span className="text-sm md:text-sm font-medium">No credit card</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 md:h-5 w-4 md:w-5 text-cyan-200" />
-                <span className="text-sm md:text-sm font-medium">4 free essays</span>
+              <div className="h-px bg-white/15" />
+              <div>
+                <span className="text-3xl font-extrabold leading-none tracking-tight text-white lg:text-[36px]">8s</span>
+                <p className="mt-2.5 max-w-[220px] text-xs leading-relaxed text-sky-200 sm:text-sm lg:text-[14px]">
+                  average time to your first band score.
+                </p>
               </div>
             </div>
           </div>
