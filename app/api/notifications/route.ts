@@ -12,12 +12,21 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role, email')
-      .eq('id', user.id)
-      .single()
+    const { searchParams } = new URL(request.url)
+    const unreadOnly = searchParams.get('unread_only') === 'true'
+    const shouldMarkRead = searchParams.get('mark_read') === 'true'
+    const page = parseInt(searchParams.get('page') || '1', 10)
+    const limit = 10
+    const offset = (page - 1) * limit
 
+    // profile + all-of-user's read ids never depend on each other — fetch in parallel
+    // instead of two sequential round-trips.
+    const [profileResult, readsResult] = await Promise.all([
+      supabase.from('profiles').select('role, email').eq('id', user.id).single(),
+      supabase.from('notification_reads').select('notification_id').eq('user_id', user.id),
+    ])
+
+    const profile = profileResult.data
     if (!profile) {
       return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
     }
@@ -29,18 +38,11 @@ export async function GET(request: Request) {
     if (isPro) applicableAudiences.push('pro')
     if (!isPro) applicableAudiences.push('free')
 
-    const { searchParams } = new URL(request.url)
-    const unreadOnly = searchParams.get('unread_only') === 'true'
-    const shouldMarkRead = searchParams.get('mark_read') === 'true'
-
-    const { data: reads } = await supabase
-      .from('notification_reads')
-      .select('notification_id')
-      .eq('user_id', user.id)
-
-    const readIds = new Set(reads?.map(r => r.notification_id) || [])
+    const readIds = new Set(readsResult.data?.map(r => r.notification_id) || [])
 
     if (unreadOnly) {
+      // Only need ids here, and only for computing a count — cheaper than
+      // selecting full rows for a value the client discards.
       const { data: allNotifications } = await supabase
         .from('notifications')
         .select('id')
@@ -50,17 +52,22 @@ export async function GET(request: Request) {
       return NextResponse.json({ unreadCount })
     }
 
-    const page = parseInt(searchParams.get('page') || '1', 10)
-    const limit = 10
-    const offset = (page - 1) * limit
+    // Page of notifications + (when needed) the full id list used to mark
+    // everything read run in parallel — the mark-read pass needs ids beyond
+    // the current page, but it doesn't need to wait on the paginated fetch.
+    const [pageResult, allIdsResult] = await Promise.all([
+      supabase
+        .from('notifications')
+        .select('*', { count: 'exact' })
+        .in('target_audience', applicableAudiences)
+        .order('created_at', { ascending: false })
+        .range(offset, offset + limit - 1),
+      shouldMarkRead
+        ? supabase.from('notifications').select('id').in('target_audience', applicableAudiences)
+        : Promise.resolve({ data: null }),
+    ])
 
-    const { data: notifications, count, error } = await supabase
-      .from('notifications')
-      .select('*', { count: 'exact' })
-      .in('target_audience', applicableAudiences)
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1)
-
+    const { data: notifications, count, error } = pageResult
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
@@ -70,16 +77,8 @@ export async function GET(request: Request) {
       is_read: readIds.has(n.id),
     })) || []
 
-    // Mark all applicable notifications as read, reusing the ids/reads already
-    // fetched above instead of issuing separate queries (avoids a second
-    // round-trip pair when the caller wants list + mark-read together).
     if (shouldMarkRead) {
-      const { data: allNotifications } = await supabase
-        .from('notifications')
-        .select('id')
-        .in('target_audience', applicableAudiences)
-
-      const unreadIds = (allNotifications || [])
+      const unreadIds = (allIdsResult.data || [])
         .map(n => n.id)
         .filter(id => !readIds.has(id))
 

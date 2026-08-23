@@ -7,8 +7,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { Bell, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
 import { format } from 'date-fns'
 import type { NotificationWithReadStatus } from '@/types/notification'
@@ -56,107 +54,101 @@ export function NotificationsModal({ open, onOpenChange, onMarkedRead }: Notific
   const displayed = showUnreadOnly
     ? notifications.filter(n => !n.is_read)
     : notifications
+  const unreadCount = notifications.filter(n => !n.is_read).length
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg sm:max-w-xl md:max-w-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-ocean-800 to-cyan-700 bg-clip-text text-transparent">
+      <DialogContent className="max-w-lg gap-0 p-0 sm:max-w-xl md:max-w-2xl">
+        <DialogHeader className="space-y-0 px-6 pb-0 pt-5">
+          <DialogTitle className="text-lg font-extrabold text-ocean-900">
             Notifications
           </DialogTitle>
-          <p className="text-ocean-600 text-sm">
+          <p className="mb-3.5 text-[12.5px] text-slate-500">
             Updates and announcements from IELTS4Life
           </p>
-        </DialogHeader>
 
-        <div className="flex gap-2">
-          <Button
-            variant={!showUnreadOnly ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setShowUnreadOnly(false)}
-            className={!showUnreadOnly ? 'bg-cyan-600 hover:bg-cyan-700' : 'border-ocean-300'}
-          >
-            All
-          </Button>
-          <Button
-            variant={showUnreadOnly ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setShowUnreadOnly(true)}
-            className={showUnreadOnly ? 'bg-cyan-600 hover:bg-cyan-700' : 'border-ocean-300'}
-          >
-            Unread
-          </Button>
-        </div>
+          <div className="-mx-6 flex gap-4 border-b border-slate-100 px-6">
+            <button
+              onClick={() => setShowUnreadOnly(false)}
+              className={`border-b-2 pb-2.5 text-[13px] font-bold transition-colors ${
+                !showUnreadOnly ? 'border-cyan-600 text-cyan-700' : 'border-transparent text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setShowUnreadOnly(true)}
+              className={`flex items-center gap-1.5 border-b-2 pb-2.5 text-[13px] font-bold transition-colors ${
+                showUnreadOnly ? 'border-cyan-600 text-cyan-700' : 'border-transparent text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              Unread
+              {unreadCount > 0 && (
+                <span className="rounded-full bg-red-600 px-1.5 py-px text-[10.5px] font-extrabold text-white">
+                  {unreadCount}
+                </span>
+              )}
+            </button>
+          </div>
+        </DialogHeader>
 
         {isLoading ? (
           <div className="flex items-center justify-center py-16">
             <Loader2 className="h-8 w-8 animate-spin text-cyan-600" />
           </div>
         ) : displayed.length === 0 ? (
-          <Card>
-            <CardContent className="py-12 text-center">
-              <Bell className="h-12 w-12 mx-auto mb-4 text-ocean-300" />
-              <p className="text-ocean-600">
-                {showUnreadOnly ? 'No unread notifications' : 'No notifications yet'}
-              </p>
-            </CardContent>
-          </Card>
+          <div className="py-14 text-center">
+            <Bell className="mx-auto mb-3.5 h-10 w-10 text-slate-200" />
+            <p className="text-sm text-slate-500">
+              {showUnreadOnly ? 'No unread notifications' : 'No notifications yet'}
+            </p>
+          </div>
         ) : (
-          <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-1">
+          <div className={`max-h-[50vh] overflow-y-auto ${totalPages <= 1 ? 'pb-2' : ''}`}>
             {displayed.map(notification => (
-              <Card
+              <div
                 key={notification.id}
-                className={`transition-shadow hover:shadow-md ${
-                  !notification.is_read ? 'border-l-4 border-l-cyan-500' : ''
+                className={`flex gap-3 border-b border-slate-50 px-6 py-4 last:border-b-0 ${
+                  !notification.is_read ? 'bg-cyan-50/40' : ''
                 }`}
               >
-                <CardHeader className="pb-2">
-                  <div className="flex items-start justify-between gap-3">
-                    <CardTitle className="text-base text-slate-900">
-                      {notification.title}
-                    </CardTitle>
-                    {!notification.is_read && (
-                      <span className="flex-shrink-0 mt-1 flex h-2 w-2 rounded-full bg-red-500" />
-                    )}
-                  </div>
-                  <p className="text-xs text-slate-500">
-                    {format(new Date(notification.created_at), 'MMM dd, yyyy · HH:mm')}
-                  </p>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-slate-700 whitespace-pre-wrap">
+                <span className={`mt-1.5 h-[7px] w-[7px] flex-shrink-0 rounded-full ${!notification.is_read ? 'bg-cyan-600' : ''}`} />
+                <div className="min-w-0 flex-1">
+                  <span className={`block text-sm font-extrabold ${notification.is_read ? 'text-slate-700' : 'text-slate-900'}`}>
+                    {notification.title}
+                  </span>
+                  <p className={`mb-1.5 mt-1 whitespace-pre-wrap text-[12.5px] leading-relaxed ${notification.is_read ? 'text-slate-400' : 'text-slate-600'}`}>
                     {notification.content}
                   </p>
-                </CardContent>
-              </Card>
+                  <span className={`text-[11px] ${notification.is_read ? 'text-slate-300' : 'text-slate-400'}`}>
+                    {format(new Date(notification.created_at), 'MMM d, yyyy · HH:mm')}
+                  </span>
+                </div>
+              </div>
             ))}
           </div>
         )}
 
         {totalPages > 1 && (
-          <div className="flex items-center justify-between pt-2">
-            <p className="text-sm text-ocean-600">
+          <div className="flex items-center justify-between border-t border-slate-100 px-6 py-3">
+            <span className="text-xs text-slate-400">
               Page {currentPage} of {totalPages}
-            </p>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
+            </span>
+            <div className="flex items-center gap-1.5">
+              <button
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="border-ocean-300"
+                className="flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 disabled:opacity-40"
               >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
+                <ChevronLeft className="h-3.5 w-3.5" />
+              </button>
+              <button
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
-                className="border-ocean-300"
+                className="flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 disabled:opacity-40"
               >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
+                <ChevronRight className="h-3.5 w-3.5" />
+              </button>
             </div>
           </div>
         )}
