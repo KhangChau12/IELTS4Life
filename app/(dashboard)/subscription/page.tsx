@@ -196,7 +196,7 @@ export default async function SubscriptionPage() {
             <Sparkles className="h-[18px] w-[18px] flex-shrink-0 text-amber-700" />
             <div>
               <span className="text-[13px] font-bold text-amber-900">Limited-time offer</span>
-              <span className="ml-1.5 text-xs text-amber-700">Pro 25% off · Essay Pack 40% off</span>
+              <span className="ml-1.5 text-xs text-amber-700">Pro {pricing.pro.discountPct}% off · Essay Pack {pricing.pack.discountPct}% off</span>
             </div>
           </div>
           <div className="flex items-center gap-2 sm:flex-col sm:items-end sm:gap-0">
