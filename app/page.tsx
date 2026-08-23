@@ -77,7 +77,7 @@ export default async function HomePage() {
         name: 'Is IELTS4Life really free to use?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes. No credit card needed. You get 4 free essay submissions the moment you register. Guest users (no account) get 1 free attempt.',
+          text: 'Yes. No credit card needed. You get 5 free essay submissions the moment you register. Guest users (no account) get 1 free attempt.',
         },
       },
       {
@@ -174,7 +174,7 @@ export default async function HomePage() {
 
               {/* Text column */}
               <div className="space-y-5 text-center lg:space-y-6 lg:text-left">
-                <h1 className="text-[28px] leading-[1.18] font-extrabold tracking-tight text-slate-900 sm:text-4xl md:text-[40px] lg:text-[54px] lg:leading-[1.06]">
+                <h1 className="mx-auto max-w-[560px] text-[28px] leading-[1.18] font-extrabold tracking-tight text-slate-900 sm:text-4xl md:text-[40px] lg:mx-0 lg:text-[44px] lg:leading-[1.15]">
                   Know exactly why your essay scored what it did.
                 </h1>
                 <p className="text-xs font-bold text-cyan-700 sm:text-sm lg:text-[13.5px]">
@@ -206,7 +206,7 @@ export default async function HomePage() {
                       Browse prompt library
                     </Link>
 
-                    <p className="text-xs text-slate-400">No sign-up needed · Instant results · 4 free essays</p>
+                    <p className="text-xs text-slate-400">No sign-up needed · Instant results · 5 free essays</p>
                   </div>
                 )}
               </div>
@@ -652,7 +652,7 @@ export default async function HomePage() {
                 Stop guessing what an examiner would say.
               </h2>
               <p className="mt-3 max-w-[420px] text-sm leading-relaxed text-sky-200 sm:mt-4 sm:text-base">
-                Four free essays, no card required. See your first band score in under a minute.
+                Five free essays, no card required. See your first band score in under a minute.
               </p>
               <Link href="/register" className="mt-6 inline-block sm:mt-10">
                 <Button
@@ -670,7 +670,7 @@ export default async function HomePage() {
             {/* Right: concrete stats, breaks the centered-button template */}
             <div className="flex flex-col justify-center gap-6 border-t border-white/15 px-5 py-10 sm:px-8 ipad-lg:border-l ipad-lg:border-t-0 ipad-lg:py-[88px]">
               <div>
-                <span className="text-4xl font-extrabold leading-none tracking-tight text-white lg:text-[64px]">4</span>
+                <span className="text-4xl font-extrabold leading-none tracking-tight text-white lg:text-[64px]">5</span>
                 <p className="mt-2.5 max-w-[220px] text-xs leading-relaxed text-sky-200 sm:text-sm lg:text-[14px]">
                   free essay scores when you register — no trial period, no credit card.
                 </p>

@@ -33,7 +33,7 @@ const faqs: FAQItem[] = [
     tag: 'general',
     question: 'Is IELTS4Life really free to use?',
     answer:
-      'Yes. No credit card needed. You get 4 free essay submissions the moment you register — enough to see real progress before deciding whether to upgrade. Guest users (no account) get 1 free attempt.',
+      'Yes. No credit card needed. You get 5 free essay submissions the moment you register — enough to see real progress before deciding whether to upgrade. Guest users (no account) get 1 free attempt.',
   },
   {
     tag: 'general',
@@ -97,13 +97,13 @@ const faqs: FAQItem[] = [
     tag: 'privacy',
     question: 'What is the difference between Free and Pro?',
     answer:
-      'Free users get 4 total essay submissions (3 per day). Pro users get 5 essays per day with no total cap — plus all the same features. Pro is 100,000 VND/month (≈ $4 USD). PTNK students with an @ptnk.edu.vn email get Pro access for free.',
+      'Free users get 5 total essay submissions (3 per day). Pro users get 5 essays per day with no total cap — plus all the same features. Pro is 75,000 VND/month (≈ $3 USD). PTNK students with an @ptnk.edu.vn email get Pro access for free.',
   },
   {
     tag: 'privacy',
     question: 'What is the Essay Pack?',
     answer:
-      'If you just need more essays without a monthly subscription, the Essay Pack adds 15 essays to your account for 50,000 VND — a one-time purchase. Great for exam season when you want to practice intensively for a short period.',
+      'If you just need more essays without a monthly subscription, the Essay Pack adds 15 essays to your account for 45,000 VND — a one-time purchase. Great for exam season when you want to practice intensively for a short period.',
   },
   {
     tag: 'privacy',

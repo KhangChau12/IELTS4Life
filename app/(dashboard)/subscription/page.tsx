@@ -227,13 +227,13 @@ export default async function SubscriptionPage() {
             <div className="flex items-start gap-2">
               <Check className="mt-0.5 h-[15px] w-[15px] flex-shrink-0 text-emerald-600" strokeWidth={2.6} />
               <span className="text-[13px] text-slate-700">
-                <strong className="font-bold">3 essays/day</strong> with AI scoring
+                <strong className="font-bold">{dailyQuota} essays/day</strong> with AI scoring
               </span>
             </div>
             <div className="flex items-start gap-2">
               <Check className="mt-0.5 h-[15px] w-[15px] flex-shrink-0 text-emerald-600" strokeWidth={2.6} />
               <span className="text-[13px] text-slate-700">
-                <strong className="font-bold">4 essays base</strong> — earn more by inviting
+                <strong className="font-bold">{baseTotalQuota} essays base</strong> — earn more by inviting
               </span>
             </div>
             <div className="flex items-start gap-2">
@@ -362,7 +362,7 @@ export default async function SubscriptionPage() {
             </div>
             <div className="flex items-start gap-2">
               <Check className="mt-0.5 h-[15px] w-[15px] flex-shrink-0 text-emerald-600" strokeWidth={2.6} />
-              <span className="text-[13px] text-slate-700">Keeps daily limit (3/day)</span>
+              <span className="text-[13px] text-slate-700">Keeps daily limit ({dailyQuota}/day)</span>
             </div>
           </div>
 

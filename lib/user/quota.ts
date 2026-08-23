@@ -13,7 +13,7 @@ export function getDailyQuota(email: string): number {
 
 export function getTotalQuota(email: string): number | null {
   if (email.endsWith('@ptnk.edu.vn')) return null
-  return 4
+  return 5
 }
 
 /**

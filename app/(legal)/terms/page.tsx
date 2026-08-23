@@ -75,7 +75,7 @@ export default function TermsOfServicePage() {
                 <tr>
                   <td className="px-4 py-2 font-medium">Free</td>
                   <td className="px-4 py-2">Free</td>
-                  <td className="px-4 py-2">3 essays/day, 4 total</td>
+                  <td className="px-4 py-2">3 essays/day, 5 total</td>
                 </tr>
                 <tr>
                   <td className="px-4 py-2 font-medium">Pro</td>
@@ -84,7 +84,7 @@ export default function TermsOfServicePage() {
                 </tr>
                 <tr>
                   <td className="px-4 py-2 font-medium">Essay Pack</td>
-                  <td className="px-4 py-2">50,000 VND (one-time)</td>
+                  <td className="px-4 py-2">45,000 VND (one-time)</td>
                   <td className="px-4 py-2">+15 bonus essays added to your account</td>
                 </tr>
               </tbody>

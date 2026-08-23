@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from '@/components/ui/button'
 import { Crown, CheckCircle, Clock, Users, Zap } from 'lucide-react'
 import Link from 'next/link'
+import { getPricing } from '@/lib/pricing'
 
 interface QuotaExhaustedModalProps {
   open: boolean
@@ -13,6 +14,8 @@ interface QuotaExhaustedModalProps {
 }
 
 export function QuotaExhaustedModal({ open, onOpenChange, type, lastEssayId }: QuotaExhaustedModalProps) {
+  const pricing = getPricing()
+
   if (type === 'daily') {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
@@ -136,7 +139,7 @@ export function QuotaExhaustedModal({ open, onOpenChange, type, lastEssayId }: Q
             <Link href="/subscription" className="flex-1">
               <Button className="w-full bg-gradient-to-r from-ocean-600 to-cyan-600 hover:from-ocean-700 hover:to-cyan-700 text-white font-semibold">
                 <Zap className="h-4 w-4 mr-2" />
-                Upgrade to Pro — 100K VND/mo
+                Upgrade to Pro — {(pricing.pro.current / 1000).toFixed(0)}K VND/mo
               </Button>
             </Link>
             <Link href="/invite" className="flex-shrink-0">
