@@ -107,7 +107,7 @@ export function EssayImprovement({
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Progress simulation - 3 seconds for improvement (Groq is fast!)
+  // Progress simulation - 3 seconds for improvement
   useEffect(() => {
     if (!isGenerating) {
       return // Don't create interval if not generating

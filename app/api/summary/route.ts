@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase/server'
-import { createGroqClient, MODELS } from '@/lib/openai/client'
+import { createOpenRouterClient, MODELS, OPENROUTER_FAST } from '@/lib/openai/client'
+import { ERROR_SUMMARY_JSON_SCHEMA } from '@/lib/openai/schema'
 import { ERROR_SUMMARY_PROMPT } from '@/lib/openai/prompts'
 import type { ErrorSummary } from '@/types/user'
 
@@ -51,9 +52,9 @@ export async function POST() {
       )
     }
 
-    // Call Groq to summarize errors (with key rotation)
-    const groqClient = createGroqClient()
-    const completion = await groqClient.chat.completions.create({
+    // Call OpenRouter (DeepSeek V4 Flash) to summarize errors
+    const openRouterClient = createOpenRouterClient()
+    const completion = await openRouterClient.chat.completions.create({
       model: MODELS.ERROR_SUMMARY,
       messages: [
         {
@@ -65,8 +66,9 @@ export async function POST() {
           content: `Recent errors:\n${recentErrors.map((e, i) => `${i + 1}. ${e}`).join('\n')}`,
         },
       ],
-      response_format: { type: 'json_object' },
+      response_format: { type: 'json_schema', json_schema: ERROR_SUMMARY_JSON_SCHEMA },
       temperature: 0.5,
+      ...OPENROUTER_FAST,
     })
 
     const summary: ErrorSummary = JSON.parse(

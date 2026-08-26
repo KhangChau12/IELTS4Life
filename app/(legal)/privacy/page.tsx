@@ -68,7 +68,7 @@ export default function PrivacyPolicyPage() {
         <section>
           <h2 className="text-xl font-semibold text-slate-800 mb-3">3. How We Use Your Information</h2>
           <ul className="list-disc list-inside space-y-2 text-slate-600">
-            <li>Provide AI essay scoring using Groq (Llama 3.3-70B) and vocabulary generation using OpenAI GPT-4o.</li>
+            <li>Provide AI essay scoring using OpenRouter (DeepSeek V4 Flash) and vocabulary generation using OpenAI GPT-4o.</li>
             <li>Display your score history, vocabulary progress, and learning statistics on your dashboard.</li>
             <li>Enforce daily and total essay quotas based on your subscription tier.</li>
             <li>Process payments and activate Pro subscriptions or Essay Pack bonuses.</li>
@@ -93,7 +93,7 @@ export default function PrivacyPolicyPage() {
               <tbody className="divide-y divide-slate-100">
                 <tr><td className="px-4 py-2">Supabase</td><td className="px-4 py-2">Database storage and user authentication</td></tr>
                 <tr><td className="px-4 py-2">Google OAuth</td><td className="px-4 py-2">Sign-in with Google (optional)</td></tr>
-                <tr><td className="px-4 py-2">Groq API</td><td className="px-4 py-2">AI essay scoring (Llama 3.3-70B)</td></tr>
+                <tr><td className="px-4 py-2">OpenRouter</td><td className="px-4 py-2">AI essay scoring (DeepSeek V4 Flash)</td></tr>
                 <tr><td className="px-4 py-2">OpenAI</td><td className="px-4 py-2">Vocabulary generation (GPT-4o)</td></tr>
                 <tr><td className="px-4 py-2">SePay / MB Bank</td><td className="px-4 py-2">Payment processing</td></tr>
                 <tr><td className="px-4 py-2">FingerprintJS</td><td className="px-4 py-2">Device fingerprinting for guest users</td></tr>
@@ -102,7 +102,7 @@ export default function PrivacyPolicyPage() {
             </table>
           </div>
           <p className="text-slate-600 leading-relaxed mt-3">
-            Your essay content is transmitted to Groq and OpenAI APIs for processing. We do not sell this
+            Your essay content is transmitted to OpenRouter and OpenAI APIs for processing. We do not sell this
             data to third parties or use it for advertising purposes.
           </p>
         </section>

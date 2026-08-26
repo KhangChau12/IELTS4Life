@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
 import { createServiceRoleClient } from '@/lib/supabase/service'
-import { createGroqClient, MODELS } from '@/lib/openai/client'
+import { createOpenRouterClient, MODELS, OPENROUTER_FAST } from '@/lib/openai/client'
 import { PROMPT_CLASSIFICATION_SYSTEM_PROMPT } from '@/lib/openai/prompts'
+import { PROMPT_CLASSIFICATION_JSON_SCHEMA } from '@/lib/openai/schema'
 import { QUESTION_TYPES } from '@/types/prompt'
 import { logger } from '@/lib/logger'
 
@@ -60,9 +61,9 @@ export async function POST(request: Request) {
 
     const questionTypesList = Object.entries(QUESTION_TYPES).map(([key, label]) => ({ key, label }))
 
-    // Call Groq to classify the prompt (8s timeout to leave room for DB ops within serverless limit)
-    const groqClient = createGroqClient()
-    const completion = await groqClient.chat.completions.create(
+    // Call OpenRouter (DeepSeek V4 Flash) to classify the prompt (8s timeout to leave room for DB ops within serverless limit)
+    const openRouterClient = createOpenRouterClient()
+    const completion = await openRouterClient.chat.completions.create(
       {
         model: MODELS.ESSAY_SCORING,
         messages: [
@@ -75,14 +76,15 @@ export async function POST(request: Request) {
             content: prompt_text,
           },
         ],
-        response_format: { type: 'json_object' },
+        response_format: { type: 'json_schema', json_schema: PROMPT_CLASSIFICATION_JSON_SCHEMA },
         temperature: 0.1,
+        ...OPENROUTER_FAST,
       },
       { timeout: 8000 }
     )
 
     const raw = completion.choices[0].message.content || '{}'
-    let result: { valid: boolean; topic_id?: string; question_type?: string; reason?: string }
+    let result: { valid: boolean; topic_id: string | null; question_type: string | null; reason: string | null }
 
     try {
       result = JSON.parse(raw)

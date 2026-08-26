@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase/server'
 import { createServiceRoleClient } from '@/lib/supabase/service'
-import { createGroqClient, MODELS } from '@/lib/openai/client'
+import { createOpenRouterClient, MODELS, OPENROUTER_FAST } from '@/lib/openai/client'
 import { OUTLINE_GENERATION_PROMPT } from '@/lib/openai/prompts'
+import { OUTLINE_GENERATION_JSON_SCHEMA } from '@/lib/openai/schema'
 
 export async function POST(
   _request: Request,
@@ -40,9 +41,9 @@ export async function POST(
       return NextResponse.json({ error: 'Prompt not found' }, { status: 404 })
     }
 
-    // Generate outlines via Groq
-    const groqClient = createGroqClient()
-    const completion = await groqClient.chat.completions.create({
+    // Generate outlines via OpenRouter (DeepSeek V4 Flash)
+    const openRouterClient = createOpenRouterClient()
+    const completion = await openRouterClient.chat.completions.create({
       model: MODELS.OUTLINE_GENERATION,
       messages: [
         {
@@ -50,8 +51,9 @@ export async function POST(
           content: OUTLINE_GENERATION_PROMPT(prompt.question_type, prompt.prompt_text),
         },
       ],
-      response_format: { type: 'json_object' },
+      response_format: { type: 'json_schema', json_schema: OUTLINE_GENERATION_JSON_SCHEMA },
       temperature: 0.7,
+      ...OPENROUTER_FAST,
     })
 
     const result = JSON.parse(completion.choices[0].message.content || '{}')

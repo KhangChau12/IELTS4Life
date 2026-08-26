@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase/server'
-import { createGroqClient, MODELS } from '@/lib/openai/client'
+import { createOpenRouterClient, MODELS, OPENROUTER_FAST } from '@/lib/openai/client'
 import { DETAILED_WRITING_GUIDANCE_PROMPT } from '@/lib/openai/prompts'
+import { DETAILED_GUIDANCE_JSON_SCHEMA } from '@/lib/openai/schema'
 import { rateLimiters, checkRateLimit } from '@/lib/rate-limit'
 
 export async function POST(request: Request) {
@@ -103,9 +104,9 @@ export async function POST(request: Request) {
       },
     }
 
-    // Call Groq to generate detailed guidance (with key rotation)
-    const groqClient = createGroqClient()
-    const completion = await groqClient.chat.completions.create({
+    // Call OpenRouter (DeepSeek V4 Flash) to generate detailed guidance
+    const openRouterClient = createOpenRouterClient()
+    const completion = await openRouterClient.chat.completions.create({
       model: MODELS.ESSAY_SCORING, // Use same model as scoring
       messages: [
         {
@@ -145,8 +146,9 @@ Grammatical Accuracy: ${context.strengths.grammatical_accuracy.join('; ') || 'No
 Provide personalized, specific guidance to help this student improve their next essay.`,
         },
       ],
-      response_format: { type: 'json_object' },
+      response_format: { type: 'json_schema', json_schema: DETAILED_GUIDANCE_JSON_SCHEMA },
       temperature: 0.7,
+      ...OPENROUTER_FAST,
     })
 
     const guidance = JSON.parse(

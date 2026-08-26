@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase/server'
-import { createGroqClient, MODELS } from '@/lib/openai/client'
+import { createOpenRouterClient, MODELS, OPENROUTER_FAST } from '@/lib/openai/client'
 import { ESSAY_IMPROVEMENT_PROMPT } from '@/lib/openai/prompts'
+import { ESSAY_IMPROVEMENT_JSON_SCHEMA } from '@/lib/openai/schema'
 import { rateLimiters, checkRateLimit } from '@/lib/rate-limit'
 import { logger } from '@/lib/logger'
 
@@ -67,9 +68,9 @@ export async function POST(request: Request) {
       })
     }
 
-    // Call Groq to improve the essay (with key rotation)
-    const groqClient = createGroqClient()
-    const completion = await groqClient.chat.completions.create({
+    // Call OpenRouter (DeepSeek V4 Flash) to improve the essay
+    const openRouterClient = createOpenRouterClient()
+    const completion = await openRouterClient.chat.completions.create({
       model: MODELS.ESSAY_IMPROVEMENT,
       messages: [
         {
@@ -81,8 +82,9 @@ export async function POST(request: Request) {
           content: `Essay Prompt: ${essay.prompt}\n\nStudent's Essay (Band ${essay.overall_score || 'N/A'}):\n${essay.essay_content}\n\nPlease provide an improved Band 8-9 version.`,
         },
       ],
-      response_format: { type: 'json_object' },
+      response_format: { type: 'json_schema', json_schema: ESSAY_IMPROVEMENT_JSON_SCHEMA },
       temperature: 0.7,
+      ...OPENROUTER_FAST,
     })
 
     const result = JSON.parse(
