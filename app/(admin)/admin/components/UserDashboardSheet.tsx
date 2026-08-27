@@ -20,7 +20,14 @@ import {
   Eye,
   ChevronDown,
   ChevronUp,
+  Wallet,
 } from 'lucide-react'
+
+function formatVND(amount: number): string {
+  if (amount >= 1_000_000) return `${(amount / 1_000_000).toFixed(1)}M₫`
+  if (amount >= 1_000) return `${(amount / 1_000).toFixed(0)}K₫`
+  return `${amount}₫`
+}
 
 interface AdminUser {
   id: string
@@ -67,6 +74,7 @@ interface DashboardData {
     totalEssays: number
     averageScore: number | null
     latestScore: number | null
+    totalSpent: number
   }
   userStats: {
     vocabulary: { total: number; essaysWithoutVocab: number }
@@ -245,6 +253,12 @@ export function UserDashboardSheet({ user, onClose }: UserDashboardSheetProps) {
                   <div className="flex items-center gap-1.5 text-xs text-ocean-700 bg-white border border-ocean-200 rounded-full px-3 py-1">
                     <GraduationCap className="h-3.5 w-3.5 text-amber-500" />
                     <span className="font-semibold">Band {data.stats.averageScore.toFixed(1)}</span> avg
+                  </div>
+                )}
+                {data.stats.totalSpent > 0 && (
+                  <div className="flex items-center gap-1.5 text-xs text-ocean-700 bg-white border border-ocean-200 rounded-full px-3 py-1">
+                    <Wallet className="h-3.5 w-3.5 text-emerald-600" />
+                    <span className="font-semibold">{formatVND(data.stats.totalSpent)}</span> spent
                   </div>
                 )}
               </div>

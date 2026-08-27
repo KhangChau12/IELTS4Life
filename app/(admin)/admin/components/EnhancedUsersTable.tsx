@@ -16,6 +16,7 @@ interface User {
   role: string
   essay_count: number
   quiz_total_attempts: number
+  total_spent: number
 }
 
 interface EnhancedUsersTableProps {
@@ -23,8 +24,14 @@ interface EnhancedUsersTableProps {
   onUserClick: (user: User) => void
 }
 
-type SortField = 'email' | 'created_at' | 'essay_count' | 'quiz_total_attempts'
+type SortField = 'email' | 'created_at' | 'essay_count' | 'quiz_total_attempts' | 'total_spent'
 type SortOrder = 'asc' | 'desc'
+
+function formatVND(amount: number): string {
+  if (amount >= 1_000_000) return `${(amount / 1_000_000).toFixed(1)}M₫`
+  if (amount >= 1_000) return `${(amount / 1_000).toFixed(0)}K₫`
+  return `${amount}₫`
+}
 
 export function EnhancedUsersTable({ users, onUserClick }: EnhancedUsersTableProps) {
   const [searchTerm, setSearchTerm] = useState('')
@@ -142,6 +149,14 @@ export function EnhancedUsersTable({ users, onUserClick }: EnhancedUsersTablePro
                       <span className="font-semibold text-violet-600">
                         {user.quiz_total_attempts} quizzes
                       </span>
+                      {user.total_spent > 0 && (
+                        <>
+                          <span className="text-ocean-500">·</span>
+                          <span className="font-semibold text-emerald-600">
+                            {formatVND(user.total_spent)}
+                          </span>
+                        </>
+                      )}
                       <Eye className="h-3.5 w-3.5 text-ocean-400 ml-1" />
                     </div>
                   </div>
@@ -186,6 +201,15 @@ export function EnhancedUsersTable({ users, onUserClick }: EnhancedUsersTablePro
                     </th>
                     <th className="text-left py-3 px-4">
                       <button
+                        onClick={() => handleSort('total_spent')}
+                        className="flex items-center gap-2 text-ocean-700 font-semibold text-sm hover:text-ocean-900 transition-colors"
+                      >
+                        Spent
+                        <ArrowUpDown className="h-3 w-3" />
+                      </button>
+                    </th>
+                    <th className="text-left py-3 px-4">
+                      <button
                         onClick={() => handleSort('created_at')}
                         className="flex items-center gap-2 text-ocean-700 font-semibold text-sm hover:text-ocean-900 transition-colors"
                       >
@@ -218,6 +242,15 @@ export function EnhancedUsersTable({ users, onUserClick }: EnhancedUsersTablePro
                         <span className="inline-flex items-center gap-1 text-sm font-semibold text-violet-600">
                           {user.quiz_total_attempts}
                         </span>
+                      </td>
+                      <td className="py-3 px-4">
+                        {user.total_spent > 0 ? (
+                          <span className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-600">
+                            {formatVND(user.total_spent)}
+                          </span>
+                        ) : (
+                          <span className="text-ocean-400 italic text-sm">—</span>
+                        )}
                       </td>
                       <td className="py-3 px-4 text-ocean-600 text-sm">
                         {format(new Date(user.created_at), 'MMM dd, yyyy HH:mm')}

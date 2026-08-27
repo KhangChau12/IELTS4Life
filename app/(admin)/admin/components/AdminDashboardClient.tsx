@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { RefreshCw, Search, AlertTriangle, ThumbsDown, ChevronLeft, ChevronRight, Eye } from 'lucide-react'
+import { RefreshCw, Search, AlertTriangle, ThumbsDown, ChevronLeft, ChevronRight, Eye, ArrowUpDown } from 'lucide-react'
 import { UserDashboardSheet } from './UserDashboardSheet'
 import { format } from 'date-fns'
 import type { AdminStats } from '@/types/admin'
@@ -12,14 +12,18 @@ interface AdminDashboardClientProps {
   initialStats: AdminStats
 }
 
+type UserSortField = 'essay_count' | 'quiz_total_attempts' | 'total_spent' | 'created_at'
+
 function formatVND(amount: number): string {
-  if (amount >= 1_000_000) {
-    return `${(amount / 1_000_000).toFixed(1)}M₫`
+  const sign = amount < 0 ? '-' : ''
+  const abs = Math.abs(amount)
+  if (abs >= 1_000_000) {
+    return `${sign}${(abs / 1_000_000).toFixed(1)}M₫`
   }
-  if (amount >= 1_000) {
-    return `${(amount / 1_000).toFixed(0)}K₫`
+  if (abs >= 1_000) {
+    return `${sign}${(abs / 1_000).toFixed(0)}K₫`
   }
-  return `${amount}₫`
+  return `${sign}${abs}₫`
 }
 
 function formatNumber(num: number): string {
@@ -54,6 +58,8 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
   const [selectedUser, setSelectedUser] = useState<AdminStats['allUsers'][number] | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
+  const [sortField, setSortField] = useState<UserSortField>('created_at')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const itemsPerPage = 15
 
   const handleRefresh = async () => {
@@ -74,10 +80,30 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
 
   const filteredUsers = useMemo(() => {
     const term = searchTerm.toLowerCase()
-    return stats.allUsers.filter(
+    const filtered = stats.allUsers.filter(
       (u) => u.email.toLowerCase().includes(term) || (u.full_name ?? '').toLowerCase().includes(term)
     )
-  }, [stats.allUsers, searchTerm])
+    const sorted = [...filtered].sort((a, b) => {
+      let cmp: number
+      if (sortField === 'created_at') {
+        cmp = new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      } else {
+        cmp = a[sortField] - b[sortField]
+      }
+      return sortOrder === 'asc' ? cmp : -cmp
+    })
+    return sorted
+  }, [stats.allUsers, searchTerm, sortField, sortOrder])
+
+  const handleSort = (field: UserSortField) => {
+    if (field === sortField) {
+      setSortOrder((o) => (o === 'asc' ? 'desc' : 'asc'))
+    } else {
+      setSortField(field)
+      setSortOrder('desc')
+    }
+    setCurrentPage(1)
+  }
 
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage)
   const paginatedUsers = filteredUsers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
@@ -337,6 +363,14 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
             <span className="text-xs text-slate-400">Transactions</span>
             <span className="text-[13px] font-bold text-slate-700">{stats.totalTransactions}</span>
           </div>
+          <div className="mt-2 flex items-center justify-between">
+            <span className="text-xs text-slate-400">
+              API cost <span className="text-slate-300">· last 90 days</span>
+            </span>
+            <span className="text-[13px] font-bold text-rose-500 tabular-nums">
+              {formatVND(stats.apiCostVnd)}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -588,6 +622,11 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
                       <span className="font-semibold text-violet-600">{user.quiz_total_attempts} quizzes</span>
                     </div>
                   </div>
+                  {user.total_spent > 0 && (
+                    <div className="mt-1 text-xs font-semibold text-emerald-600">
+                      {formatVND(user.total_spent)} spent
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -599,9 +638,42 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
                   <tr className="border-b border-slate-100">
                     <th className="px-5 py-2.5 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">Name</th>
                     <th className="px-5 py-2.5 text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">Email</th>
-                    <th className="px-5 py-2.5 text-right text-[11px] font-bold uppercase tracking-wide text-slate-400">Essays</th>
-                    <th className="px-5 py-2.5 text-right text-[11px] font-bold uppercase tracking-wide text-slate-400">Quizzes</th>
-                    <th className="px-5 py-2.5 text-right text-[11px] font-bold uppercase tracking-wide text-slate-400">Joined</th>
+                    <th className="px-5 py-2.5 text-right text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                      <button
+                        onClick={() => handleSort('essay_count')}
+                        className="ml-auto flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-slate-400 transition-colors hover:text-slate-600"
+                      >
+                        Essays
+                        <ArrowUpDown className="h-3 w-3" />
+                      </button>
+                    </th>
+                    <th className="px-5 py-2.5 text-right text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                      <button
+                        onClick={() => handleSort('quiz_total_attempts')}
+                        className="ml-auto flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-slate-400 transition-colors hover:text-slate-600"
+                      >
+                        Quizzes
+                        <ArrowUpDown className="h-3 w-3" />
+                      </button>
+                    </th>
+                    <th className="px-5 py-2.5 text-right text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                      <button
+                        onClick={() => handleSort('total_spent')}
+                        className="ml-auto flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-slate-400 transition-colors hover:text-slate-600"
+                      >
+                        Spent
+                        <ArrowUpDown className="h-3 w-3" />
+                      </button>
+                    </th>
+                    <th className="px-5 py-2.5 text-right text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                      <button
+                        onClick={() => handleSort('created_at')}
+                        className="ml-auto flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-slate-400 transition-colors hover:text-slate-600"
+                      >
+                        Joined
+                        <ArrowUpDown className="h-3 w-3" />
+                      </button>
+                    </th>
                     <th className="w-10 px-5 py-2.5" />
                   </tr>
                 </thead>
@@ -621,6 +693,13 @@ export function AdminDashboardClient({ initialStats }: AdminDashboardClientProps
                       </td>
                       <td className="px-5 py-2.5 text-right text-[12.5px] font-bold text-slate-900 tabular-nums">
                         {user.quiz_total_attempts}
+                      </td>
+                      <td className="px-5 py-2.5 text-right text-[12.5px] font-bold tabular-nums">
+                        {user.total_spent > 0 ? (
+                          <span className="text-emerald-600">{formatVND(user.total_spent)}</span>
+                        ) : (
+                          <span className="italic text-slate-300">—</span>
+                        )}
                       </td>
                       <td className="px-5 py-2.5 text-right text-xs text-slate-400">
                         {format(new Date(user.created_at), 'MMM d, yyyy')}

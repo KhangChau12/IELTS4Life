@@ -14,7 +14,7 @@ export async function GET(
   const { userId } = params
   const supabase = createServiceRoleClient()
 
-  const [profileResult, essaysResult, vocabResult] = await Promise.all([
+  const [profileResult, essaysResult, vocabResult, transactionsResult] = await Promise.all([
     supabase
       .from('profiles')
       .select(
@@ -32,6 +32,8 @@ export async function GET(
       .order('created_at', { ascending: false }),
 
     supabase.from('vocabulary').select('essay_id').eq('user_id', userId),
+
+    supabase.from('payment_transactions').select('amount').eq('user_id', userId).eq('status', 'completed'),
   ])
 
   if (profileResult.error || !profileResult.data) {
@@ -50,6 +52,8 @@ export async function GET(
         essaysWithScores.length
       : null
   const latestScore = essaysWithScores.length > 0 ? essaysWithScores[0].overall_score : null
+
+  const totalSpent = (transactionsResult.data ?? []).reduce((sum, t) => sum + (t.amount || 0), 0)
 
   const totalVocabulary = vocabulary.length
   const vocabEssayIds = new Set(vocabulary.map((v) => v.essay_id).filter(Boolean))
@@ -72,7 +76,7 @@ export async function GET(
   return NextResponse.json({
     profile,
     essays,
-    stats: { totalEssays, averageScore, latestScore },
+    stats: { totalEssays, averageScore, latestScore, totalSpent },
     userStats: {
       vocabulary: { total: totalVocabulary, essaysWithoutVocab },
       quiz: {

@@ -1,5 +1,10 @@
 import { createServiceRoleClient } from '@/lib/supabase/service'
+import { fetchOpenRouterKeyUsage, fetchOpenAICost } from '@/lib/openai/client'
 import type { AdminStats } from '@/types/admin'
+
+// Hardcoded USD->VND rate for converting OpenRouter's dollar-denominated usage into the
+// site's VND-denominated revenue figures. Update here if the rate drifts significantly.
+const USD_TO_VND = 26000
 
 export async function fetchAdminStats(): Promise<AdminStats> {
   const serviceClient = createServiceRoleClient()
@@ -25,6 +30,8 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     essayCountResult,
     satisfactionResult,
     pendingPromptsCountResult,
+    openRouterUsage,
+    openAICost,
   ] = await Promise.all([
     serviceClient.from('essays').select('overall_score'),
     serviceClient.from('essays').select('created_at, prompt_id, writing_prompts(status)').gte('created_at', fourteenDaysAgoISO).order('created_at', { ascending: true }),
@@ -46,7 +53,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
       .eq('subscription_status', 'active')
       .gt('subscription_end_date', new Date().toISOString()),
     serviceClient.from('payment_transactions')
-      .select('amount, order_code')
+      .select('user_id, amount, order_code')
       .eq('status', 'completed'),
     serviceClient.from('vocabulary').select('*', { count: 'exact', head: true }),
     serviceClient.from('writing_prompts').select('*', { count: 'exact', head: true }),
@@ -54,6 +61,8 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     serviceClient.from('essays').select('*', { count: 'exact', head: true }),
     serviceClient.from('profiles').select('satisfaction_rating, satisfaction_rated_at'),
     serviceClient.from('writing_prompts').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+    fetchOpenRouterKeyUsage(),
+    fetchOpenAICost(),
   ])
 
   // Separate parallel groups into named vars
@@ -123,10 +132,31 @@ export async function fetchAdminStats(): Promise<AdminStats> {
   const proRevenue = proTransactions.reduce((s, t) => s + (t.amount || 0), 0)
   const packRevenue = packTransactions.reduce((s, t) => s + (t.amount || 0), 0)
 
+  // API cost — OpenRouter (scoring/improvement/guidance/outline/classify) + OpenAI (vocabulary),
+  // both USD, last ~90 days only (not all-time — shown as a standalone reference figure, not
+  // subtracted from the all-time Revenue card). Either source is 0 if its fetch failed — never
+  // blocks stats.
+  const openRouterCostQuarterUsd = openRouterUsage?.usageQuarterUsd ?? 0
+  const openRouterCostMonthlyUsd = openRouterUsage?.usageMonthlyUsd ?? 0
+  const openAICostQuarterUsd = openAICost?.costQuarterUsd ?? 0
+  const openAICostMonthlyUsd = openAICost?.costMonthlyUsd ?? 0
+
+  const apiCostVnd = Math.round((openRouterCostQuarterUsd + openAICostQuarterUsd) * USD_TO_VND)
+  const apiCostMonthlyVnd = Math.round((openRouterCostMonthlyUsd + openAICostMonthlyUsd) * USD_TO_VND)
+  const openRouterCostVnd = Math.round(openRouterCostQuarterUsd * USD_TO_VND)
+  const openAICostVnd = Math.round(openAICostQuarterUsd * USD_TO_VND)
+
   // Referral stats
   const totalInvitedUsers = inviteStats.filter(p => p.invited_by !== null).length
   const uniqueReferrers = new Set(inviteStats.filter(p => p.invited_by !== null).map(p => p.invited_by)).size
   const inviteConversionRate = totalUsers > 0 ? (totalInvitedUsers / totalUsers) * 100 : 0
+
+  // Total spent per user, from completed transactions
+  const spentByUser = new Map<string, number>()
+  for (const t of completedTransactions) {
+    if (!t.user_id) continue
+    spentByUser.set(t.user_id, (spentByUser.get(t.user_id) ?? 0) + (t.amount || 0))
+  }
 
   // Users with essay counts
   const allUsers = (allUsersWithEssays ?? []).map(u => ({
@@ -137,6 +167,7 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     role: u.role,
     essay_count: Array.isArray(u.essays) ? (u.essays[0]?.count ?? 0) : 0,
     quiz_total_attempts: u.quiz_total_attempts ?? 0,
+    total_spent: spentByUser.get(u.id) ?? 0,
   }))
 
   // User growth — smart bucketing (day/week/month)
@@ -266,6 +297,10 @@ export async function fetchAdminStats(): Promise<AdminStats> {
     totalRevenue,
     proRevenue,
     packRevenue,
+    apiCostVnd,
+    apiCostMonthlyVnd,
+    openRouterCostVnd,
+    openAICostVnd,
     totalTransactions: completedTransactions.length,
     proSubs: proTransactions.length,
     packPurchases: packTransactions.length,

@@ -24,6 +24,7 @@ export interface AdminStats {
     role: string
     essay_count: number
     quiz_total_attempts: number
+    total_spent: number
   }>
   essaysOverTime: Array<{ date: string; count: number; prompt_count: number }>
   totalVocabulary: number
@@ -50,6 +51,10 @@ export interface AdminStats {
   totalRevenue: number
   proRevenue: number
   packRevenue: number
+  apiCostVnd: number
+  apiCostMonthlyVnd: number
+  openRouterCostVnd: number
+  openAICostVnd: number
   totalTransactions: number
   proSubs: number
   packPurchases: number
