@@ -113,6 +113,12 @@ export const ESSAY_SCORING_JSON_SCHEMA = {
   },
 } as const
 
+/**
+ * @deprecated The improve route no longer asks the model for a diff — it rewrites
+ * (ESSAY_REWRITE_JSON_SCHEMA), then diffs deterministically in code
+ * (lib/openai/essay-diff.ts), then labels the hunks (ESSAY_EDIT_LABELS_JSON_SCHEMA).
+ * Kept only so any code path still referencing it keeps type-checking.
+ */
 export const ESSAY_IMPROVEMENT_JSON_SCHEMA = {
   name: 'essay_improvement',
   strict: true,
@@ -135,6 +141,36 @@ export const ESSAY_IMPROVEMENT_JSON_SCHEMA = {
       },
     },
     required: ['improved_essay', 'changes'],
+    additionalProperties: false,
+  },
+} as const
+
+// Pass 1 of the improve pipeline: rewrite the essay to Band 8-9. No diff here.
+export const ESSAY_REWRITE_JSON_SCHEMA = {
+  name: 'essay_rewrite',
+  strict: true,
+  schema: {
+    type: 'object',
+    properties: {
+      improved_essay: { type: 'string' },
+    },
+    required: ['improved_essay'],
+    additionalProperties: false,
+  },
+} as const
+
+// Pass 3 of the improve pipeline: label each pre-computed diff hunk. The model
+// returns one short reason per hunk, matched by index — it never sees or
+// reproduces the {original, improved} spans (those come from code).
+export const ESSAY_EDIT_LABELS_JSON_SCHEMA = {
+  name: 'essay_edit_labels',
+  strict: true,
+  schema: {
+    type: 'object',
+    properties: {
+      reasons: { type: 'array', items: { type: 'string' } },
+    },
+    required: ['reasons'],
     additionalProperties: false,
   },
 } as const

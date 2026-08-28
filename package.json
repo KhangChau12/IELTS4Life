@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit",
-    "screenshots": "node scripts/capture-screenshots.js"
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@fingerprintjs/fingerprintjs": "^4.6.2",
@@ -44,8 +43,7 @@
     "resend": "^6.17.1",
     "tailwind-merge": "^2.5.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.23.0",
-    "zustand": "^4.5.0"
+    "zod": "^3.23.0"
   },
   "devDependencies": {
     "@react-email/render": "^2.0.10",

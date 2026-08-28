@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Loader2, CheckCircle, Sparkles, ArrowRight } from 'lucide-react'
@@ -47,7 +47,7 @@ function CustomTooltip({ original, reason, children }: CustomTooltipProps) {
         ref={triggerRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className="bg-green-100 text-green-900 px-0.5 rounded font-medium border-b-2 border-green-400 cursor-help transition-all duration-200 hover:bg-green-200 hover:shadow-sm"
+        className="animate-fadeIn bg-green-100 text-green-900 px-0.5 rounded font-medium border-b-2 border-green-400 cursor-help transition-all duration-200 hover:bg-green-200 hover:shadow-sm"
       >
         {children}
       </span>
@@ -82,9 +82,18 @@ interface EssayImprovementProps {
   essayId: string
   originalEssay: string
   initialImprovedEssay?: string | null
+  /** null = the diff step has not run yet; [] = ran and found no changes */
   initialChanges?: Change[] | null
   onGeneratingChange?: (isGenerating: boolean) => void
 }
+
+// rewriting  -> waiting for the Band 8-9 rewrite
+// diffing    -> rewrite is on screen, computing + labelling the highlights
+// done       -> highlights applied (or confirmed there are none)
+// error      -> the rewrite itself failed (essay not shown)
+type Phase = 'idle' | 'rewriting' | 'diffing' | 'done' | 'error'
+
+const DIFF_RETRY_LIMIT = 4
 
 export function EssayImprovement({
   essayId,
@@ -94,89 +103,124 @@ export function EssayImprovement({
   onGeneratingChange,
 }: EssayImprovementProps) {
   const [improvedEssay, setImprovedEssay] = useState<string | null>(initialImprovedEssay || null)
-  const [changes, setChanges] = useState<Change[]>(initialChanges || [])
-  const [isGenerating, setIsGenerating] = useState(false)
+  const [changes, setChanges] = useState<Change[]>(initialChanges ?? [])
+  // The diff step is "settled" once we hold a non-null changes array (even an empty one).
+  const [diffSettled, setDiffSettled] = useState<boolean>(initialChanges != null)
+  const [phase, setPhase] = useState<Phase>(() => {
+    if (initialImprovedEssay && initialChanges != null) return 'done'
+    if (initialImprovedEssay) return 'diffing'
+    return 'idle'
+  })
   const [progress, setProgress] = useState(0)
   const [stage, setStage] = useState('')
   const [error, setError] = useState('')
+  const [diffError, setDiffError] = useState(false)
+  const startedRef = useRef(false)
 
-  // Auto-generate if not already done
+  const isBusy = phase === 'rewriting' || phase === 'diffing'
+
+  // ---- fake progress bar: 0->70% during rewrite, 70->95% during diff ----
   useEffect(() => {
-    if (!initialImprovedEssay) {
-      generateImprovement()
-    }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Progress simulation - 3 seconds for improvement
-  useEffect(() => {
-    if (!isGenerating) {
-      return // Don't create interval if not generating
-    }
-
+    if (phase !== 'rewriting' && phase !== 'diffing') return
+    const target = phase === 'rewriting' ? 70 : 95
+    const step = phase === 'rewriting' ? 1.4 : 1.0 // ~5s to 70, ~2.5s to 95
     const interval = setInterval(() => {
-      setProgress(prev => {
-        // Stop at 95%
-        if (prev >= 95) {
-          clearInterval(interval)
-          return 95
-        }
-
-        const newProgress = prev + 3.17 // 95% in 3 seconds (3000ms / 100ms intervals)
-
-        // Update stage based on progress
-        if (newProgress >= 75) {
-          setStage('Polishing improvements...')
-        } else if (newProgress >= 50) {
-          setStage('Enhancing vocabulary and grammar...')
-        } else if (newProgress >= 25) {
-          setStage('Improving coherence and structure...')
+      setProgress((prev) => {
+        if (prev >= target) return target
+        const next = prev + step
+        if (phase === 'rewriting') {
+          setStage(next < 25 ? 'Reading your essay...' : next < 50 ? 'Rewriting to Band 8-9...' : 'Polishing the rewrite...')
         } else {
-          setStage('Analyzing your essay...')
+          setStage('Finding the specific improvements...')
         }
-
-        return Math.min(newProgress, 95)
+        return Math.min(next, target)
       })
     }, 100)
-
     return () => clearInterval(interval)
-  }, [isGenerating]) // Only depend on isGenerating, not progress
+  }, [phase])
 
-  const generateImprovement = async () => {
-    setIsGenerating(true)
-    onGeneratingChange?.(true)
-    setProgress(0)
-    setStage('Analyzing your essay...')
-    setError('')
-
-    try {
-      const response = await fetch('/api/essays/improve', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          essay_id: essayId,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to generate improvement')
+  // ---- run the diff step ----
+  const runDiff = useCallback(async () => {
+    setDiffError(false)
+    setPhase('diffing')
+    for (let attempt = 0; attempt < DIFF_RETRY_LIMIT; attempt++) {
+      try {
+        const res = await fetch('/api/essays/improve/diff', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ essay_id: essayId }),
+        })
+        if (res.status === 409) {
+          // rewrite not persisted yet — wait and retry
+          await new Promise((r) => setTimeout(r, 2000))
+          continue
+        }
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.error || 'diff failed')
+        setChanges(Array.isArray(data.changes) ? data.changes : [])
+        setDiffSettled(true)
+        setProgress(100)
+        setPhase('done')
+        return
+      } catch {
+        await new Promise((r) => setTimeout(r, 1500))
       }
+    }
+    // give up on highlights but keep the essay readable
+    setDiffError(true)
+    setPhase('done')
+  }, [essayId])
 
-      setProgress(100)
-      setStage('Complete!')
+  // ---- run the rewrite step ----
+  const runRewrite = useCallback(async () => {
+    setPhase('rewriting')
+    setProgress(0)
+    setStage('Reading your essay...')
+    setError('')
+    try {
+      const res = await fetch('/api/essays/improve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ essay_id: essayId }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to generate improvement')
+
       setImprovedEssay(data.improved_essay)
-      setChanges(data.changes || [])
+
+      if (Array.isArray(data.changes) && data.changes.length > 0) {
+        // cached run already had changes
+        setChanges(data.changes)
+        setDiffSettled(true)
+        setProgress(100)
+        setPhase('done')
+      } else {
+        await runDiff()
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
       setProgress(0)
-    } finally {
-      setIsGenerating(false)
-      onGeneratingChange?.(false)
+      setPhase('error')
     }
-  }
+  }, [essayId, runDiff])
+
+  // ---- kick off on mount ----
+  useEffect(() => {
+    if (startedRef.current) return
+    startedRef.current = true
+    if (!initialImprovedEssay) {
+      runRewrite()
+    } else if (initialChanges == null) {
+      // rewrite exists from a previous (possibly interrupted) run; finish the diff
+      runDiff()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // ---- tell the parent when a network step is in flight (drives the tab pulse) ----
+  useEffect(() => {
+    onGeneratingChange?.(isBusy)
+  }, [isBusy, onGeneratingChange])
 
   // Segment type for custom diff rendering
   interface Segment {
@@ -192,7 +236,6 @@ export function EssayImprovement({
     }
 
     const segments: Segment[] = []
-    let remainingText = improvedEssay
     let processedLength = 0
 
     // Sort changes by their position in the improved essay
@@ -281,17 +324,25 @@ export function EssayImprovement({
     )
   }
 
-  if (error) {
+  // ---- the rewrite itself failed: nothing to show ----
+  if (phase === 'error') {
     return (
       <Card className="border-red-200 bg-red-50 animate-fadeInUp">
-        <CardContent className="pt-6">
-          <p className="text-red-600 text-sm">{error}</p>
+        <CardContent className="pt-6 space-y-3">
+          <p className="text-red-600 text-sm">{error || 'Failed to generate the improved essay.'}</p>
+          <button
+            onClick={() => runRewrite()}
+            className="text-sm font-medium text-ocean-700 hover:text-ocean-900 underline underline-offset-2"
+          >
+            Try again
+          </button>
         </CardContent>
       </Card>
     )
   }
 
-  if (isGenerating) {
+  // ---- rewrite still running: no essay yet, show progress ----
+  if (phase === 'rewriting' && !improvedEssay) {
     return (
       <Card className="border-ocean-200 shadow-card animate-fadeInUp">
         <CardHeader className="px-4 sm:px-6 py-3 sm:py-4">
@@ -308,11 +359,11 @@ export function EssayImprovement({
             </div>
             <Progress value={progress} className="h-1.5 sm:h-2" />
           </div>
-          <div className="bg-cyan-50 border border-cyan-200 rounded-md p-3">
-            <p className="text-xs text-ocean-600 leading-relaxed">
-              AI is rewriting your essay to demonstrate what a Band 8-9 version would look like.
-              This process takes approximately 20 seconds.
-            </p>
+          <div className="space-y-2">
+            <div className="h-3 bg-ocean-100 rounded animate-pulse" />
+            <div className="h-3 bg-ocean-100 rounded animate-pulse w-[92%]" />
+            <div className="h-3 bg-ocean-100 rounded animate-pulse w-[97%]" />
+            <div className="h-3 bg-ocean-100 rounded animate-pulse w-[85%]" />
           </div>
         </CardContent>
       </Card>
@@ -323,33 +374,63 @@ export function EssayImprovement({
     return null
   }
 
+  const hasHighlights = changes.length > 0
+  const showNoChangeNote = phase === 'done' && diffSettled && !hasHighlights && !diffError
+
   return (
     <Card className="border-ocean-200 shadow-card animate-fadeInUp">
       <CardHeader className="px-4 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between gap-2">
           <CardTitle className="flex items-center gap-2 text-ocean-800 text-base sm:text-lg">
             <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-cyan-600" />
-            Improved Essay (Band 7-8+ Example)
+            Improved Essay (Band 8-9 Example)
           </CardTitle>
-          <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />
+          {phase === 'done' && <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />}
         </div>
-        <p className="text-xs sm:text-sm text-ocean-600 mt-2">
-          <span className="inline-block px-1.5 sm:px-2 py-0.5 bg-green-100 text-green-800 rounded mr-1.5 sm:mr-2">
-            ✨ Highlighted
-          </span>
-          sections show improvements. Hover over highlighted text to see what was changed.
-        </p>
+
+        {phase === 'diffing' && (
+          <div className="flex items-center gap-2 text-xs sm:text-sm text-ocean-600 mt-2">
+            <Loader2 className="h-3.5 w-3.5 animate-spin text-cyan-600" />
+            <span>Finding the specific improvements to highlight…</span>
+          </div>
+        )}
+
+        {hasHighlights && phase === 'done' && (
+          <p className="text-xs sm:text-sm text-ocean-600 mt-2">
+            <span className="inline-block px-1.5 sm:px-2 py-0.5 bg-green-100 text-green-800 rounded mr-1.5 sm:mr-2">
+              ✨ Highlighted
+            </span>
+            sections show improvements. Hover over highlighted text to see what was changed.
+          </p>
+        )}
+
+        {showNoChangeNote && (
+          <p className="text-xs sm:text-sm text-ocean-600 mt-2">
+            Your essay is already close to this level — only light touches were needed, so there is nothing significant to highlight.
+          </p>
+        )}
+
+        {diffError && (
+          <p className="text-xs sm:text-sm text-amber-700 mt-2">
+            Couldn&apos;t load the highlighted changes.{' '}
+            <button onClick={() => runDiff()} className="underline underline-offset-2 font-medium">
+              Retry
+            </button>
+          </p>
+        )}
       </CardHeader>
       <CardContent className="px-4 sm:px-6">
         <div className="bg-white border border-ocean-200 rounded-lg p-3 sm:p-6 leading-relaxed">
           {renderDiff()}
         </div>
-        <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-cyan-50 border border-cyan-200 rounded-md">
-          <p className="text-xs sm:text-sm text-ocean-700">
-            <strong>How to use this:</strong> Compare the highlighted improvements with your original essay.
-            Notice how vocabulary, grammar, and sentence structures have been enhanced while keeping your main ideas intact.
-          </p>
-        </div>
+        {hasHighlights && (
+          <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-cyan-50 border border-cyan-200 rounded-md">
+            <p className="text-xs sm:text-sm text-ocean-700">
+              <strong>How to use this:</strong> Compare the highlighted improvements with your original essay.
+              Notice how vocabulary, grammar, and sentence structures have been enhanced while keeping your main ideas intact.
+            </p>
+          </div>
+        )}
       </CardContent>
     </Card>
   )
